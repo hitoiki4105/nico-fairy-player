@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ニコタグ再生</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <h1>ニコタグ再生</h1>
+    <p class="lead">タグを指定して、ニコニコ動画をランダムに再生します。</p>
+
+    <form id="search-form">
+      <div class="field">
+        <label for="include-tags">含めるタグ（カンマ区切りで複数入力可）</label>
+        <input type="text" id="include-tags" placeholder="例: 初音ミク, オリジナル曲" />
+      </div>
+
+      <div class="field">
+        <span class="field-label">含めるタグの条件</span>
+        <div class="radio-group">
+          <label><input type="radio" name="match-mode" value="AND" checked /> すべて含む（AND）</label>
+          <label><input type="radio" name="match-mode" value="OR" /> いずれか含む（OR）</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="exclude-tags">除外するタグ（カンマ区切りで複数入力可）</label>
+        <input type="text" id="exclude-tags" placeholder="例: R-18" />
+      </div>
+
+      <div class="field field-row">
+        <div>
+          <label for="min-views">再生数（下限）</label>
+          <div class="stepper">
+            <button type="button" class="step-btn" data-target="min-views" data-step="-100">-100</button>
+            <input type="number" id="min-views" min="0" step="100" placeholder="指定なし" />
+            <button type="button" class="step-btn" data-target="min-views" data-step="100">+100</button>
+          </div>
+        </div>
+        <div>
+          <label for="max-views">再生数（上限）</label>
+          <div class="stepper">
+            <button type="button" class="step-btn" data-target="max-views" data-step="-100">-100</button>
+            <input type="number" id="max-views" min="0" step="100" placeholder="指定なし" />
+            <button type="button" class="step-btn" data-target="max-views" data-step="100">+100</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="field field-row">
+        <div>
+          <label for="year-from">投稿年（から）</label>
+          <input type="number" id="year-from" min="2006" max="2100" placeholder="指定なし" />
+        </div>
+        <div>
+          <label for="year-to">投稿年（まで）</label>
+          <input type="number" id="year-to" min="2006" max="2100" placeholder="指定なし" />
+        </div>
+      </div>
+
+      <button type="submit" id="search-button">検索する</button>
+    </form>
+
+    <section id="status" aria-live="polite"></section>
+
+    <section id="result" hidden>
+      <p id="result-count"></p>
+      <p id="current-title"></p>
+      <p id="current-uploader"></p>
+      <div id="player"></div>
+      <button type="button" id="next-button">次のランダム動画</button>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
