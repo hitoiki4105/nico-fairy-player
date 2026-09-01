@@ -1,1 +1,1 @@
-# nico-serendipity-player
+# nico-fairy-player
