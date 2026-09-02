@@ -36,22 +36,25 @@ const translations = {
     lead: "条件を指定して、ニコニコに投稿された動画とランダムで出会えます",
     leadSub: "タグ検索とキーワード検索、どちらか一方だけでも使えます",
     languageLabel: "言語",
-    voiceCategoryLabel: "音声合成の系統",
-    voiroidLabel: "ボイロ系",
-    vocaloidLabel: "ボカロ系",
+    voiceCategoryLabel: "Q1：どんな動画を探してるの？",
+    voiroidLabel: "ボイロ・解説・劇場系",
+    vocaloidLabel: "ボカロ・音楽系",
     voiceCategoryTooltip:
-      "それぞれのボタンで以下のタグが内部的にいずれか含む（OR）で付与されます\n「ボイロ系」ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n「ボカロ系」ボカロ、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、VOCALOID",
-    includeTagsLabel: "含めるタグ（半角、全角スペースで複数入力可）",
+      "それぞれのボタンで以下のタグが内部的にいずれか含む（OR）で付与されます\n「ボイロ・解説・劇場系」ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n「ボカロ・音楽系」ボカロ、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、VOCALOID",
+    includeTagsLabel: "Q2：気になるタグは何？",
+    includeTagsNote: "半角、全角スペースを加えて複数入力した場合、すべて含む（AND）結果がでます",
     includeTagsPlaceholder: "例: 初音ミク オリジナル曲",
-    keywordLabel: "キーワード検索（タイトル・詳細欄）",
+    keywordLabel: "Q４：キーワードでもいいよ？",
+    keywordNote: "キーワード検索はタイトル・動画詳細欄を参照します。",
     keywordPlaceholder: "例: リミックス",
-    keywordSuggestNote: "妖精さんに、動画を絞り込むキーワードをランダムで提案してもらえます",
+    keywordSuggestNote: "Wikipediaの記事タイトルをランダムで取得することができます",
     keywordSuggestButton: "キーワードを提案してもらう",
+    keywordExpandTitle: "キーワードを広げる？",
     keywordExpandNote: "入力中の単語から、類義語・関連語をWikipediaで探して「いずれか含む（OR）」に広げます",
     keywordExpandButton: "キーワードを広げる",
     disclaimerPrefix: "非公式ツールです。問い合わせなどはこちらから",
-    filterToggleLabel: "フィルター設定（再生数の指定等）",
-    viewsRangeLabel: "再生数",
+    filterToggleLabel: "フィルター設定（投稿日など）",
+    viewsRangeLabel: "Q３：森の奥まで行ってみる？",
     minViewsLabel: "再生数（下限）",
     maxViewsLabel: "再生数（上限）",
     viewsPlaceholder: "指定なし",
@@ -70,6 +73,7 @@ const translations = {
     searchButton: "妖精さんと探しに行こう！",
     statusNeedTag: "含めるタグかキーワードのどちらかを入力してください。",
     statusSearching: "検索中...",
+    statusSuggesting: "単語を探しています...",
     statusExpanding: "類義語・関連語を探しています...",
     statusExpandFailed: "うまく広げられませんでした。別の単語で試してみてください。",
     statusFailed: "検索に失敗しました。しばらくしてからもう一度お試しください。",
@@ -89,22 +93,25 @@ const translations = {
     lead: "设定条件后，随机与投稿到niconico的视频相遇",
     leadSub: "标签搜索和关键词搜索，只使用其中一种也可以",
     languageLabel: "语言",
-    voiceCategoryLabel: "语音合成系统",
-    voiroidLabel: "VOICEROID系",
-    vocaloidLabel: "VOCALOID系",
+    voiceCategoryLabel: "Q1：想找什么样的视频？",
+    voiroidLabel: "VOICEROID・解说・剧场系",
+    vocaloidLabel: "VOCALOID・音乐系",
     voiceCategoryTooltip:
-      "点击按钮后，会在内部以「包含任意一个（OR）」的方式附加以下标签\n「ボイロ系」ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n「ボカロ系」ボカロ、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、VOCALOID",
-    includeTagsLabel: "包含的标签（可用半角或全角空格分隔多个）",
+      "点击按钮后，会在内部以「包含任意一个（OR）」的方式附加以下标签\n「VOICEROID・解说・剧场系」ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n「VOCALOID・音乐系」ボカロ、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、VOCALOID",
+    includeTagsLabel: "Q2：在意的标签是什么？",
+    includeTagsNote: "用半角或全角空格输入多个标签时，会显示全部包含（AND）的结果",
     includeTagsPlaceholder: "例：初音未来 原创曲",
-    keywordLabel: "关键词搜索（标题・简介）",
+    keywordLabel: "Q４：也可以用关键词吗？",
+    keywordNote: "关键词搜索会参照标题和视频简介栏。",
     keywordPlaceholder: "例：混音",
-    keywordSuggestNote: "可以让妖精随机为你推荐一个用于筛选视频的关键词",
+    keywordSuggestNote: "可以随机获取一个Wikipedia的文章标题",
     keywordSuggestButton: "让妖精推荐关键词",
+    keywordExpandTitle: "扩展关键词？",
     keywordExpandNote: "根据输入的词语，从Wikipedia查找同义词・相关词，以「包含任意一个（OR）」的方式扩展",
     keywordExpandButton: "扩展关键词",
     disclaimerPrefix: "这是非官方工具。如需联系，请通过",
-    filterToggleLabel: "筛选设置（播放数等）",
-    viewsRangeLabel: "播放数",
+    filterToggleLabel: "筛选设置（投稿日期等）",
+    viewsRangeLabel: "Q３：要不要深入森林深处看看？",
     minViewsLabel: "播放数（下限）",
     maxViewsLabel: "播放数（上限）",
     viewsPlaceholder: "不限",
@@ -123,6 +130,7 @@ const translations = {
     searchButton: "和妖精一起去找找看！",
     statusNeedTag: "请输入标签或关键词中的至少一项。",
     statusSearching: "正在搜索...",
+    statusSuggesting: "正在查找单词...",
     statusExpanding: "正在查找同义词・相关词...",
     statusExpandFailed: "未能成功扩展，请换个词试试。",
     statusFailed: "搜索失败，请稍后再试。",
@@ -142,22 +150,25 @@ const translations = {
     lead: "조건을 지정하면 니코니코에 올라온 동영상과 무작위로 만날 수 있어요",
     leadSub: "태그 검색과 키워드 검색, 둘 중 하나만 사용해도 됩니다",
     languageLabel: "언어",
-    voiceCategoryLabel: "음성 합성 계열",
-    voiroidLabel: "보이로이드 계열",
-    vocaloidLabel: "보카로이드 계열",
+    voiceCategoryLabel: "Q1：어떤 영상을 찾고 있어?",
+    voiroidLabel: "보이로이드・해설・극장 계열",
+    vocaloidLabel: "보카로이드・음악 계열",
     voiceCategoryTooltip:
-      "각 버튼을 누르면 내부적으로 다음 태그가 「하나라도 포함(OR)」 조건으로 추가됩니다\n「ボイロ系」ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n「ボカロ系」ボカロ、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、VOCALOID",
-    includeTagsLabel: "포함할 태그（반각・전각 공백으로 여러 개 입력 가능）",
+      "각 버튼을 누르면 내부적으로 다음 태그가 「하나라도 포함(OR)」 조건으로 추가됩니다\n「보이로이드・해설・극장 계열」ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n「보카로이드・음악 계열」ボカロ、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、VOCALOID",
+    includeTagsLabel: "Q2：궁금한 태그가 있나요?",
+    includeTagsNote: "반각・전각 공백으로 여러 개 입력하면 모두 포함（AND）된 결과가 나옵니다",
     includeTagsPlaceholder: "예: 하츠네 미쿠 오리지널곡",
-    keywordLabel: "키워드 검색（제목・설명란）",
+    keywordLabel: "Q４：키워드도 괜찮아?",
+    keywordNote: "키워드 검색은 제목・동영상 설명란을 참조합니다.",
     keywordPlaceholder: "예: 리믹스",
-    keywordSuggestNote: "요정이 동영상을 좁혀줄 키워드를 무작위로 제안해줍니다",
+    keywordSuggestNote: "Wikipedia 문서 제목을 무작위로 가져올 수 있습니다",
     keywordSuggestButton: "키워드 제안받기",
+    keywordExpandTitle: "키워드를 넓혀볼까?",
     keywordExpandNote: "입력한 단어를 바탕으로 Wikipedia에서 유의어・관련어를 찾아 「하나라도 포함(OR)」으로 넓힙니다",
     keywordExpandButton: "키워드 넓히기",
     disclaimerPrefix: "비공식 도구입니다. 문의는 이쪽으로",
-    filterToggleLabel: "필터 설정（조회수 지정 등）",
-    viewsRangeLabel: "조회수",
+    filterToggleLabel: "필터 설정（게시일 등）",
+    viewsRangeLabel: "Q３：숲 깊은 곳까지 가볼까?",
     minViewsLabel: "조회수（하한）",
     maxViewsLabel: "조회수（상한）",
     viewsPlaceholder: "지정 안 함",
@@ -176,6 +187,7 @@ const translations = {
     searchButton: "요정과 함께 찾으러 가요!",
     statusNeedTag: "포함할 태그나 키워드 중 하나는 입력해 주세요.",
     statusSearching: "검색 중...",
+    statusSuggesting: "단어를 찾는 중...",
     statusExpanding: "유의어・관련어를 찾는 중...",
     statusExpandFailed: "잘 넓히지 못했습니다. 다른 단어로 시도해 주세요.",
     statusFailed: "검색에 실패했습니다. 잠시 후 다시 시도해 주세요.",
@@ -195,22 +207,25 @@ const translations = {
     lead: "Set your conditions and randomly meet videos posted on Niconico",
     leadSub: "You can use tag search and keyword search independently, or just one of them",
     languageLabel: "Language",
-    voiceCategoryLabel: "Voice synthesis type",
-    voiroidLabel: "VOICEROID-type",
-    vocaloidLabel: "VOCALOID-type",
+    voiceCategoryLabel: "Q1: What kind of video are you looking for?",
+    voiroidLabel: "VOICEROID / Narration / Theater",
+    vocaloidLabel: "VOCALOID / Music",
     voiceCategoryTooltip:
-      "Each button internally adds the following tags with an OR condition\n\"VOICEROID-type\": \u30dc\u30a4\u30ed, \u30dc\u30a4\u30b9\u30ed\u30a4\u30c9, \u30bd\u30d5\u30c8\u30d5\u30a7\u30a2\u30c8\u30fc\u30af, \u30bd\u30d5\u30c8\u30a6\u30a7\u30a2\u30c8\u30fc\u30af\u5287\u5834, VOICELOID\n\"VOCALOID-type\": \u30dc\u30ab\u30ed, UTAU, \u30bd\u30d5\u30c8\u30a6\u30a7\u30a2\u30b7\u30f3\u30ac\u30fc, vocaloid\u30aa\u30ea\u30b8\u30ca\u30eb\u66f2, VOCALOID",
-    includeTagsLabel: "Tags to include (separate with spaces)",
+      "Each button internally adds the following tags with an OR condition\n\"VOICEROID / Narration / Theater\": \u30dc\u30a4\u30ed, \u30dc\u30a4\u30b9\u30ed\u30a4\u30c9, \u30bd\u30d5\u30c8\u30d5\u30a7\u30a2\u30c8\u30fc\u30af, \u30bd\u30d5\u30c8\u30a6\u30a7\u30a2\u30c8\u30fc\u30af\u5287\u5834, VOICELOID\n\"VOCALOID / Music\": \u30dc\u30ab\u30ed, UTAU, \u30bd\u30d5\u30c8\u30a6\u30a7\u30a2\u30b7\u30f3\u30ac\u30fc, vocaloid\u30aa\u30ea\u30b8\u30ca\u30eb\u66f2, VOCALOID",
+    includeTagsLabel: "Q2: What tags interest you?",
+    includeTagsNote: "Entering multiple tags separated by spaces returns videos matching all of them (AND)",
     includeTagsPlaceholder: "e.g. Hatsune Miku original song",
-    keywordLabel: "Keyword search (title & description)",
+    keywordLabel: "Q4: A keyword works too?",
+    keywordNote: "Keyword search looks at the title and video description.",
     keywordPlaceholder: "e.g. remix",
-    keywordSuggestNote: "Let the fairy randomly suggest a keyword to narrow down videos",
+    keywordSuggestNote: "You can fetch a random Wikipedia article title",
     keywordSuggestButton: "Suggest a keyword",
+    keywordExpandTitle: "Expand the keyword?",
     keywordExpandNote: "Looks up synonyms and related words on Wikipedia for your keyword and adds them with an OR condition",
     keywordExpandButton: "Expand keyword",
     disclaimerPrefix: "This is an unofficial tool. For inquiries, contact",
-    filterToggleLabel: "Filter settings (views, etc.)",
-    viewsRangeLabel: "Views",
+    filterToggleLabel: "Filter settings (upload date, etc.)",
+    viewsRangeLabel: "Q3: Want to go deeper into the forest?",
     minViewsLabel: "Min. views",
     maxViewsLabel: "Max. views",
     viewsPlaceholder: "No limit",
@@ -229,6 +244,7 @@ const translations = {
     searchButton: "Let's go searching with the fairy!",
     statusNeedTag: "Please enter at least a tag or a keyword.",
     statusSearching: "Searching...",
+    statusSuggesting: "Looking for a word...",
     statusExpanding: "Looking up synonyms and related words...",
     statusExpandFailed: "Couldn't expand that word. Try a different one.",
     statusFailed: "Search failed. Please try again later.",
@@ -277,8 +293,8 @@ const voiceCategoryInfo = document.getElementById("voice-category-info");
 let videoList = [];
 // 「次の動画と出会う」で既に再生した動画のcontentId
 let playedContentIds = new Set();
-// 選択中の音声合成系統（null / "voiroid" / "vocaloid"）
-let selectedVoiceCategory = null;
+// 選択中の音声合成系統（voiroid / vocaloid のどちらか、両方、または空のSet）
+let selectedVoiceCategories = new Set();
 
 // ==== 言語切り替え ====
 function applyLanguage(lang) {
@@ -309,11 +325,43 @@ languageSelect.addEventListener("change", () => {
 
 applyLanguage("ja");
 
-// ==== キーワード提案ボタン ====
-keywordSuggestButton.addEventListener("click", () => {
-  const word = KEYWORD_SUGGESTIONS[Math.floor(Math.random() * KEYWORD_SUGGESTIONS.length)];
-  keywordInput.value = word;
+// ==== キーワード提案ボタン（Wikipediaのランダム記事APIから取得。失敗時は手元のリストにフォールバック） ====
+keywordSuggestButton.addEventListener("click", async () => {
+  keywordSuggestButton.disabled = true;
+  setStatus(translations[currentLang].statusSuggesting);
+
+  try {
+    const word = await fetchRandomWordFromWikipedia();
+    keywordInput.value = word || pickFallbackSuggestion();
+  } catch (error) {
+    console.error(error);
+    keywordInput.value = pickFallbackSuggestion();
+  } finally {
+    setStatus("");
+    keywordSuggestButton.disabled = false;
+  }
 });
+
+function pickFallbackSuggestion() {
+  return KEYWORD_SUGGESTIONS[Math.floor(Math.random() * KEYWORD_SUGGESTIONS.length)];
+}
+
+// Wikipedia の「ランダム記事」APIから記事タイトルを1つ取得する
+async function fetchRandomWordFromWikipedia() {
+  const wikiLang = ["ja", "zh", "ko", "en"].includes(currentLang) ? currentLang : "ja";
+  const apiBase = `https://${wikiLang}.wikipedia.org/w/api.php`;
+  const url = `${apiBase}?action=query&list=random&rnnamespace=0&rnlimit=1&format=json&origin=*`;
+
+  const response = await fetch(url);
+  const data = await response.json();
+  const page = data.query && data.query.random && data.query.random[0];
+
+  if (!page) return null;
+
+  const title = page.title.replace(/[（(].*?[）)]/g, "").trim();
+  // あまりに長いタイトルはキーワードとして扱いにくいので、その場合はフォールバックに任せる
+  return title.length > 0 && title.length <= 15 ? title : null;
+}
 
 // ==== キーワードを広げるボタン（Wikipedia APIで類義語・関連語を取得） ====
 keywordExpandButton.addEventListener("click", () => {
@@ -377,17 +425,21 @@ async function fetchRelatedWordsFromWikipedia(word) {
     .slice(0, 5);
 }
 
-// ==== ボイロ系／ボカロ系トグル ====
-function setVoiceCategory(category) {
-  selectedVoiceCategory = selectedVoiceCategory === category ? null : category;
-  voiroidToggle.classList.toggle("active", selectedVoiceCategory === "voiroid");
-  vocaloidToggle.classList.toggle("active", selectedVoiceCategory === "vocaloid");
-  voiroidToggle.setAttribute("aria-pressed", String(selectedVoiceCategory === "voiroid"));
-  vocaloidToggle.setAttribute("aria-pressed", String(selectedVoiceCategory === "vocaloid"));
+// ==== ボイロ系／ボカロ系トグル（それぞれ独立してON/OFFできる） ====
+function toggleVoiceCategory(category) {
+  if (selectedVoiceCategories.has(category)) {
+    selectedVoiceCategories.delete(category);
+  } else {
+    selectedVoiceCategories.add(category);
+  }
+  voiroidToggle.classList.toggle("active", selectedVoiceCategories.has("voiroid"));
+  vocaloidToggle.classList.toggle("active", selectedVoiceCategories.has("vocaloid"));
+  voiroidToggle.setAttribute("aria-pressed", String(selectedVoiceCategories.has("voiroid")));
+  vocaloidToggle.setAttribute("aria-pressed", String(selectedVoiceCategories.has("vocaloid")));
 }
 
-voiroidToggle.addEventListener("click", () => setVoiceCategory("voiroid"));
-vocaloidToggle.addEventListener("click", () => setVoiceCategory("vocaloid"));
+voiroidToggle.addEventListener("click", () => toggleVoiceCategory("voiroid"));
+vocaloidToggle.addEventListener("click", () => toggleVoiceCategory("vocaloid"));
 
 // ==== 投稿日の指定方法の切り替え ====
 document.querySelectorAll('input[name="date-mode"]').forEach((radio) => {
@@ -468,7 +520,7 @@ function buildDateRange() {
 }
 
 // タグ・再生数・投稿日の条件をまとめた jsonFilter オブジェクトを組み立てる
-function buildJsonFilter({ includeTags, excludeTags, matchMode, minViews, maxViews, dateRange, voiceCategory }) {
+function buildJsonFilter({ includeTags, excludeTags, matchMode, minViews, maxViews, dateRange, voiceCategories }) {
   const filters = [];
 
   const tagEqualNodes = includeTags.map((tag) => ({
@@ -485,16 +537,19 @@ function buildJsonFilter({ includeTags, excludeTags, matchMode, minViews, maxVie
     });
   }
 
-  // ボイロ系／ボカロ系トグルで選ばれたタグ（いずれか含む＝OR）
-  if (voiceCategory && CATEGORY_TAGS[voiceCategory]) {
-    filters.push({
-      type: "or",
-      filters: CATEGORY_TAGS[voiceCategory].map((tag) => ({
-        type: "equal",
-        field: "tagsExact",
-        value: tag,
-      })),
-    });
+  // ボイロ系／ボカロ系トグルで選ばれたタグ（選ばれている系統すべてを、いずれか含む＝OR）
+  if (voiceCategories && voiceCategories.size > 0) {
+    const combinedTags = [...voiceCategories].flatMap((category) => CATEGORY_TAGS[category] || []);
+    if (combinedTags.length > 0) {
+      filters.push({
+        type: "or",
+        filters: [...new Set(combinedTags)].map((tag) => ({
+          type: "equal",
+          field: "tagsExact",
+          value: tag,
+        })),
+      });
+    }
   }
 
   for (const tag of excludeTags) {
@@ -565,7 +620,7 @@ function buildBaseParams() {
     minViews,
     maxViews,
     dateRange,
-    voiceCategory: selectedVoiceCategory,
+    voiceCategories: selectedVoiceCategories,
   });
 
   if (jsonFilter) {
