@@ -1,10 +1,14 @@
 :root {
-  --bg: #fafafa;
-  --text: #1c1c1c;
-  --muted: #666666;
-  --border: #d9d9d9;
-  --accent: #2b4c8c;
+  --bg-top: #eef4e6;
+  --bg-bottom: #cfe0bb;
+  --card-bg: #fbfaf3;
+  --text: #24301f;
+  --muted: #5b6b57;
+  --border: #c9d6bd;
+  --accent: #2f5233;
   --accent-text: #ffffff;
+  --highlight: #c98a3b;
+  --highlight-text: #ffffff;
 }
 
 * {
@@ -13,10 +17,21 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
-  background: var(--bg);
+  min-height: 100vh;
+  font-family: "Sawarabi Gothic", -apple-system, "Hiragino Kaku Gothic ProN",
+    "Yu Gothic", "PingFang SC", "Noto Sans KR", sans-serif;
+  background: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bottom) 100%);
   color: var(--text);
   line-height: 1.6;
+}
+
+button,
+.watch-link {
+  font-family: "Kiwi Maru", "Sawarabi Gothic", sans-serif;
+}
+
+#current-title {
+  font-family: "BIZ UDPGothic", "Sawarabi Gothic", sans-serif;
 }
 
 main {
@@ -25,15 +40,65 @@ main {
   padding: 32px 20px 80px;
 }
 
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.titles {
+  flex: 1;
+  min-width: 240px;
+}
+
 h1 {
-  font-size: 1.6rem;
-  margin-bottom: 4px;
+  font-family: "Hina Mincho", serif;
+  font-size: 1.8rem;
+  margin: 0 0 4px;
+  color: var(--accent);
 }
 
 .lead {
   color: var(--muted);
-  margin-top: 0;
-  margin-bottom: 28px;
+  margin: 0 0 2px;
+  white-space: nowrap;
+}
+
+.lead-sub {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.disclaimer {
+  color: var(--muted);
+  font-size: 0.72rem;
+  margin: 6px 0 0;
+}
+
+.disclaimer a {
+  color: var(--accent);
+}
+
+.lang-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.lang-field select {
+  padding: 4px 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: var(--card-bg);
+  color: var(--text);
 }
 
 .field {
@@ -48,13 +113,77 @@ h1 {
   margin-bottom: 6px;
 }
 
+.label-with-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.label-with-info .field-label {
+  margin-bottom: 0;
+}
+
+.info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--muted);
+  color: var(--muted);
+  font-size: 0.75rem;
+  cursor: help;
+}
+
+.toggle-row {
+  display: flex;
+  gap: 10px;
+}
+
+.toggle-btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  background: var(--card-bg);
+  color: var(--accent);
+  font-size: 0.9rem;
+}
+
+.toggle-btn:hover {
+  background: #eef1e6;
+}
+
+.toggle-btn.active {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
 .field input[type="text"],
-.field input[type="number"] {
+.field input[type="number"],
+.field input[type="date"] {
   width: 100%;
   padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 1rem;
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+.field input[type="number"] {
+  padding-right: 8px;
+}
+
+/* 数値入力のスピンボタンを、常時・大きめに表示する（Chrome/Edge/Safari） */
+.field input[type="number"]::-webkit-inner-spin-button,
+.field input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+  transform: scale(1.8);
+  transform-origin: right center;
+  margin-left: 6px;
+  cursor: pointer;
 }
 
 .field-row {
@@ -66,10 +195,49 @@ h1 {
   flex: 1;
 }
 
+.views-row {
+  align-items: flex-end;
+}
+
+.tilde {
+  color: var(--muted);
+  padding-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.keyword-suggest {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.keyword-suggest .note {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+#keyword-suggest-button {
+  align-self: flex-start;
+  padding: 8px 14px;
+  background: var(--card-bg);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+#keyword-suggest-button:hover {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
 .radio-group {
   display: flex;
   gap: 16px;
   font-size: 0.95rem;
+  flex-wrap: wrap;
 }
 
 .radio-group label {
@@ -79,29 +247,37 @@ h1 {
   color: var(--text);
 }
 
-.stepper {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.stepper input {
-  flex: 1;
-  text-align: center;
-}
-
-.step-btn {
-  padding: 8px 10px;
-  background: #ffffff;
+#filter-panel {
   border: 1px solid var(--border);
-  color: var(--text);
-  border-radius: 6px;
-  font-size: 0.85rem;
-  white-space: nowrap;
+  border-radius: 8px;
+  padding: 4px 14px;
+  margin-bottom: 18px;
+  background: var(--card-bg);
 }
 
-.step-btn:hover {
-  background: #f0f0f0;
+#filter-panel summary {
+  cursor: pointer;
+  padding: 10px 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+  list-style: none;
+  color: var(--accent);
+}
+
+#filter-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+#filter-panel summary::before {
+  content: "▸ ";
+}
+
+#filter-panel[open] summary::before {
+  content: "▾ ";
+}
+
+.filter-body {
+  padding: 4px 0 14px;
 }
 
 button {
@@ -114,9 +290,14 @@ button {
 #search-button {
   width: 100%;
   padding: 12px;
-  background: var(--accent);
-  color: var(--accent-text);
+  background: var(--highlight);
+  color: var(--highlight-text);
   margin-top: 8px;
+  font-weight: 600;
+}
+
+#search-button:hover {
+  filter: brightness(1.05);
 }
 
 #search-button:disabled {
@@ -158,14 +339,41 @@ button {
 
 #player {
   aspect-ratio: 16 / 9;
-  background: #000;
+  background: #10160f;
   margin-bottom: 16px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.result-actions {
+  display: flex;
+  gap: 10px;
 }
 
 #next-button {
-  width: 100%;
+  flex: 2;
   padding: 12px;
-  background: #ffffff;
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.watch-link {
+  flex: 1;
+  padding: 12px;
+  background: var(--card-bg);
   color: var(--accent);
   border: 1px solid var(--accent);
+  border-radius: 6px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 480px) {
+  .lead {
+    white-space: normal;
+  }
 }

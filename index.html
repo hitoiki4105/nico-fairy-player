@@ -3,64 +3,124 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ニコタグ再生</title>
+  <title>妖精さんプレイヤー</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hina+Mincho&family=BIZ+UDPGothic:wght@400;700&family=Kiwi+Maru:wght@400;500&family=Sawarabi+Gothic&display=swap"
+    rel="stylesheet"
+  />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main>
-    <h1>ニコタグ再生</h1>
-    <p class="lead">タグを指定して、ニコニコ動画をランダムに再生します。</p>
+    <div class="top-bar">
+      <div class="titles">
+        <h1 data-i18n="heading">妖精さんプレイヤー</h1>
+        <p class="lead" data-i18n="lead">条件を指定して、ニコニコに投稿された動画とランダムで出会えます</p>
+        <p class="lead-sub" data-i18n="leadSub">タグ検索とキーワード検索、どちらか一方だけでも使えます</p>
+        <p class="disclaimer"><span data-i18n="disclaimerPrefix">非公式ツールです。問い合わせなどはこちらから</span> <a href="https://x.com/hitoiki327882" target="_blank" rel="noopener">https://x.com/hitoiki327882</a></p>
+      </div>
+      <div class="lang-field">
+        <label for="language-select" data-i18n="languageLabel">言語</label>
+        <select id="language-select">
+          <option value="ja">日本語</option>
+          <option value="zh">中文</option>
+          <option value="ko">한국어</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+    </div>
 
     <form id="search-form">
       <div class="field">
-        <label for="include-tags">含めるタグ（カンマ区切りで複数入力可）</label>
-        <input type="text" id="include-tags" placeholder="例: 初音ミク, オリジナル曲" />
-      </div>
-
-      <div class="field">
-        <span class="field-label">含めるタグの条件</span>
-        <div class="radio-group">
-          <label><input type="radio" name="match-mode" value="AND" checked /> すべて含む（AND）</label>
-          <label><input type="radio" name="match-mode" value="OR" /> いずれか含む（OR）</label>
+        <div class="label-with-info">
+          <span class="field-label" data-i18n="voiceCategoryLabel">音声合成の系統</span>
+          <span class="info-icon" id="voice-category-info" tabindex="0">ⓘ</span>
+        </div>
+        <div class="toggle-row">
+          <button type="button" class="toggle-btn" id="voiroid-toggle" data-category="voiroid" data-i18n="voiroidLabel">ボイロ系</button>
+          <button type="button" class="toggle-btn" id="vocaloid-toggle" data-category="vocaloid" data-i18n="vocaloidLabel">ボカロ系</button>
         </div>
       </div>
 
       <div class="field">
-        <label for="exclude-tags">除外するタグ（カンマ区切りで複数入力可）</label>
-        <input type="text" id="exclude-tags" placeholder="例: R-18" />
+        <label for="include-tags" data-i18n="includeTagsLabel">含めるタグ（半角、全角スペースで複数入力可）</label>
+        <input type="text" id="include-tags" data-i18n-placeholder="includeTagsPlaceholder" placeholder="例: 初音ミク オリジナル曲" />
       </div>
 
-      <div class="field field-row">
-        <div>
-          <label for="min-views">再生数（下限）</label>
-          <div class="stepper">
-            <button type="button" class="step-btn" data-target="min-views" data-step="-100">-100</button>
-            <input type="number" id="min-views" min="0" step="100" placeholder="指定なし" />
-            <button type="button" class="step-btn" data-target="min-views" data-step="100">+100</button>
+      <div class="field">
+        <label for="keyword" data-i18n="keywordLabel">キーワード検索（タイトル・詳細欄）</label>
+        <input type="text" id="keyword" data-i18n-placeholder="keywordPlaceholder" placeholder="例: リミックス" />
+        <div class="keyword-suggest">
+          <p class="note" data-i18n="keywordSuggestNote">妖精さんに、動画を絞り込むキーワードをランダムで提案してもらえます</p>
+          <button type="button" id="keyword-suggest-button" data-i18n="keywordSuggestButton">キーワードを提案してもらう</button>
+        </div>
+        <div class="keyword-suggest">
+          <p class="note" data-i18n="keywordExpandNote">入力中の単語から、類義語・関連語をWikipediaで探して「いずれか含む（OR）」に広げます</p>
+          <button type="button" id="keyword-expand-button" data-i18n="keywordExpandButton">キーワードを広げる</button>
+        </div>
+      </div>
+
+      <details id="filter-panel">
+        <summary data-i18n="filterToggleLabel">フィルター設定（再生数の指定等）</summary>
+
+        <div class="filter-body">
+          <div class="field">
+            <span class="field-label" data-i18n="viewsRangeLabel">再生数</span>
+            <div class="field-row views-row">
+              <div>
+                <label for="min-views" data-i18n="minViewsLabel">再生数（下限）</label>
+                <input type="number" id="min-views" min="0" step="100" data-i18n-placeholder="viewsPlaceholder" placeholder="指定なし" />
+              </div>
+              <span class="tilde">〜</span>
+              <div>
+                <label for="max-views" data-i18n="maxViewsLabel">再生数（上限）</label>
+                <input type="number" id="max-views" min="0" step="100" data-i18n-placeholder="viewsPlaceholder" placeholder="指定なし" />
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="field-label" data-i18n="dateRangeLabel">投稿日の範囲</span>
+            <div class="radio-group">
+              <label><input type="radio" name="date-mode" value="range" checked /> <span data-i18n="dateModeRange">期間で指定</span></label>
+              <label><input type="radio" name="date-mode" value="single" /> <span data-i18n="dateModeSingle">特定の1日を指定</span></label>
+            </div>
+
+            <div id="date-range-block" class="field-row" style="margin-top:10px;">
+              <div>
+                <label for="year-from" data-i18n="yearFromLabel">投稿年（から）</label>
+                <input type="number" id="year-from" min="2006" max="2100" data-i18n-placeholder="yearPlaceholder" placeholder="指定なし" />
+              </div>
+              <div>
+                <label for="year-to" data-i18n="yearToLabel">投稿年（まで）</label>
+                <input type="number" id="year-to" min="2006" max="2100" data-i18n-placeholder="yearPlaceholder" placeholder="指定なし" />
+              </div>
+            </div>
+
+            <div id="date-single-block" style="margin-top:10px;" hidden>
+              <label for="specific-date" data-i18n="specificDateLabel">投稿日</label>
+              <input type="date" id="specific-date" />
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="field-label" data-i18n="matchModeLabel">含めるタグの条件</span>
+            <div class="radio-group">
+              <label><input type="radio" name="match-mode" value="AND" checked /> <span data-i18n="matchModeAnd">すべて含む（AND）</span></label>
+              <label><input type="radio" name="match-mode" value="OR" /> <span data-i18n="matchModeOr">いずれか含む（OR）</span></label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="exclude-tags" data-i18n="excludeTagsLabel">除外するタグ（半角、全角スペースで複数入力可）</label>
+            <input type="text" id="exclude-tags" data-i18n-placeholder="excludeTagsPlaceholder" placeholder="例: R-18" />
           </div>
         </div>
-        <div>
-          <label for="max-views">再生数（上限）</label>
-          <div class="stepper">
-            <button type="button" class="step-btn" data-target="max-views" data-step="-100">-100</button>
-            <input type="number" id="max-views" min="0" step="100" placeholder="指定なし" />
-            <button type="button" class="step-btn" data-target="max-views" data-step="100">+100</button>
-          </div>
-        </div>
-      </div>
+      </details>
 
-      <div class="field field-row">
-        <div>
-          <label for="year-from">投稿年（から）</label>
-          <input type="number" id="year-from" min="2006" max="2100" placeholder="指定なし" />
-        </div>
-        <div>
-          <label for="year-to">投稿年（まで）</label>
-          <input type="number" id="year-to" min="2006" max="2100" placeholder="指定なし" />
-        </div>
-      </div>
-
-      <button type="submit" id="search-button">検索する</button>
+      <button type="submit" id="search-button" data-i18n="searchButton">妖精さんと探しに行こう！</button>
     </form>
 
     <section id="status" aria-live="polite"></section>
@@ -70,7 +130,10 @@
       <p id="current-title"></p>
       <p id="current-uploader"></p>
       <div id="player"></div>
-      <button type="button" id="next-button">次のランダム動画</button>
+      <div class="result-actions">
+        <a id="watch-on-nico" class="watch-link" href="#" target="_blank" rel="noopener" data-i18n="watchOnNicoButton">ニコニコで見る</a>
+        <button type="button" id="next-button" data-i18n="nextButton">次の動画と出会う</button>
+      </div>
     </section>
   </main>
 
