@@ -15,9 +15,9 @@
 <body>
   <main>
     <div class="top-bar">
-      <h1 data-i18n="heading">動画の森、妖精さんプレイヤー</h1>
-      <p class="lead" data-i18n="lead">条件を指定して、ニコニコに投稿された動画とランダムで出会えます</p>
-      <p class="disclaimer"><span data-i18n="disclaimerPrefix">非公式ツールです。問い合わせなどはこちらから</span> <a href="https://x.com/hitoiki327882" target="_blank" rel="noopener">https://x.com/hitoiki327882</a></p>
+      <h1 id="page-title" data-i18n="heading">動画の森、妖精さんプレイヤー</h1>
+      <p class="lead" data-i18n="subtitle">ニコニコ動画ランダム再生ツール（非公式）</p>
+      <p class="disclaimer"><span data-i18n="disclaimerPrefix">問い合わせなどはこちらから</span> <a href="https://x.com/hitoiki327882" target="_blank" rel="noopener">https://x.com/hitoiki327882</a></p>
     </div>
 
     <div class="lang-field">
@@ -34,7 +34,7 @@
       <div class="field forest-box">
         <label for="include-tags" class="section-question" style="font-family: 'Hina Mincho', serif; font-size: 1.15rem;font-weight: 700; color: var(--accent);" data-i18n="includeTagsLabel">Q1：気になるタグは何？</label>
         <input type="text" id="include-tags" data-i18n-placeholder="includeTagsPlaceholder" placeholder="例: 初音ミク オリジナル曲" />
-        <p class="lead-sub" data-i18n="leadSub">タグ検索とキーワード検索、どちらか一方だけでも使えます。</p>
+        <p class="disclaimer" data-i18n="leadSub">タグ検索とキーワード検索、どちらか一方だけでも使えます。</p>
         <button type="button" class="note-toggle" id="include-tags-note-toggle" data-i18n="includeTagsNoteToggle">説明をきく</button>
         <p class="disclaimer" id="include-tags-note" data-i18n="includeTagsNote" hidden>・半角、全角スペースを加えて複数入力した場合、すべて含む（AND）結果がでます。
 ニコニコ動画でのタグ検索結果とヒット件数が異なる場合があります。原因は不明です。</p>

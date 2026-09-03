@@ -33,33 +33,34 @@ const translations = {
   ja: {
     pageTitle: "動画の森、妖精さんプレイヤー",
     heading: "動画の森、妖精さんプレイヤー",
+    subtitle: "ニコニコ動画ランダム再生ツール（非公式）",
     lead: "条件を指定して、ニコニコに投稿された動画とランダムで出会えます",
-    leadSub: "タグ検索とキーワード検索、どちらか一方だけでも使えます。",
+    leadSub: "タグ検索とキーワード検索、どちらか一方だけでも使えるよ。",
     languageLabel: "言語",
     voiceCategoryLabel: "Q4：どんな動画を探してるの？",
     voiroidLabel: "ボイロ・解説・劇場系",
     vocaloidLabel: "ボカロ・音楽系",
     voiceCategoryNoteToggle: "説明をきく",
     voiceCategoryNote:
-      "・この選択によって表示される動画が限定される可能性があります。投稿祭などのタグだけで検索する場合、どちらも選択しない方がよい結果になるかもしれません。\n・それぞれのボタンで以下のタグが内部的にいずれか含む（OR）で付与されます。\n「ボイロ・解説・劇場系」：ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n「ボカロ・音楽系」：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID",
+      "・この選択で、表示される動画が限定されるよ。投稿祭などのタグだけで検索する場合、どちらも選択しない方がよい結果になるかもね。\n・それぞれのボタンで以下のタグが内部的にいずれか含む（OR）で付与されるよ。\n「ボイロ・解説・劇場系」：ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n「ボカロ・音楽系」：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID",
     includeTagsLabel: "Q1：気になるタグは何？",
     includeTagsNoteToggle: "説明をきく",
     includeTagsNote:
-      "・半角、全角スペースを加えて複数入力した場合、すべて含む（AND）結果がでます。\nニコニコ動画でのタグ検索結果とヒット件数が異なる場合があります。原因は不明です。",
+      "・半角、全角スペースを加えて複数入力した場合、すべて含む（AND）結果がでるよ。\n・ニコニコ動画でのタグ検索結果とヒット件数が違うことがあるよ。原因は不明だよ。",
     includeTagsPlaceholder: "例: 初音ミク オリジナル曲",
     keywordLabel: "Q3：キーワードでもいいよ？",
-    keywordNote: "キーワード検索はタイトル・動画詳細欄を参照します。",
+    keywordNote: "キーワード検索は動画のタイトル・動画詳細欄を参照するよ。",
     keywordPlayToggle: "キーワードであそんじゃう？",
     keywordPlaceholder: "例: リミックス",
-    keywordSuggestNote: "Wikipediaの記事タイトルをランダムで取得することができます",
+    keywordSuggestNote: "Wikipediaの記事タイトルをランダムで取得できるよ。",
     keywordSuggestButton: "キーワードを提案してもらう",
     keywordExpandTitle: "キーワードを広げる？",
-    keywordExpandNote: "入力中の単語から、類義語・関連語をWikipediaで探して「いずれか含む（OR）」に広げます",
+    keywordExpandNote: "入力中の単語から、類義語・関連語をWikipediaで探して「いずれか含む（OR）」に広げられるよ。",
     keywordExpandButton: "キーワードを広げる",
-    disclaimerPrefix: "非公式ツールです。問い合わせなどはこちらから",
+    disclaimerPrefix: "問い合わせなどはこちらから",
     filterToggleLabel: "フィルター設定（投稿日など）",
     viewsRangeLabel: "Q2：森の奥まで行ってみる？",
-    viewsBoxNote: "森の奥には、まだたくさんの動画があるよ。",
+    viewsBoxNote: "森の奥にはたくさんの動画があるよ。",
     minViewsLabel: "再生数（下限）",
     maxViewsLabel: "再生数（上限）",
     viewsPlaceholder: "指定なし",
@@ -95,6 +96,7 @@ const translations = {
   zh: {
     pageTitle: "视频森林，妖精播放器",
     heading: "视频森林，妖精播放器",
+    subtitle: "niconico随机播放工具（非官方）",
     lead: "设定条件后，随机与投稿到niconico的视频相遇",
     leadSub: "标签搜索和关键词搜索，只使用其中一种也可以。",
     languageLabel: "语言",
@@ -157,6 +159,7 @@ const translations = {
   ko: {
     pageTitle: "영상의 숲, 요정 플레이어",
     heading: "영상의 숲, 요정 플레이어",
+    subtitle: "니코니코 동영상 랜덤 재생 도구（비공식）",
     lead: "조건을 지정하면 니코니코에 올라온 동영상과 무작위로 만날 수 있어요",
     leadSub: "태그 검색과 키워드 검색, 둘 중 하나만 사용해도 됩니다.",
     languageLabel: "언어",
@@ -219,6 +222,7 @@ const translations = {
   en: {
     pageTitle: "Forest of Videos, Fairy Player",
     heading: "Forest of Videos, Fairy Player",
+    subtitle: "An unofficial random-play tool for Niconico videos",
     lead: "Set your conditions and randomly meet videos posted on Niconico",
     leadSub: "You can use tag search and keyword search independently, or just one of them.",
     languageLabel: "Language",
@@ -340,7 +344,36 @@ function applyLanguage(lang) {
       el.placeholder = translations[lang][key];
     }
   });
+
+  fitTitleToWidth();
 }
+
+// タイトルの文字サイズを、セクション幅いっぱいに収まるように自動調整する
+const pageTitleEl = document.getElementById("page-title");
+
+function fitTitleToWidth() {
+  if (!pageTitleEl) return;
+  const container = pageTitleEl.parentElement;
+  if (!container) return;
+
+  // 一旦CSSのデフォルトサイズに戻してから、実際の幅を測り直す
+  pageTitleEl.style.fontSize = "";
+
+  const availableWidth = container.clientWidth;
+  const naturalWidth = pageTitleEl.scrollWidth;
+  if (!availableWidth || !naturalWidth) return;
+
+  const baseSize = parseFloat(getComputedStyle(pageTitleEl).fontSize);
+  const scale = availableWidth / naturalWidth;
+  pageTitleEl.style.fontSize = `${baseSize * scale}px`;
+}
+
+// Webフォント（Hina Mincho）の読み込み完了後に測り直す（読み込み前だと幅がずれるため）
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(fitTitleToWidth);
+}
+
+window.addEventListener("resize", fitTitleToWidth);
 
 languageSelect.addEventListener("change", () => {
   applyLanguage(languageSelect.value);
@@ -762,8 +795,8 @@ async function playRandomVideo({ animate = false } = {}) {
   const video = pickNextVideo();
 
   if (animate) {
-    // 前の動画を左にスライドアウトさせてから入れ替える
-    playerEl.classList.add("slide-out");
+    // 前の動画をその場でフェードアウトさせてから入れ替える
+    playerEl.classList.add("fade-out");
     await new Promise((resolve) => setTimeout(resolve, 350));
   }
 
@@ -777,12 +810,12 @@ async function playRandomVideo({ animate = false } = {}) {
   embedScript.src = `https://embed.nicovideo.jp/watch/${video.contentId}/script?w=640&h=360`;
   playerEl.appendChild(embedScript);
 
-  // 新しい動画を右側の待機位置に置いてから、スライドインさせる
-  playerEl.classList.remove("slide-out");
-  playerEl.classList.add("slide-in");
+  // 新しい動画をフェードインさせる
+  playerEl.classList.remove("fade-out");
+  playerEl.classList.add("fade-in");
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      playerEl.classList.remove("slide-in");
+      playerEl.classList.remove("fade-in");
     });
   });
 
