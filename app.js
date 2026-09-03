@@ -36,6 +36,8 @@ const translations = {
     subtitle: "ニコニコ動画ランダム再生ツール（非公式）",
     lead: "条件を指定して、ニコニコに投稿された動画とランダムで出会えます",
     leadSub: "タグ検索とキーワード検索、どちらか一方だけでも使えるよ。",
+    tagMapPrefix: "あ、",
+    tagMapSuffix: "ってツール、知ってる？",
     languageLabel: "言語",
     voiceCategoryLabel: "Q4：どんな動画を探してるの？",
     voiroidLabel: "ボイロ・解説・劇場系",
@@ -93,7 +95,8 @@ const translations = {
     nextButton: "次の動画と出会う",
     watchOnNicoButton: "ニコニコで見る",
     historyTitle: "出会った動画の記録",
-    historyMoreButton: "記録をもっと見る",
+    historyNote: "・クリックすると、ニコニコ動画に飛びます",
+    historyMoreButton: "足跡を辿る",
   },
   zh: {
     pageTitle: "视频森林，妖精播放器",
@@ -101,6 +104,8 @@ const translations = {
     subtitle: "niconico随机播放工具（非官方）",
     lead: "设定条件后，随机与投稿到niconico的视频相遇",
     leadSub: "标签搜索和关键词搜索，只使用其中一种也可以。",
+    tagMapPrefix: "对了，你知道",
+    tagMapSuffix: "这个工具吗？",
     languageLabel: "语言",
     voiceCategoryLabel: "Q4：想找什么样的视频？",
     voiroidLabel: "VOICEROID・解说・剧场系",
@@ -158,7 +163,8 @@ const translations = {
     nextButton: "邂逅下一个视频",
     watchOnNicoButton: "在niconico观看",
     historyTitle: "相遇过的视频记录",
-    historyMoreButton: "查看更多记录",
+    historyNote: "・点击即可跳转到niconico动画",
+    historyMoreButton: "追寻足迹",
   },
   ko: {
     pageTitle: "영상의 숲, 요정 플레이어",
@@ -166,6 +172,8 @@ const translations = {
     subtitle: "니코니코 동영상 랜덤 재생 도구（비공식）",
     lead: "조건을 지정하면 니코니코에 올라온 동영상과 무작위로 만날 수 있어요",
     leadSub: "태그 검색과 키워드 검색, 둘 중 하나만 사용해도 됩니다.",
+    tagMapPrefix: "아, ",
+    tagMapSuffix: "이라는 도구 알아?",
     languageLabel: "언어",
     voiceCategoryLabel: "Q4：어떤 영상을 찾고 있어?",
     voiroidLabel: "보이로이드・해설・극장 계열",
@@ -231,6 +239,8 @@ const translations = {
     subtitle: "An unofficial random-play tool for Niconico videos",
     lead: "Set your conditions and randomly meet videos posted on Niconico",
     leadSub: "You can use tag search and keyword search independently, or just one of them.",
+    tagMapPrefix: "Oh, do you know about ",
+    tagMapSuffix: ", a tool for exploring tags?",
     languageLabel: "Language",
     voiceCategoryLabel: "Q4: What kind of video are you looking for?",
     voiroidLabel: "VOICEROID / Narration / Theater",
@@ -314,6 +324,9 @@ const resultCountEl = document.getElementById("result-count");
 const currentTitleEl = document.getElementById("current-title");
 const currentUploaderEl = document.getElementById("current-uploader");
 const playerEl = document.getElementById("player");
+const playerEmbedEl = document.getElementById("player-embed");
+const playerThumbEl = document.getElementById("player-thumb");
+const playerFairyEl = document.getElementById("player-fairy");
 const nextButton = document.getElementById("next-button");
 const watchOnNicoLink = document.getElementById("watch-on-nico");
 const languageSelect = document.getElementById("language-select");
@@ -325,7 +338,6 @@ const includeTagsNoteToggle = document.getElementById("include-tags-note-toggle"
 const includeTagsNoteEl = document.getElementById("include-tags-note");
 const keywordPlayToggle = document.getElementById("keyword-play-toggle");
 const keywordPlayEl = document.getElementById("keyword-play");
-const heroImageEl = document.getElementById("hero-image");
 const historySection = document.getElementById("history");
 const historyListEl = document.getElementById("history-list");
 const historyMoreButton = document.getElementById("history-more-button");
@@ -338,6 +350,8 @@ let playedContentIds = new Set();
 let selectedVoiceCategories = new Set();
 // 出会った動画の記録（新しいものが先頭）
 let watchHistory = [];
+// 現在プレイヤーに表示している動画のサムネイルURL（次の動画へのフェード演出で使う）
+let currentThumbnailUrl = "";
 const HISTORY_VISIBLE_COUNT = 5;
 
 // ==== 言語切り替え ====
@@ -719,21 +733,6 @@ async function fetchSearch(params) {
   return response.json();
 }
 
-// 検索を始めたら、イラストをフェードアウトさせたあと妖精（img_fairy.png）を回転させながら表示する
-async function playFairyReveal() {
-  if (!heroImageEl) return;
-
-  heroImageEl.classList.add("hero-fade-out");
-  await new Promise((resolve) => setTimeout(resolve, 300));
-
-  heroImageEl.src = "img_fairy.png";
-  heroImageEl.classList.remove("hero-fade-out");
-  heroImageEl.classList.add("hero-spin-in");
-  setTimeout(() => {
-    heroImageEl.classList.remove("hero-spin-in");
-  }, 500);
-}
-
 async function runSearch() {
   const baseParams = buildBaseParams();
 
@@ -745,7 +744,6 @@ async function runSearch() {
   setStatus(translations[currentLang].statusSearching);
   searchButton.disabled = true;
   resultSection.hidden = true;
-  playFairyReveal();
 
   try {
     // 1回目：ヒット件数だけを把握するための軽いリクエスト
@@ -826,29 +824,41 @@ async function playRandomVideo({ animate = false } = {}) {
   const video = pickNextVideo();
 
   if (animate) {
-    // 前の動画をその場でフェードアウトさせてから入れ替える
-    playerEl.classList.add("fade-out");
+    // 1. 前の動画のサムネを表示した状態から、0.5秒でフェードアウト
+    playerThumbEl.style.transition = "none";
+    playerThumbEl.src = currentThumbnailUrl || "";
+    playerThumbEl.classList.remove("thumb-hidden");
+    void playerThumbEl.offsetWidth; // 強制的に反映させてから
+    playerThumbEl.style.transition = "";
+    playerThumbEl.classList.add("thumb-hidden");
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    // 2. 妖精をY軸で0.35秒回転させる
+    playerFairyEl.classList.add("spin-active");
     await new Promise((resolve) => setTimeout(resolve, 350));
+    playerFairyEl.classList.remove("spin-active");
   }
 
   currentTitleEl.textContent = video.title;
   currentUploaderEl.textContent = translations[currentLang].uploaderLoading;
   watchOnNicoLink.href = `https://www.nicovideo.jp/watch/${video.contentId}`;
+  currentThumbnailUrl = video.thumbnailUrl || "";
 
-  // 再生エリアを空にしてから、ニコニコの公式埋め込みスクリプトを差し込む
-  playerEl.innerHTML = "";
+  // 埋め込みプレイヤーを差し替える（サムネの裏側で読み込む）
+  playerEmbedEl.innerHTML = "";
   const embedScript = document.createElement("script");
   embedScript.src = `https://embed.nicovideo.jp/watch/${video.contentId}/script?w=640&h=360`;
-  playerEl.appendChild(embedScript);
+  playerEmbedEl.appendChild(embedScript);
 
-  // 新しい動画をフェードインさせる
-  playerEl.classList.remove("fade-out");
-  playerEl.classList.add("fade-in");
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      playerEl.classList.remove("fade-in");
-    });
-  });
+  if (animate) {
+    // 3. 次の動画のサムネを0.5秒でフェードイン
+    playerThumbEl.style.transition = "none";
+    playerThumbEl.src = currentThumbnailUrl;
+    void playerThumbEl.offsetWidth;
+    playerThumbEl.style.transition = "";
+    playerThumbEl.classList.remove("thumb-hidden");
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
 
   const uploaderName = await fetchUploaderName(video.contentId);
   currentUploaderEl.textContent = uploaderName
@@ -869,7 +879,7 @@ function addToHistory(entry) {
   renderHistory();
 }
 
-// 記録一覧を描画する（最近5件はそのまま表示、それ以降は「もっと見る」で表示）
+// 記録一覧を描画する（最近5件はそのまま表示、それ以降は「足跡を辿る」で開閉表示）
 function renderHistory() {
   if (watchHistory.length === 0) return;
 
@@ -882,6 +892,10 @@ function renderHistory() {
     if (index >= HISTORY_VISIBLE_COUNT) {
       li.classList.add("hidden-extra");
     }
+    li.title = translations[currentLang].historyNote;
+    li.addEventListener("click", () => {
+      window.open(`https://www.nicovideo.jp/watch/${entry.contentId}`, "_blank", "noopener");
+    });
 
     const img = document.createElement("img");
     img.className = "history-thumb";
@@ -909,13 +923,18 @@ function renderHistory() {
   });
 
   historyMoreButton.hidden = watchHistory.length <= HISTORY_VISIBLE_COUNT;
+  isHistoryExpanded = false;
 }
 
+let isHistoryExpanded = false;
+
 historyMoreButton.addEventListener("click", () => {
-  document.querySelectorAll("#history-list .hidden-extra").forEach((el) => {
-    el.classList.remove("hidden-extra");
+  isHistoryExpanded = !isHistoryExpanded;
+  document.querySelectorAll("#history-list .history-item").forEach((el, index) => {
+    if (index >= HISTORY_VISIBLE_COUNT) {
+      el.classList.toggle("hidden-extra", !isHistoryExpanded);
+    }
   });
-  historyMoreButton.hidden = true;
 });
 
 // 動画の詳細情報API（getthumbinfo）から投稿者名（またはチャンネル名）を取り出す

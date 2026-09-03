@@ -389,18 +389,57 @@ button {
 }
 
 #player {
+  position: relative;
   aspect-ratio: 16 / 9;
   background: #10160f;
   margin-bottom: 16px;
   border-radius: 6px;
   overflow: hidden;
-  opacity: 1;
-  transition: opacity 0.35s ease;
+  perspective: 600px;
 }
 
-#player.fade-out,
-#player.fade-in {
+.player-thumb {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.player-thumb.thumb-hidden {
   opacity: 0;
+}
+
+#player-embed {
+  width: 100%;
+  height: 100%;
+}
+
+.player-fairy {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28%;
+  max-width: 100px;
+  transform: translate(-50%, -50%) rotateY(0deg);
+  opacity: 0;
+  transition: opacity 0.1s ease;
+}
+
+.player-fairy.spin-active {
+  opacity: 1;
+  animation: playerFairySpin 0.35s linear;
+}
+
+@keyframes playerFairySpin {
+  from {
+    transform: translate(-50%, -50%) rotateY(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotateY(360deg);
+  }
 }
 
 .hero-image-wrap {
@@ -413,27 +452,18 @@ button {
   height: auto;
   border-radius: 14px;
   box-shadow: 0 4px 10px rgba(47, 82, 51, 0.25);
-  opacity: 1;
-  transition: opacity 0.3s ease;
 }
 
-.hero-image.hero-fade-out {
-  opacity: 0;
+.title-image-wrap {
+  margin: 0 0 22px;
 }
 
-.hero-image.hero-spin-in {
-  animation: heroSpinIn 0.5s ease;
-}
-
-@keyframes heroSpinIn {
-  from {
-    opacity: 0;
-    transform: rotate(-180deg) scale(0.6);
-  }
-  to {
-    opacity: 1;
-    transform: rotate(0deg) scale(1);
-  }
+.title-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  box-shadow: 0 4px 10px rgba(47, 82, 51, 0.25);
 }
 
 .result-actions {
@@ -492,6 +522,7 @@ button {
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 10px;
+  cursor: pointer;
   padding: 8px 10px;
 }
 

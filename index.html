@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>動画の森、妖精さんプレイヤー</title>
+  <title>妖精さんプレイヤー</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -15,7 +15,7 @@
 <body>
   <main>
     <div class="top-bar">
-      <h1 id="page-title" data-i18n="heading">動画の森、妖精さんプレイヤー</h1>
+      <h1 id="page-title" data-i18n="heading">妖精さんプレイヤー</h1>
       <p class="lead" data-i18n="subtitle">ニコニコ動画ランダム再生ツール（非公式）</p>
       <p class="disclaimer"><span data-i18n="disclaimerPrefix">問い合わせなどはこちらから</span> <a href="https://x.com/hitoiki327882" target="_blank" rel="noopener">https://x.com/hitoiki327882</a></p>
     </div>
@@ -30,11 +30,16 @@
       </select>
     </div>
 
+    <div class="title-image-wrap">
+      <img src="img_title.jpg" alt="" class="title-image" />
+    </div>
+
     <form id="search-form">
       <div class="field forest-box">
         <label for="include-tags" class="section-question" style="font-family: 'Hina Mincho', serif; font-size: 1.15rem;font-weight: 700; color: var(--accent);" data-i18n="includeTagsLabel">Q1：気になるタグは何？</label>
         <input type="text" id="include-tags" data-i18n-placeholder="includeTagsPlaceholder" placeholder="例: 初音ミク オリジナル曲" />
         <p class="disclaimer" data-i18n="leadSub">タグ検索とキーワード検索、どちらか一方だけでも使えます。</p>
+        <p class="disclaimer"><span data-i18n="tagMapPrefix">あ、</span><a href="https://nico-tag-map.hitoiki4105.workers.dev/" target="_blank" rel="noopener">タグ探索マップ</a><span data-i18n="tagMapSuffix">ってツール、知ってる？</span></p>
         <button type="button" class="note-toggle" id="include-tags-note-toggle" data-i18n="includeTagsNoteToggle">説明をきく</button>
         <p class="disclaimer" id="include-tags-note" data-i18n="includeTagsNote" hidden>・半角、全角スペースを加えて複数入力した場合、すべて含む（AND）結果がでます。
 ニコニコ動画でのタグ検索結果とヒット件数が異なる場合があります。原因は不明です。</p>
@@ -143,7 +148,11 @@
       <p id="result-count"></p>
       <p id="current-title"></p>
       <p id="current-uploader"></p>
-      <div id="player"></div>
+      <div id="player">
+        <img id="player-thumb" class="player-thumb thumb-hidden" alt="" />
+        <img id="player-fairy" class="player-fairy" src="img_fairy.png" alt="" />
+        <div id="player-embed"></div>
+      </div>
       <div class="result-actions">
         <a id="watch-on-nico" class="watch-link" href="#" target="_blank" rel="noopener" data-i18n="watchOnNicoButton">ニコニコで見る</a>
         <button type="button" id="next-button" data-i18n="nextButton">次の動画と出会う</button>
@@ -152,8 +161,9 @@
 
     <section id="history" hidden>
       <h2 data-i18n="historyTitle">出会った動画の記録</h2>
+      <p class="disclaimer" data-i18n="historyNote">・クリックすると、ニコニコ動画に飛びます</p>
       <ul id="history-list"></ul>
-      <button type="button" id="history-more-button" class="pill-button" data-i18n="historyMoreButton" hidden>記録をもっと見る</button>
+      <button type="button" id="history-more-button" class="pill-button" data-i18n="historyMoreButton" hidden>足跡を辿る</button>
     </section>
   </main>
 
