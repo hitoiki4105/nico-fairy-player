@@ -15,7 +15,7 @@
 <body>
   <main>
     <div class="top-bar">
-      <h1 id="page-title" data-i18n="heading">妖精さんプレイヤー</h1>
+      <h1 id="page-title" data-i18n="heading" style="font-size: 24px;">妖精さんプレイヤー</h1>
       <p class="lead" data-i18n="subtitle">ニコニコ動画ランダム再生ツール（非公式）</p>
       <p class="disclaimer"><span data-i18n="disclaimerPrefix">問い合わせなどはこちらから</span> <a href="https://x.com/hitoiki327882" target="_blank" rel="noopener">https://x.com/hitoiki327882</a></p>
     </div>
@@ -35,7 +35,7 @@
     </div>
 
     <form id="search-form">
-      <div class="field forest-box">
+      <div class="field forest-box" id="q1-section">
         <label for="include-tags" class="section-question" style="font-family: 'Hina Mincho', serif; font-size: 1.15rem;font-weight: 700; color: var(--accent);" data-i18n="includeTagsLabel">Q1：気になるタグは何？</label>
         <input type="text" id="include-tags" data-i18n-placeholder="includeTagsPlaceholder" placeholder="例: 初音ミク オリジナル曲" />
         <p class="disclaimer" data-i18n="leadSub">タグ検索とキーワード検索、どちらか一方だけでも使えます。</p>
@@ -165,6 +165,8 @@
       <ul id="history-list"></ul>
       <button type="button" id="history-more-button" class="pill-button" data-i18n="historyMoreButton" hidden>足跡を辿る</button>
     </section>
+
+    <button type="button" id="scroll-to-q1-button" data-i18n="scrollToQ1Button">🏷️ Q1へ</button>
   </main>
 
   <script src="app.js"></script>

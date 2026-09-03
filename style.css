@@ -430,7 +430,7 @@ button {
 
 .player-fairy.spin-active {
   opacity: 1;
-  animation: playerFairySpin 0.35s linear;
+  animation: playerFairySpin 0.8s linear;
 }
 
 @keyframes playerFairySpin {
@@ -439,6 +439,68 @@ button {
   }
   to {
     transform: translate(-50%, -50%) rotateY(360deg);
+  }
+}
+
+.player-fairy.wave-rtl {
+  opacity: 1;
+  animation: playerFairyWaveRTL 0.8s ease-in-out;
+}
+
+@keyframes playerFairyWaveRTL {
+  0% {
+    transform: translate(150%, -50%) translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  25% {
+    transform: translate(75%, -50%) translateY(-16px);
+  }
+  50% {
+    transform: translate(0%, -50%) translateY(12px);
+  }
+  75% {
+    transform: translate(-75%, -50%) translateY(-16px);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-150%, -50%) translateY(0);
+    opacity: 0;
+  }
+}
+
+.player-fairy.wave-ltr {
+  opacity: 1;
+  animation: playerFairyWaveLTR 0.8s ease-in-out;
+}
+
+@keyframes playerFairyWaveLTR {
+  0% {
+    transform: translate(-150%, -50%) translateY(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  25% {
+    transform: translate(-75%, -50%) translateY(-16px);
+  }
+  50% {
+    transform: translate(0%, -50%) translateY(12px);
+  }
+  75% {
+    transform: translate(75%, -50%) translateY(-16px);
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(150%, -50%) translateY(0);
+    opacity: 0;
   }
 }
 
@@ -560,6 +622,24 @@ button {
 
 #history-more-button {
   margin-top: 14px;
+}
+
+#scroll-to-q1-button {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 200;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-text);
+  font-family: "Kiwi Maru", "Sawarabi Gothic", sans-serif;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 10px rgba(47, 82, 51, 0.35);
+}
+
+#scroll-to-q1-button:hover {
+  filter: brightness(1.08);
 }
 
 @media (max-width: 480px) {

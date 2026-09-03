@@ -88,7 +88,8 @@ const translations = {
     statusNoResults: "条件に一致する動画が見つかりませんでした。タグや条件を変えてお試しください。",
     statusNetworkError: "通信エラーが発生しました。時間をおいて再度お試しください。",
     statusLoopedRound: "すべて再生したので、最初からもう一周します。",
-    resultCountSuffix: "件ヒットしました",
+    resultCountSuffix: "の動画が見つかったよ",
+    scrollToQ1Button: "🏷️ Q1へ",
     uploaderLoading: "投稿者を取得中...",
     uploaderPrefix: "投稿者: ",
     uploaderUnknown: "投稿者: 取得できませんでした",
@@ -157,6 +158,7 @@ const translations = {
     statusNetworkError: "发生通信错误，请稍后重试。",
     statusLoopedRound: "已经全部播放过了，将重新从头开始循环。",
     resultCountSuffix: "个结果",
+    scrollToQ1Button: "🏷️ 前往Q1",
     uploaderLoading: "正在获取投稿者...",
     uploaderPrefix: "投稿者：",
     uploaderUnknown: "投稿者：获取失败",
@@ -225,6 +227,7 @@ const translations = {
     statusNetworkError: "통신 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
     statusLoopedRound: "모두 재생했으므로 처음부터 다시 순환합니다.",
     resultCountSuffix: "건 검색됨",
+    scrollToQ1Button: "🏷️ Q1로",
     uploaderLoading: "업로더 정보를 가져오는 중...",
     uploaderPrefix: "업로더: ",
     uploaderUnknown: "업로더: 가져오지 못했습니다",
@@ -292,6 +295,7 @@ const translations = {
     statusNetworkError: "A network error occurred. Please try again later.",
     statusLoopedRound: "You've seen them all - starting over from the top.",
     resultCountSuffix: " results",
+    scrollToQ1Button: "🏷️ To Q1",
     uploaderLoading: "Loading uploader...",
     uploaderPrefix: "Uploader: ",
     uploaderUnknown: "Uploader: unavailable",
@@ -341,6 +345,8 @@ const keywordPlayEl = document.getElementById("keyword-play");
 const historySection = document.getElementById("history");
 const historyListEl = document.getElementById("history-list");
 const historyMoreButton = document.getElementById("history-more-button");
+const scrollToQ1Button = document.getElementById("scroll-to-q1-button");
+const q1Section = document.getElementById("q1-section");
 
 // 検索でヒットした動画一覧（ランダムに取得した最大100件）
 let videoList = [];
@@ -374,35 +380,8 @@ function applyLanguage(lang) {
     }
   });
 
-  fitTitleToWidth();
-}
-
-// タイトルの文字サイズを、セクション幅いっぱいに収まるように自動調整する
-const pageTitleEl = document.getElementById("page-title");
-
-function fitTitleToWidth() {
-  if (!pageTitleEl) return;
-  const container = pageTitleEl.parentElement;
-  if (!container) return;
-
-  // 一旦CSSのデフォルトサイズに戻してから、実際の幅を測り直す
-  pageTitleEl.style.fontSize = "";
-
-  const availableWidth = container.clientWidth;
-  const naturalWidth = pageTitleEl.scrollWidth;
-  if (!availableWidth || !naturalWidth) return;
-
-  const baseSize = parseFloat(getComputedStyle(pageTitleEl).fontSize);
-  const scale = availableWidth / naturalWidth;
-  pageTitleEl.style.fontSize = `${baseSize * scale}px`;
-}
-
-// Webフォント（Hina Mincho）の読み込み完了後に測り直す（読み込み前だと幅がずれるため）
-if (document.fonts && document.fonts.ready) {
-  document.fonts.ready.then(fitTitleToWidth);
-}
-
-window.addEventListener("resize", fitTitleToWidth);
+// タイトルは固定サイズ（style="font-size: 24px;"）で表示するため、
+// 幅いっぱいに自動拡大する機能は無効化しています（以前は fitTitleToWidth() で自動調整していました）
 
 languageSelect.addEventListener("change", () => {
   applyLanguage(languageSelect.value);
@@ -421,6 +400,11 @@ includeTagsNoteToggle.addEventListener("click", () => {
 
 keywordPlayToggle.addEventListener("click", () => {
   keywordPlayEl.hidden = !keywordPlayEl.hidden;
+});
+
+// ==== 画面右下の固定ボタン：Q1セクションへスクロール ====
+scrollToQ1Button.addEventListener("click", () => {
+  q1Section.scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
 // ==== キーワード提案ボタン（Wikipediaのランダム記事APIから取得。失敗時は手元のリストにフォールバック） ====
@@ -791,6 +775,7 @@ async function runSearch() {
     setStatus("");
     resultCountEl.textContent = `${totalHitCount.toLocaleString()}${translations[currentLang].resultCountSuffix}`;
     resultSection.hidden = false;
+    resultCountEl.scrollIntoView({ behavior: "smooth", block: "start" });
     playRandomVideo();
   } catch (error) {
     console.error(error);
@@ -818,25 +803,30 @@ function pickNextVideo() {
   return video;
 }
 
+const FAIRY_VARIANTS = ["spin-active", "wave-rtl", "wave-ltr"];
+
 async function playRandomVideo({ animate = false } = {}) {
   if (videoList.length === 0) return;
 
   const video = pickNextVideo();
 
   if (animate) {
-    // 1. 前の動画のサムネを表示した状態から、0.5秒でフェードアウト
+    // t=0: 前の動画のサムネを表示した状態から、0.8秒でフェードアウト開始
     playerThumbEl.style.transition = "none";
     playerThumbEl.src = currentThumbnailUrl || "";
     playerThumbEl.classList.remove("thumb-hidden");
     void playerThumbEl.offsetWidth; // 強制的に反映させてから
-    playerThumbEl.style.transition = "";
+    playerThumbEl.style.transition = "opacity 0.8s ease";
     playerThumbEl.classList.add("thumb-hidden");
-    await new Promise((resolve) => setTimeout(resolve, 500));
 
-    // 2. 妖精をY軸で0.35秒回転させる
-    playerFairyEl.classList.add("spin-active");
-    await new Promise((resolve) => setTimeout(resolve, 350));
-    playerFairyEl.classList.remove("spin-active");
+    // t=0.5: 妖精のアニメーション開始（A:回転 / B:右→左 / C:左→右 からランダム）
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    const fairyVariant = FAIRY_VARIANTS[Math.floor(Math.random() * FAIRY_VARIANTS.length)];
+    playerFairyEl.classList.add(fairyVariant);
+
+    // t=1.3: 妖精のアニメーション終了（フェードアウトも t=0.8 に終わっている）
+    await new Promise((resolve) => setTimeout(resolve, 800));
+    playerFairyEl.classList.remove(fairyVariant);
   }
 
   currentTitleEl.textContent = video.title;
@@ -851,13 +841,13 @@ async function playRandomVideo({ animate = false } = {}) {
   playerEmbedEl.appendChild(embedScript);
 
   if (animate) {
-    // 3. 次の動画のサムネを0.5秒でフェードイン
+    // t=1.3: 次の動画のサムネのフェードイン開始（0.8秒 → t=2.1で終了）
     playerThumbEl.style.transition = "none";
     playerThumbEl.src = currentThumbnailUrl;
     void playerThumbEl.offsetWidth;
-    playerThumbEl.style.transition = "";
+    playerThumbEl.style.transition = "opacity 0.8s ease";
     playerThumbEl.classList.remove("thumb-hidden");
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 800));
   }
 
   const uploaderName = await fetchUploaderName(video.contentId);
