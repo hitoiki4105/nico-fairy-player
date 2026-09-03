@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>妖精さんプレイヤー</title>
+  <title>動画の森、妖精さんプレイヤー</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -15,28 +15,29 @@
 <body>
   <main>
     <div class="top-bar">
-      <div class="titles">
-        <h1 data-i18n="heading">妖精さんプレイヤー</h1>
-        <p class="lead" data-i18n="lead">条件を指定して、ニコニコに投稿された動画とランダムで出会えます</p>
-        <p class="lead-sub" data-i18n="leadSub">タグ検索とキーワード検索、どちらか一方だけでも使えます</p>
-        <p class="disclaimer"><span data-i18n="disclaimerPrefix">非公式ツールです。問い合わせなどはこちらから</span> <a href="https://x.com/hitoiki327882" target="_blank" rel="noopener">https://x.com/hitoiki327882</a></p>
-      </div>
-      <div class="lang-field">
-        <label for="language-select" data-i18n="languageLabel">言語</label>
-        <select id="language-select">
-          <option value="ja">日本語</option>
-          <option value="zh">中文</option>
-          <option value="ko">한국어</option>
-          <option value="en">English</option>
-        </select>
-      </div>
+      <h1 data-i18n="heading">動画の森、妖精さんプレイヤー</h1>
+      <p class="lead" data-i18n="lead">条件を指定して、ニコニコに投稿された動画とランダムで出会えます</p>
+      <p class="disclaimer"><span data-i18n="disclaimerPrefix">非公式ツールです。問い合わせなどはこちらから</span> <a href="https://x.com/hitoiki327882" target="_blank" rel="noopener">https://x.com/hitoiki327882</a></p>
+    </div>
+
+    <div class="lang-field">
+      <label for="language-select" data-i18n="languageLabel">言語</label>
+      <select id="language-select">
+        <option value="ja">日本語</option>
+        <option value="zh">中文</option>
+        <option value="ko">한국어</option>
+        <option value="en">English</option>
+      </select>
     </div>
 
     <form id="search-form">
       <div class="field forest-box">
         <label for="include-tags" class="section-question" style="font-family: 'Hina Mincho', serif; font-size: 1.15rem;font-weight: 700; color: var(--accent);" data-i18n="includeTagsLabel">Q1：気になるタグは何？</label>
         <input type="text" id="include-tags" data-i18n-placeholder="includeTagsPlaceholder" placeholder="例: 初音ミク オリジナル曲" />
-        <p class="disclaimer" data-i18n="includeTagsNote">半角、全角スペースを加えて複数入力した場合、すべて含む（AND）結果がでます</p>
+        <p class="lead-sub" data-i18n="leadSub">タグ検索とキーワード検索、どちらか一方だけでも使えます。</p>
+        <button type="button" class="note-toggle" id="include-tags-note-toggle" data-i18n="includeTagsNoteToggle">説明をきく</button>
+        <p class="disclaimer" id="include-tags-note" data-i18n="includeTagsNote" hidden>・半角、全角スペースを加えて複数入力した場合、すべて含む（AND）結果がでます。
+ニコニコ動画でのタグ検索結果とヒット件数が異なる場合があります。原因は不明です。</p>
       </div>
 
       <div class="field forest-box">
@@ -52,20 +53,24 @@
             <input type="number" id="max-views" min="0" step="100" data-i18n-placeholder="viewsPlaceholder" placeholder="指定なし" />
           </div>
         </div>
+        <p class="disclaimer" data-i18n="viewsBoxNote">森の奥には、まだたくさんの動画があるよ。</p>
       </div>
 
       <div class="field forest-box">
         <label for="keyword" class="section-question" style="font-family: 'Hina Mincho', serif; font-size: 1.15rem;font-weight: 700; color: var(--accent);" data-i18n="keywordLabel">Q3：キーワードでもいいよ？</label>
         <input type="text" id="keyword" data-i18n-placeholder="keywordPlaceholder" placeholder="例: リミックス" />
         <p class="disclaimer" data-i18n="keywordNote">キーワード検索はタイトル・動画詳細欄を参照します。</p>
-        <div class="keyword-suggest">
-          <p class="note" data-i18n="keywordSuggestNote">Wikipediaの記事タイトルをランダムで取得することができます</p>
-          <button type="button" id="keyword-suggest-button" class="pill-button" data-i18n="keywordSuggestButton">キーワードを提案してもらう</button>
-        </div>
-        <div class="keyword-suggest">
-          <span class="field-label" data-i18n="keywordExpandTitle">キーワードを広げる？</span>
-          <p class="note" data-i18n="keywordExpandNote">入力中の単語から、類義語・関連語をWikipediaで探して「いずれか含む（OR）」に広げます</p>
-          <button type="button" id="keyword-expand-button" class="pill-button" data-i18n="keywordExpandButton">キーワードを広げる</button>
+        <button type="button" class="note-toggle" id="keyword-play-toggle" data-i18n="keywordPlayToggle">キーワードであそんじゃう？</button>
+        <div id="keyword-play" hidden>
+          <div class="keyword-suggest">
+            <p class="note" data-i18n="keywordSuggestNote">Wikipediaの記事タイトルをランダムで取得することができます</p>
+            <button type="button" id="keyword-suggest-button" class="pill-button" data-i18n="keywordSuggestButton">キーワードを提案してもらう</button>
+          </div>
+          <div class="keyword-suggest">
+            <span class="field-label" data-i18n="keywordExpandTitle">キーワードを広げる？</span>
+            <p class="note" data-i18n="keywordExpandNote">入力中の単語から、類義語・関連語をWikipediaで探して「いずれか含む（OR）」に広げます</p>
+            <button type="button" id="keyword-expand-button" class="pill-button" data-i18n="keywordExpandButton">キーワードを広げる</button>
+          </div>
         </div>
       </div>
 
@@ -75,10 +80,11 @@
           <button type="button" class="toggle-btn" id="voiroid-toggle" data-category="voiroid" data-i18n="voiroidLabel">ボイロ・解説・劇場系</button>
           <button type="button" class="toggle-btn" id="vocaloid-toggle" data-category="vocaloid" data-i18n="vocaloidLabel">ボカロ・音楽系</button>
         </div>
-        <p class="disclaimer" data-i18n="voiceCategoryNote">この選択によって表示される動画が限定される可能性があります。投稿祭などのタグだけで検索する場合、どちらも選択しない方がよい結果になるかもしれません
-それぞれのボタンで以下のタグが内部的にいずれか含む（OR）で付与されます
-ボイロ・解説・劇場系：ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID
-ボカロ・音楽系：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID</p>
+        <button type="button" class="pill-button note-toggle" id="voice-category-note-toggle" data-i18n="voiceCategoryNoteToggle">説明をきく</button>
+        <p class="disclaimer" id="voice-category-note" data-i18n="voiceCategoryNote" hidden>・この選択によって表示される動画が限定される可能性があります。投稿祭などのタグだけで検索する場合、どちらも選択しない方がよい結果になるかもしれません。
+・それぞれのボタンで以下のタグが内部的にいずれか含む（OR）で付与されます。
+「ボイロ・解説・劇場系」：ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID
+「ボカロ・音楽系」：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID</p>
       </div>
 
       <details id="filter-panel">
@@ -126,6 +132,10 @@
 
       <button type="submit" id="search-button" data-i18n="searchButton">妖精さんと探しに行こう！</button>
     </form>
+
+    <div class="hero-image-wrap">
+      <img src="image_bg.jpg" alt="" class="hero-image" />
+    </div>
 
     <section id="status" aria-live="polite"></section>
 

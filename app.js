@@ -31,21 +31,25 @@ const CATEGORY_TAGS = {
 
 const translations = {
   ja: {
-    pageTitle: "妖精さんプレイヤー",
-    heading: "妖精さんプレイヤー",
+    pageTitle: "動画の森、妖精さんプレイヤー",
+    heading: "動画の森、妖精さんプレイヤー",
     lead: "条件を指定して、ニコニコに投稿された動画とランダムで出会えます",
-    leadSub: "タグ検索とキーワード検索、どちらか一方だけでも使えます",
+    leadSub: "タグ検索とキーワード検索、どちらか一方だけでも使えます。",
     languageLabel: "言語",
     voiceCategoryLabel: "Q4：どんな動画を探してるの？",
     voiroidLabel: "ボイロ・解説・劇場系",
     vocaloidLabel: "ボカロ・音楽系",
+    voiceCategoryNoteToggle: "説明をきく",
     voiceCategoryNote:
-      "この選択によって表示される動画が限定される可能性があります。投稿祭などのタグだけで検索する場合、どちらも選択しない方がよい結果になるかもしれません\nそれぞれのボタンで以下のタグが内部的にいずれか含む（OR）で付与されます\nボイロ・解説・劇場系：ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\nボカロ・音楽系：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID",
+      "・この選択によって表示される動画が限定される可能性があります。投稿祭などのタグだけで検索する場合、どちらも選択しない方がよい結果になるかもしれません。\n・それぞれのボタンで以下のタグが内部的にいずれか含む（OR）で付与されます。\n「ボイロ・解説・劇場系」：ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n「ボカロ・音楽系」：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID",
     includeTagsLabel: "Q1：気になるタグは何？",
-    includeTagsNote: "半角、全角スペースを加えて複数入力した場合、すべて含む（AND）結果がでます",
+    includeTagsNoteToggle: "説明をきく",
+    includeTagsNote:
+      "・半角、全角スペースを加えて複数入力した場合、すべて含む（AND）結果がでます。\nニコニコ動画でのタグ検索結果とヒット件数が異なる場合があります。原因は不明です。",
     includeTagsPlaceholder: "例: 初音ミク オリジナル曲",
     keywordLabel: "Q3：キーワードでもいいよ？",
     keywordNote: "キーワード検索はタイトル・動画詳細欄を参照します。",
+    keywordPlayToggle: "キーワードであそんじゃう？",
     keywordPlaceholder: "例: リミックス",
     keywordSuggestNote: "Wikipediaの記事タイトルをランダムで取得することができます",
     keywordSuggestButton: "キーワードを提案してもらう",
@@ -55,6 +59,7 @@ const translations = {
     disclaimerPrefix: "非公式ツールです。問い合わせなどはこちらから",
     filterToggleLabel: "フィルター設定（投稿日など）",
     viewsRangeLabel: "Q2：森の奥まで行ってみる？",
+    viewsBoxNote: "森の奥には、まだたくさんの動画があるよ。",
     minViewsLabel: "再生数（下限）",
     maxViewsLabel: "再生数（上限）",
     viewsPlaceholder: "指定なし",
@@ -88,20 +93,24 @@ const translations = {
     watchOnNicoButton: "ニコニコで見る",
   },
   zh: {
-    pageTitle: "妖精播放器",
-    heading: "妖精播放器",
+    pageTitle: "视频森林，妖精播放器",
+    heading: "视频森林，妖精播放器",
     lead: "设定条件后，随机与投稿到niconico的视频相遇",
-    leadSub: "标签搜索和关键词搜索，只使用其中一种也可以",
+    leadSub: "标签搜索和关键词搜索，只使用其中一种也可以。",
     languageLabel: "语言",
     voiceCategoryLabel: "Q4：想找什么样的视频？",
     voiroidLabel: "VOICEROID・解说・剧场系",
     vocaloidLabel: "VOCALOID・音乐系",
+    voiceCategoryNoteToggle: "查看说明",
     voiceCategoryNote:
-      "此选择可能会限制显示的视频范围。如果只想用投稿祭之类的标签搜索，两者都不选可能会得到更好的结果\n点击按钮后，会在内部以「包含任意一个（OR）」的方式附加以下标签\nVOICEROID・解说・剧场系：ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\nVOCALOID・音乐系：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID",
+      "・此选择可能会限制显示的视频范围。如果只想用投稿祭之类的标签搜索，两者都不选可能会得到更好的结果。\n・点击按钮后，会在内部以「包含任意一个（OR）」的方式附加以下标签。\n「VOICEROID・解说・剧场系」：ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n「VOCALOID・音乐系」：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID",
     includeTagsLabel: "Q1：在意的标签是什么？",
-    includeTagsNote: "用半角或全角空格输入多个标签时，会显示全部包含（AND）的结果",
+    includeTagsNoteToggle: "查看说明",
+    includeTagsNote:
+      "・用半角或全角空格输入多个标签时，会显示全部包含（AND）的结果。\n有时候和niconico动画站内标签搜索的结果数量会不同，原因不明。",
     includeTagsPlaceholder: "例：初音未来 原创曲",
     keywordLabel: "Q3：也可以用关键词吗？",
+    keywordPlayToggle: "要不要玩玩关键词？",
     keywordNote: "关键词搜索会参照标题和视频简介栏。",
     keywordPlaceholder: "例：混音",
     keywordSuggestNote: "可以随机获取一个Wikipedia的文章标题",
@@ -112,6 +121,7 @@ const translations = {
     disclaimerPrefix: "这是非官方工具。如需联系，请通过",
     filterToggleLabel: "筛选设置（投稿日期等）",
     viewsRangeLabel: "Q2：要不要深入森林深处看看？",
+    viewsBoxNote: "森林深处，还有很多视频等着你。",
     minViewsLabel: "播放数（下限）",
     maxViewsLabel: "播放数（上限）",
     viewsPlaceholder: "不限",
@@ -145,21 +155,25 @@ const translations = {
     watchOnNicoButton: "在niconico观看",
   },
   ko: {
-    pageTitle: "요정 플레이어",
-    heading: "요정 플레이어",
+    pageTitle: "영상의 숲, 요정 플레이어",
+    heading: "영상의 숲, 요정 플레이어",
     lead: "조건을 지정하면 니코니코에 올라온 동영상과 무작위로 만날 수 있어요",
-    leadSub: "태그 검색과 키워드 검색, 둘 중 하나만 사용해도 됩니다",
+    leadSub: "태그 검색과 키워드 검색, 둘 중 하나만 사용해도 됩니다.",
     languageLabel: "언어",
     voiceCategoryLabel: "Q4：어떤 영상을 찾고 있어?",
     voiroidLabel: "보이로이드・해설・극장 계열",
     vocaloidLabel: "보카로이드・음악 계열",
+    voiceCategoryNoteToggle: "설명 보기",
     voiceCategoryNote:
-      "이 선택으로 인해 표시되는 영상이 제한될 수 있습니다. 투고제 등의 태그만으로 검색할 경우, 둘 다 선택하지 않는 편이 더 좋은 결과가 될 수 있습니다\n각 버튼을 누르면 내부적으로 다음 태그가 「하나라도 포함(OR)」 조건으로 추가됩니다\n보이로이드・해설・극장 계열：ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n보카로이드・음악 계열：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID",
+      "・이 선택으로 인해 표시되는 영상이 제한될 수 있습니다. 투고제 등의 태그만으로 검색할 경우, 둘 다 선택하지 않는 편이 더 좋은 결과가 될 수 있습니다.\n・각 버튼을 누르면 내부적으로 다음 태그가 「하나라도 포함(OR)」 조건으로 추가됩니다.\n「보이로이드・해설・극장 계열」：ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n「보카로이드・음악 계열」：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID",
     includeTagsLabel: "Q1：궁금한 태그가 있나요?",
-    includeTagsNote: "반각・전각 공백으로 여러 개 입력하면 모두 포함（AND）된 결과가 나옵니다",
+    includeTagsNoteToggle: "설명 보기",
+    includeTagsNote:
+      "・반각・전각 공백으로 여러 개 입력하면 모두 포함（AND）된 결과가 나옵니다.\n니코니코 동영상 사이트 자체의 태그 검색 결과와 검색 건수가 다를 수 있습니다. 원인은 알 수 없습니다.",
     includeTagsPlaceholder: "예: 하츠네 미쿠 오리지널곡",
     keywordLabel: "Q3：키워드도 괜찮아?",
     keywordNote: "키워드 검색은 제목・동영상 설명란을 참조합니다.",
+    keywordPlayToggle: "키워드로 놀아볼까?",
     keywordPlaceholder: "예: 리믹스",
     keywordSuggestNote: "Wikipedia 문서 제목을 무작위로 가져올 수 있습니다",
     keywordSuggestButton: "키워드 제안받기",
@@ -169,6 +183,7 @@ const translations = {
     disclaimerPrefix: "비공식 도구입니다. 문의는 이쪽으로",
     filterToggleLabel: "필터 설정（게시일 등）",
     viewsRangeLabel: "Q2：숲 깊은 곳까지 가볼까?",
+    viewsBoxNote: "숲 깊은 곳에는 아직 많은 영상이 있어.",
     minViewsLabel: "조회수（하한）",
     maxViewsLabel: "조회수（상한）",
     viewsPlaceholder: "지정 안 함",
@@ -202,21 +217,25 @@ const translations = {
     watchOnNicoButton: "니코니코에서 보기",
   },
   en: {
-    pageTitle: "Fairy Player",
-    heading: "Fairy Player",
+    pageTitle: "Forest of Videos, Fairy Player",
+    heading: "Forest of Videos, Fairy Player",
     lead: "Set your conditions and randomly meet videos posted on Niconico",
-    leadSub: "You can use tag search and keyword search independently, or just one of them",
+    leadSub: "You can use tag search and keyword search independently, or just one of them.",
     languageLabel: "Language",
     voiceCategoryLabel: "Q4: What kind of video are you looking for?",
     voiroidLabel: "VOICEROID / Narration / Theater",
     vocaloidLabel: "VOCALOID / Music",
+    voiceCategoryNoteToggle: "Hear the explanation",
     voiceCategoryNote:
-      "This choice may limit which videos show up. If you're searching by tag-festival-style tags alone, leaving both unselected may give better results\nEach button internally adds the following tags with an OR condition\nVOICEROID / Narration / Theater: \u30dc\u30a4\u30ed, \u30dc\u30a4\u30b9\u30ed\u30a4\u30c9, \u30bd\u30d5\u30c8\u30d5\u30a7\u30a2\u30c8\u30fc\u30af, \u30bd\u30d5\u30c8\u30a6\u30a7\u30a2\u30c8\u30fc\u30af\u5287\u5834, VOICELOID\nVOCALOID / Music: \u30dc\u30ab\u30ed, \u30dc\u30fc\u30ab\u30ed\u30a4\u30c9, UTAU, \u30bd\u30d5\u30c8\u30a6\u30a7\u30a2\u30b7\u30f3\u30ac\u30fc, vocaloid\u30aa\u30ea\u30b8\u30ca\u30eb\u66f2, \u30aa\u30ea\u30b8\u30ca\u30eb, \u30aa\u30ea\u30b8\u30ca\u30eb\u66f2, VOCALOID",
+      "\u2022 This choice may limit which videos show up. If you're searching by tag-festival-style tags alone, leaving both unselected may give better results.\n\u2022 Each button internally adds the following tags with an OR condition.\n\"VOICEROID / Narration / Theater\": \u30dc\u30a4\u30ed, \u30dc\u30a4\u30b9\u30ed\u30a4\u30c9, \u30bd\u30d5\u30c8\u30d5\u30a7\u30a2\u30c8\u30fc\u30af, \u30bd\u30d5\u30c8\u30a6\u30a7\u30a2\u30c8\u30fc\u30af\u5287\u5834, VOICELOID\n\"VOCALOID / Music\": \u30dc\u30ab\u30ed, \u30dc\u30fc\u30ab\u30ed\u30a4\u30c9, UTAU, \u30bd\u30d5\u30c8\u30a6\u30a7\u30a2\u30b7\u30f3\u30ac\u30fc, vocaloid\u30aa\u30ea\u30b8\u30ca\u30eb\u66f2, \u30aa\u30ea\u30b8\u30ca\u30eb, \u30aa\u30ea\u30b8\u30ca\u30eb\u66f2, VOCALOID",
     includeTagsLabel: "Q1: What tags interest you?",
-    includeTagsNote: "Entering multiple tags separated by spaces returns videos matching all of them (AND)",
+    includeTagsNoteToggle: "Hear the explanation",
+    includeTagsNote:
+      "\u2022 Entering multiple tags separated by spaces returns videos matching all of them (AND).\nThe hit count may differ from Niconico's own tag search. The reason is unknown.",
     includeTagsPlaceholder: "e.g. Hatsune Miku original song",
     keywordLabel: "Q3: A keyword works too?",
     keywordNote: "Keyword search looks at the title and video description.",
+    keywordPlayToggle: "Want to play with keywords?",
     keywordPlaceholder: "e.g. remix",
     keywordSuggestNote: "You can fetch a random Wikipedia article title",
     keywordSuggestButton: "Suggest a keyword",
@@ -226,6 +245,7 @@ const translations = {
     disclaimerPrefix: "This is an unofficial tool. For inquiries, contact",
     filterToggleLabel: "Filter settings (upload date, etc.)",
     viewsRangeLabel: "Q2: Want to go deeper into the forest?",
+    viewsBoxNote: "There are still plenty of videos deep in the forest.",
     minViewsLabel: "Min. views",
     maxViewsLabel: "Max. views",
     viewsPlaceholder: "No limit",
@@ -287,6 +307,12 @@ const watchOnNicoLink = document.getElementById("watch-on-nico");
 const languageSelect = document.getElementById("language-select");
 const voiroidToggle = document.getElementById("voiroid-toggle");
 const vocaloidToggle = document.getElementById("vocaloid-toggle");
+const voiceCategoryNoteToggle = document.getElementById("voice-category-note-toggle");
+const voiceCategoryNoteEl = document.getElementById("voice-category-note");
+const includeTagsNoteToggle = document.getElementById("include-tags-note-toggle");
+const includeTagsNoteEl = document.getElementById("include-tags-note");
+const keywordPlayToggle = document.getElementById("keyword-play-toggle");
+const keywordPlayEl = document.getElementById("keyword-play");
 
 // 検索でヒットした動画一覧（ランダムに取得した最大100件）
 let videoList = [];
@@ -321,6 +347,19 @@ languageSelect.addEventListener("change", () => {
 });
 
 applyLanguage("ja");
+
+// ==== 説明文・補助機能の開閉トグル ====
+voiceCategoryNoteToggle.addEventListener("click", () => {
+  voiceCategoryNoteEl.hidden = !voiceCategoryNoteEl.hidden;
+});
+
+includeTagsNoteToggle.addEventListener("click", () => {
+  includeTagsNoteEl.hidden = !includeTagsNoteEl.hidden;
+});
+
+keywordPlayToggle.addEventListener("click", () => {
+  keywordPlayEl.hidden = !keywordPlayEl.hidden;
+});
 
 // ==== キーワード提案ボタン（Wikipediaのランダム記事APIから取得。失敗時は手元のリストにフォールバック） ====
 keywordSuggestButton.addEventListener("click", async () => {
@@ -454,7 +493,7 @@ form.addEventListener("submit", async (event) => {
 });
 
 nextButton.addEventListener("click", () => {
-  playRandomVideo();
+  playRandomVideo({ animate: true });
 });
 
 // 再生数（上限）が（下限）より小さくならないようにする
@@ -717,10 +756,17 @@ function pickNextVideo() {
   return video;
 }
 
-async function playRandomVideo() {
+async function playRandomVideo({ animate = false } = {}) {
   if (videoList.length === 0) return;
 
   const video = pickNextVideo();
+
+  if (animate) {
+    // 前の動画を左にスライドアウトさせてから入れ替える
+    playerEl.classList.add("slide-out");
+    await new Promise((resolve) => setTimeout(resolve, 350));
+  }
+
   currentTitleEl.textContent = video.title;
   currentUploaderEl.textContent = translations[currentLang].uploaderLoading;
   watchOnNicoLink.href = `https://www.nicovideo.jp/watch/${video.contentId}`;
@@ -730,6 +776,15 @@ async function playRandomVideo() {
   const embedScript = document.createElement("script");
   embedScript.src = `https://embed.nicovideo.jp/watch/${video.contentId}/script?w=640&h=360`;
   playerEl.appendChild(embedScript);
+
+  // 新しい動画を右側の待機位置に置いてから、スライドインさせる
+  playerEl.classList.remove("slide-out");
+  playerEl.classList.add("slide-in");
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      playerEl.classList.remove("slide-in");
+    });
+  });
 
   const uploaderName = await fetchUploaderName(video.contentId);
   currentUploaderEl.textContent = uploaderName
