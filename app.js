@@ -92,6 +92,8 @@ const translations = {
     uploaderUnknown: "投稿者: 取得できませんでした",
     nextButton: "次の動画と出会う",
     watchOnNicoButton: "ニコニコで見る",
+    historyTitle: "出会った動画の記録",
+    historyMoreButton: "記録をもっと見る",
   },
   zh: {
     pageTitle: "视频森林，妖精播放器",
@@ -155,6 +157,8 @@ const translations = {
     uploaderUnknown: "投稿者：获取失败",
     nextButton: "邂逅下一个视频",
     watchOnNicoButton: "在niconico观看",
+    historyTitle: "相遇过的视频记录",
+    historyMoreButton: "查看更多记录",
   },
   ko: {
     pageTitle: "영상의 숲, 요정 플레이어",
@@ -218,6 +222,8 @@ const translations = {
     uploaderUnknown: "업로더: 가져오지 못했습니다",
     nextButton: "다음 동영상과 만나기",
     watchOnNicoButton: "니코니코에서 보기",
+    historyTitle: "만난 동영상 기록",
+    historyMoreButton: "기록 더 보기",
   },
   en: {
     pageTitle: "Forest of Videos, Fairy Player",
@@ -281,6 +287,8 @@ const translations = {
     uploaderUnknown: "Uploader: unavailable",
     nextButton: "Meet the next video",
     watchOnNicoButton: "Watch on Niconico",
+    historyTitle: "Videos you've met",
+    historyMoreButton: "See more history",
   },
 };
 
@@ -317,6 +325,10 @@ const includeTagsNoteToggle = document.getElementById("include-tags-note-toggle"
 const includeTagsNoteEl = document.getElementById("include-tags-note");
 const keywordPlayToggle = document.getElementById("keyword-play-toggle");
 const keywordPlayEl = document.getElementById("keyword-play");
+const heroImageEl = document.getElementById("hero-image");
+const historySection = document.getElementById("history");
+const historyListEl = document.getElementById("history-list");
+const historyMoreButton = document.getElementById("history-more-button");
 
 // 検索でヒットした動画一覧（ランダムに取得した最大100件）
 let videoList = [];
@@ -324,6 +336,9 @@ let videoList = [];
 let playedContentIds = new Set();
 // 選択中の音声合成系統（voiroid / vocaloid のどちらか、両方、または空のSet）
 let selectedVoiceCategories = new Set();
+// 出会った動画の記録（新しいものが先頭）
+let watchHistory = [];
+const HISTORY_VISIBLE_COUNT = 5;
 
 // ==== 言語切り替え ====
 function applyLanguage(lang) {
@@ -675,7 +690,7 @@ function buildBaseParams() {
     q: keyword,
     _sort: "-viewCounter",
     _context: "nico-tag-player",
-    fields: "contentId,title,viewCounter",
+    fields: "contentId,title,viewCounter,thumbnailUrl",
   });
 
   if (keyword) {
@@ -704,6 +719,21 @@ async function fetchSearch(params) {
   return response.json();
 }
 
+// 検索を始めたら、イラストをフェードアウトさせたあと妖精（img_fairy.png）を回転させながら表示する
+async function playFairyReveal() {
+  if (!heroImageEl) return;
+
+  heroImageEl.classList.add("hero-fade-out");
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  heroImageEl.src = "img_fairy.png";
+  heroImageEl.classList.remove("hero-fade-out");
+  heroImageEl.classList.add("hero-spin-in");
+  setTimeout(() => {
+    heroImageEl.classList.remove("hero-spin-in");
+  }, 500);
+}
+
 async function runSearch() {
   const baseParams = buildBaseParams();
 
@@ -715,6 +745,7 @@ async function runSearch() {
   setStatus(translations[currentLang].statusSearching);
   searchButton.disabled = true;
   resultSection.hidden = true;
+  playFairyReveal();
 
   try {
     // 1回目：ヒット件数だけを把握するための軽いリクエスト
@@ -823,7 +854,69 @@ async function playRandomVideo({ animate = false } = {}) {
   currentUploaderEl.textContent = uploaderName
     ? `${translations[currentLang].uploaderPrefix}${uploaderName}`
     : translations[currentLang].uploaderUnknown;
+
+  addToHistory({
+    contentId: video.contentId,
+    title: video.title,
+    uploader: uploaderName,
+    thumbnailUrl: video.thumbnailUrl,
+  });
 }
+
+// 出会った動画を記録に追加し、一覧を再描画する
+function addToHistory(entry) {
+  watchHistory.unshift(entry);
+  renderHistory();
+}
+
+// 記録一覧を描画する（最近5件はそのまま表示、それ以降は「もっと見る」で表示）
+function renderHistory() {
+  if (watchHistory.length === 0) return;
+
+  historySection.hidden = false;
+  historyListEl.innerHTML = "";
+
+  watchHistory.forEach((entry, index) => {
+    const li = document.createElement("li");
+    li.className = "history-item";
+    if (index >= HISTORY_VISIBLE_COUNT) {
+      li.classList.add("hidden-extra");
+    }
+
+    const img = document.createElement("img");
+    img.className = "history-thumb";
+    img.src = entry.thumbnailUrl || "";
+    img.alt = "";
+
+    const textWrap = document.createElement("div");
+    textWrap.className = "history-text";
+
+    const titleEl = document.createElement("p");
+    titleEl.className = "history-title";
+    titleEl.textContent = entry.title;
+
+    const uploaderEl = document.createElement("p");
+    uploaderEl.className = "history-uploader";
+    uploaderEl.textContent = entry.uploader
+      ? `${translations[currentLang].uploaderPrefix}${entry.uploader}`
+      : translations[currentLang].uploaderUnknown;
+
+    textWrap.appendChild(titleEl);
+    textWrap.appendChild(uploaderEl);
+    li.appendChild(img);
+    li.appendChild(textWrap);
+    historyListEl.appendChild(li);
+  });
+
+  historyMoreButton.hidden = watchHistory.length <= HISTORY_VISIBLE_COUNT;
+}
+
+historyMoreButton.addEventListener("click", () => {
+  document.querySelectorAll("#history-list .hidden-extra").forEach((el) => {
+    el.classList.remove("hidden-extra");
+  });
+  historyMoreButton.hidden = true;
+});
 
 // 動画の詳細情報API（getthumbinfo）から投稿者名（またはチャンネル名）を取り出す
 async function fetchUploaderName(contentId) {

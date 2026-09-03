@@ -134,7 +134,7 @@
     </form>
 
     <div class="hero-image-wrap">
-      <img src="image_bg.jpg" alt="" class="hero-image" />
+      <img id="hero-image" src="image_bg.jpg" alt="" class="hero-image" />
     </div>
 
     <section id="status" aria-live="polite"></section>
@@ -148,6 +148,12 @@
         <a id="watch-on-nico" class="watch-link" href="#" target="_blank" rel="noopener" data-i18n="watchOnNicoButton">ニコニコで見る</a>
         <button type="button" id="next-button" data-i18n="nextButton">次の動画と出会う</button>
       </div>
+    </section>
+
+    <section id="history" hidden>
+      <h2 data-i18n="historyTitle">出会った動画の記録</h2>
+      <ul id="history-list"></ul>
+      <button type="button" id="history-more-button" class="pill-button" data-i18n="historyMoreButton" hidden>記録をもっと見る</button>
     </section>
   </main>
 
