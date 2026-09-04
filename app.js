@@ -23,10 +23,19 @@ const KEYWORD_SUGGESTIONS = [
   "歌ってみた", "踊ってみた", "耐久", "作業用",
 ];
 
-// 「ボイロ系」「ボカロ系」ボタンで内部的に付与されるタグ（いずれか含む＝OR）
-const CATEGORY_TAGS = {
-  voiroid: ["ボイロ", "ボイスロイド", "ソフトフェアトーク", "ソフトウェアトーク劇場", "VOICELOID"],
-  vocaloid: ["ボカロ", "ボーカロイド", "UTAU", "ソフトウェアシンガー", "vocaloidオリジナル曲", "オリジナル", "オリジナル曲", "VOCALOID"],
+// 投稿時ジャンル一覧（「音楽・サウンド」以外を列挙する用）
+const ALL_GENRES = [
+  "アニメ", "ゲーム", "エンタメ", "ラジオ", "歌ってみた", "演奏してみた", "踊ってみた",
+  "VOCALOID", "ニコニコインディーズ", "動物", "自然", "料理", "旅行・アウトドア",
+  "乗り物", "スポーツ", "社会・政治・時事", "技術・工作", "解説・講座", "その他",
+];
+
+// 「ボイロ系」「ボカロ系」ボタンで内部的に付与されるジャンル条件
+// vocaloid: 投稿時ジャンルが「音楽・サウンド」のもの
+// voiroid : 投稿時ジャンルが「音楽・サウンド」以外のもの
+const CATEGORY_GENRES = {
+  vocaloid: ["音楽・サウンド"],
+  voiroid: ALL_GENRES.filter((g) => g !== "音楽・サウンド"),
 };
 
 const translations = {
@@ -712,16 +721,16 @@ function buildJsonFilter({ includeTags, excludeTags, matchMode, minViews, maxVie
     });
   }
 
-  // ボイロ系／ボカロ系トグルで選ばれたタグ（選ばれている系統すべてを、いずれか含む＝OR）
+  // ボイロ系／ボカロ系トグルで選ばれた投稿時ジャンル（選ばれている系統すべてを、いずれか含む＝OR）
   if (voiceCategories && voiceCategories.size > 0) {
-    const combinedTags = [...voiceCategories].flatMap((category) => CATEGORY_TAGS[category] || []);
-    if (combinedTags.length > 0) {
+    const combinedGenres = [...voiceCategories].flatMap((category) => CATEGORY_GENRES[category] || []);
+    if (combinedGenres.length > 0) {
       filters.push({
         type: "or",
-        filters: [...new Set(combinedTags)].map((tag) => ({
+        filters: [...new Set(combinedGenres)].map((genre) => ({
           type: "equal",
-          field: "tagsExact",
-          value: tag,
+          field: "genre",
+          value: genre,
         })),
       });
     }
