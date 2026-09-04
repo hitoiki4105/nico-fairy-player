@@ -100,11 +100,13 @@ const translations = {
     nextButton: "次の動画と出会う",
     watchOnNicoButton: "ニコニコで見る",
     historyTitle: "出会った動画の記録",
-    historyNote: "・クリックすると、ニコニコ動画に飛びます",
+    historyNote: "・クリックすると、ニコニコ動画に飛びます。",
+    historyVisibleNote: "・最新の５件を表示しています",
     historyMoreButton: "記録をもっとみる",
     historyMoreNote: "・新しいウィンドウが開きます",
     historyGroupToggle: "検索語【{label}】で出会った動画",
     historyWindowClosedNote: "元のページが閉じられたか、リンクが切れています。元のページからもう一度「記録をもっとみる」を開いてください。",
+    historyWindowReloadNote: "・このウィンドウは更新すると真っ白になります。",
   },
   zh: {
     pageTitle: "视频森林，妖精播放器",
@@ -176,11 +178,13 @@ const translations = {
     nextButton: "邂逅下一个视频",
     watchOnNicoButton: "在niconico观看",
     historyTitle: "相遇过的视频记录",
-    historyNote: "・点击即可跳转到niconico动画",
+    historyNote: "・点击即可跳转到niconico动画。",
+    historyVisibleNote: "・显示最新的5条记录",
     historyMoreButton: "追寻足迹",
     historyMoreNote: "・会打开新窗口",
     historyGroupToggle: "以搜索词【{label}】相遇的视频",
     historyWindowClosedNote: "原页面已关闭或连接已断开，请从原页面重新打开「追寻足迹」。",
+    historyWindowReloadNote: "・此窗口刷新后会变成空白页面。",
   },
   ko: {
     pageTitle: "영상의 숲, 요정 플레이어",
@@ -252,10 +256,13 @@ const translations = {
     nextButton: "다음 동영상과 만나기",
     watchOnNicoButton: "니코니코에서 보기",
     historyTitle: "만난 동영상 기록",
+    historyNote: "・클릭하면 니코니코 동영상으로 이동합니다.",
+    historyVisibleNote: "・최신 5건을 표시하고 있습니다",
     historyMoreButton: "기록 더 보기",
     historyMoreNote: "・새 창이 열립니다",
     historyGroupToggle: "검색어【{label}】(으)로 만난 동영상",
     historyWindowClosedNote: "원본 페이지가 닫혔거나 연결이 끊어졌습니다. 원본 페이지에서 다시 「기록 더 보기」를 열어 주세요.",
+    historyWindowReloadNote: "・이 창은 새로고침하면 빈 화면이 됩니다.",
   },
   en: {
     pageTitle: "Forest of Videos, Fairy Player",
@@ -327,10 +334,13 @@ const translations = {
     nextButton: "Meet the next video",
     watchOnNicoButton: "Watch on Niconico",
     historyTitle: "Videos you've met",
+    historyNote: "* Click a video to open it on Niconico.",
+    historyVisibleNote: "* Showing the 5 most recent",
     historyMoreButton: "See more history",
     historyMoreNote: "* Opens a new window",
     historyGroupToggle: "Videos found with 【{label}】",
     historyWindowClosedNote: "The original page has been closed or the link is no longer active. Please open \"See more history\" again from the original page.",
+    historyWindowReloadNote: "* This window will go blank if you reload it.",
   },
 };
 
@@ -350,6 +360,8 @@ const specificDateInput = document.getElementById("specific-date");
 const dateRangeBlock = document.getElementById("date-range-block");
 const dateSingleBlock = document.getElementById("date-single-block");
 const searchButton = document.getElementById("search-button");
+const leadTextEl = document.getElementById("lead-text");
+const section11InnerEl = document.getElementById("section-s11-inner");
 const statusEl = document.getElementById("status");
 const resultSection = document.getElementById("result");
 const resultCountEl = document.getElementById("result-count");
@@ -413,10 +425,52 @@ function applyLanguage(lang) {
       el.placeholder = translations[lang][key];
     }
   });
+
+  fitSearchButtonToWidth();
+  fitS11ToLeadWidth();
 }
 
 // タイトルは固定サイズ（style="font-size: 24px;"）で表示するため、
 // 幅いっぱいに自動拡大する機能は無効化しています（以前は fitTitleToWidth() で自動調整していました）
+
+// 検索ボタンの文字サイズを「文字列の幅がボタンの幅の80%になる」ように自動調整する。
+// ただし現在のデフォルトサイズ（16px）を下回らないようにする（最小値）。
+const SEARCH_BUTTON_MIN_FONT_SIZE = 16; // px（変更前のデフォルトサイズ＝最小値）
+const SEARCH_BUTTON_TARGET_RATIO = 0.8; // ボタン幅に対する文字列幅の目標比率
+
+function fitSearchButtonToWidth() {
+  const paddingLeft = parseFloat(getComputedStyle(searchButton).paddingLeft) || 0;
+  const paddingRight = parseFloat(getComputedStyle(searchButton).paddingRight) || 0;
+  const availableWidth = searchButton.clientWidth - paddingLeft - paddingRight;
+  if (availableWidth <= 0) return;
+
+  // 最小フォントサイズで実測した文字列幅を基準に、目標幅に届くフォントサイズを逆算する
+  searchButton.style.fontSize = `${SEARCH_BUTTON_MIN_FONT_SIZE}px`;
+  const measuredWidth = searchButton.scrollWidth - paddingLeft - paddingRight;
+  if (measuredWidth <= 0) return;
+
+  const targetWidth = availableWidth * SEARCH_BUTTON_TARGET_RATIO;
+  const scaledSize = SEARCH_BUTTON_MIN_FONT_SIZE * (targetWidth / measuredWidth);
+  const finalSize = Math.max(SEARCH_BUTTON_MIN_FONT_SIZE, scaledSize);
+
+  searchButton.style.fontSize = `${finalSize}px`;
+}
+
+window.addEventListener("resize", fitSearchButtonToWidth);
+
+// S11（あいさつ〜言語設定）の横幅を、サブタイトル（.lead）の実測幅に合わせる。
+// これにより、左揃えのまま文字のまとまり全体がS11セルの中央に配置される。
+// ブラウザ幅（PC表示）でのみ意味を持つため、S11がGridの1カラム分に収まっている場合はwidthを解除する。
+function fitS11ToLeadWidth() {
+  if (!leadTextEl || !section11InnerEl) return;
+  section11InnerEl.style.width = "auto";
+  const leadWidth = leadTextEl.scrollWidth;
+  if (leadWidth > 0) {
+    section11InnerEl.style.width = `${leadWidth}px`;
+  }
+}
+
+window.addEventListener("resize", fitS11ToLeadWidth);
 
 languageSelect.addEventListener("change", () => {
   applyLanguage(languageSelect.value);
@@ -910,13 +964,9 @@ async function playRandomVideo({ animate = false } = {}) {
     : Promise.resolve();
 
   if (animate) {
-    // t=0: 前の動画のサムネを表示した状態から、0.8秒でフェードアウト開始（t=0.8で終了）
-    playerThumbEl.style.transition = "none";
-    playerThumbEl.src = currentThumbnailUrl || "";
-    playerThumbEl.classList.remove("thumb-hidden");
-    void playerThumbEl.offsetWidth; // 強制的に反映させてから
-    playerThumbEl.style.transition = "opacity 0.8s ease";
-    playerThumbEl.classList.add("thumb-hidden");
+    // t=0: 今見えている「前の動画」の本体（iframe）を0.8秒かけてフェードアウト開始（t=0.8で終了）。
+    //      サムネ画像はこの間ずっと非表示のまま（触らない）なので、余計なフラッシュは起きない。
+    playerEmbedEl.classList.add("embed-hidden");
 
     // t=0.5: 妖精の動き（A:回転 / B:右→左 / C:左→右 からランダム）を開始し、
     //        同時に0.3秒かけてフェードインを開始する（t=0.8で完了）
@@ -940,13 +990,6 @@ async function playRandomVideo({ animate = false } = {}) {
   currentThumbnailUrl = video.thumbnailUrl || "";
   resultActionsEl.hidden = false;
 
-  // 埋め込みプレイヤーを差し替える（サムネの裏側で読み込む）
-  playerEmbedEl.innerHTML = "";
-  const embedScript = document.createElement("script");
-  embedScript.src = `https://embed.nicovideo.jp/watch/${video.contentId}/script?w=640&h=360`;
-  playerEmbedEl.appendChild(embedScript);
-  observeEmbedIframeResize(playerEmbedEl);
-
   if (animate) {
     // t=0で開始した先読みがここまでに終わっていない場合のみ待つ（通常は既に完了している）
     await thumbnailPreloadPromise;
@@ -958,7 +1001,24 @@ async function playRandomVideo({ animate = false } = {}) {
     playerThumbEl.style.transition = "opacity 0.8s ease";
     playerThumbEl.classList.remove("thumb-hidden");
     await new Promise((resolve) => setTimeout(resolve, 800));
+  } else {
+    // アニメーションなし（初回検索時など）は、サムネをそのまま表示しておく
+    playerThumbEl.style.transition = "none";
+    playerThumbEl.src = currentThumbnailUrl;
+    playerThumbEl.classList.remove("thumb-hidden");
   }
+
+  // t=2.1: 次の動画のサムネがフル表示された状態で、裏側の埋め込みプレイヤーを新しい動画に差し替える。
+  //        動画側はまだ非表示（embed-hidden）のままなので、差し替えても画面には見えない。
+  playerEmbedEl.style.transition = "none";
+  playerEmbedEl.classList.remove("embed-hidden");
+  playerEmbedEl.innerHTML = "";
+  const embedScript = document.createElement("script");
+  embedScript.src = `https://embed.nicovideo.jp/watch/${video.contentId}/script?w=640&h=360`;
+  playerEmbedEl.appendChild(embedScript);
+  observeEmbedIframeResize(playerEmbedEl);
+  void playerEmbedEl.offsetWidth;
+  playerEmbedEl.style.transition = "opacity 0.8s ease";
 
   // サムネ（検索前のプレースホルダー画像、またはフェードインし終えたサムネ）を隠し、
   // 裏で読み込み済みの実際の埋め込みプレイヤーを見せる
@@ -1161,6 +1221,7 @@ function writeHistoryWindowDocument(win) {
   </div>
   <section id="history">
     <p class="disclaimer">${t.historyNote}</p>
+    <p class="disclaimer">${t.historyWindowReloadNote}</p>
     <div id="history-groups"></div>
     <p class="disclaimer" id="history-closed-note" hidden>${t.historyWindowClosedNote}</p>
   </section>
