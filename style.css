@@ -439,9 +439,24 @@ button {
   font-size: 1.1rem;
   letter-spacing: 0.02em;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 14px rgba(201, 138, 59, 0.55);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+  animation: searchButtonPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes searchButtonPulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 14px rgba(201, 138, 59, 0.55);
+  }
+  50% {
+    box-shadow: 0 4px 22px rgba(201, 138, 59, 0.85);
+  }
 }
 
 #search-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(201, 138, 59, 0.7);
   filter: brightness(1.05);
 }
 
@@ -585,31 +600,31 @@ button {
 
 @keyframes playerFairyWaveRTL {
   0% {
-    transform: translate(150%, -50%) translateY(0);
+    transform: translate(100%, -50%) translateY(0);
   }
   12.5% {
-    transform: translate(112.5%, -50%) translateY(-14px);
+    transform: translate(62.5%, -50%) translateY(-14px);
   }
   25% {
-    transform: translate(75%, -50%) translateY(0);
+    transform: translate(25%, -50%) translateY(0);
   }
   37.5% {
-    transform: translate(37.5%, -50%) translateY(14px);
+    transform: translate(-12.5%, -50%) translateY(14px);
   }
   50% {
-    transform: translate(0%, -50%) translateY(0);
+    transform: translate(-50%, -50%) translateY(0);
   }
   62.5% {
-    transform: translate(-37.5%, -50%) translateY(-14px);
+    transform: translate(-87.5%, -50%) translateY(-14px);
   }
   75% {
-    transform: translate(-75%, -50%) translateY(0);
+    transform: translate(-125%, -50%) translateY(0);
   }
   87.5% {
-    transform: translate(-112.5%, -50%) translateY(14px);
+    transform: translate(-162.5%, -50%) translateY(14px);
   }
   100% {
-    transform: translate(-150%, -50%) translateY(0);
+    transform: translate(-200%, -50%) translateY(0);
   }
 }
 
@@ -620,31 +635,31 @@ button {
 /* Cの動きは img_fairy.png を左右反転（scaleX(-1)）させながら移動させる */
 @keyframes playerFairyWaveLTR {
   0% {
-    transform: translate(-150%, -50%) translateY(0) scaleX(-1);
+    transform: translate(-200%, -50%) translateY(0) scaleX(-1);
   }
   12.5% {
-    transform: translate(-112.5%, -50%) translateY(-14px) scaleX(-1);
+    transform: translate(-162.5%, -50%) translateY(-14px) scaleX(-1);
   }
   25% {
-    transform: translate(-75%, -50%) translateY(0) scaleX(-1);
+    transform: translate(-125%, -50%) translateY(0) scaleX(-1);
   }
   37.5% {
-    transform: translate(-37.5%, -50%) translateY(14px) scaleX(-1);
+    transform: translate(-87.5%, -50%) translateY(14px) scaleX(-1);
   }
   50% {
-    transform: translate(0%, -50%) translateY(0) scaleX(-1);
+    transform: translate(-50%, -50%) translateY(0) scaleX(-1);
   }
   62.5% {
-    transform: translate(37.5%, -50%) translateY(-14px) scaleX(-1);
+    transform: translate(-12.5%, -50%) translateY(-14px) scaleX(-1);
   }
   75% {
-    transform: translate(75%, -50%) translateY(0) scaleX(-1);
+    transform: translate(25%, -50%) translateY(0) scaleX(-1);
   }
   87.5% {
-    transform: translate(112.5%, -50%) translateY(14px) scaleX(-1);
+    transform: translate(62.5%, -50%) translateY(14px) scaleX(-1);
   }
   100% {
-    transform: translate(150%, -50%) translateY(0) scaleX(-1);
+    transform: translate(100%, -50%) translateY(0) scaleX(-1);
   }
 }
 

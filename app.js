@@ -917,7 +917,9 @@ function pickNextVideo() {
 const FAIRY_VARIANTS = ["spin-active", "wave-rtl", "wave-ltr"];
 
 // ニコニコの埋め込みスクリプトは640x360固定サイズのiframeを生成するため、
-// 生成され次第それを検知して、プレイヤー枠（#player）いっぱいに広がるよう上書きする
+// 生成され次第それを検知して、プレイヤー枠（#player）いっぱいに広がるよう上書きする。
+// 戻り値のPromiseは、iframeが実際にDOMへ現れた時点（またはタイムアウト）でresolveする。
+// これにより「新しいiframeがまだ存在しない透明な状態」を確実に把握できる。
 function observeEmbedIframeResize(containerEl) {
   const applySize = (iframe) => {
     iframe.removeAttribute("width");
@@ -928,23 +930,30 @@ function observeEmbedIframeResize(containerEl) {
     iframe.style.display = "block";
   };
 
-  const existingIframe = containerEl.querySelector("iframe");
-  if (existingIframe) {
-    applySize(existingIframe);
-    return;
-  }
-
-  const observer = new MutationObserver((mutations, obs) => {
-    const iframe = containerEl.querySelector("iframe");
-    if (iframe) {
-      applySize(iframe);
-      obs.disconnect();
+  return new Promise((resolve) => {
+    const existingIframe = containerEl.querySelector("iframe");
+    if (existingIframe) {
+      applySize(existingIframe);
+      resolve(existingIframe);
+      return;
     }
-  });
-  observer.observe(containerEl, { childList: true, subtree: true });
 
-  // 万一iframeが現れなくても監視し続けないよう、一定時間で諦める
-  setTimeout(() => observer.disconnect(), 10000);
+    const observer = new MutationObserver((mutations, obs) => {
+      const iframe = containerEl.querySelector("iframe");
+      if (iframe) {
+        applySize(iframe);
+        obs.disconnect();
+        resolve(iframe);
+      }
+    });
+    observer.observe(containerEl, { childList: true, subtree: true });
+
+    // 万一iframeが現れなくても監視し続けないよう、一定時間で諦める
+    setTimeout(() => {
+      observer.disconnect();
+      resolve(null);
+    }, 10000);
+  });
 }
 
 async function playRandomVideo({ animate = false } = {}) {
@@ -952,15 +961,22 @@ async function playRandomVideo({ animate = false } = {}) {
 
   const video = pickNextVideo();
 
-  // 次のサムネはできるだけ早く（アニメーション開始と同時に）先読みしておく
+  // 次のサムネはできるだけ早く（アニメーション開始と同時に）先読みしておく。
+  // Image().decode() まで待つことで、後で playerThumbEl.src に反映した瞬間に
+  // 必ず完成した画像がそこにある状態にする（デコード待ちによる「一瞬空白→表示」のちらつき防止）
   const nextThumbnailUrl = video.thumbnailUrl || "";
   const thumbnailPreloadPromise = nextThumbnailUrl
-    ? new Promise((resolve) => {
+    ? (() => {
         const preloadImg = new Image();
-        preloadImg.onload = resolve;
-        preloadImg.onerror = resolve;
         preloadImg.src = nextThumbnailUrl;
-      })
+        if (preloadImg.decode) {
+          return preloadImg.decode().catch(() => {});
+        }
+        return new Promise((resolve) => {
+          preloadImg.onload = resolve;
+          preloadImg.onerror = resolve;
+        });
+      })()
     : Promise.resolve();
 
   if (animate) {
@@ -994,9 +1010,14 @@ async function playRandomVideo({ animate = false } = {}) {
     // t=0で開始した先読みがここまでに終わっていない場合のみ待つ（通常は既に完了している）
     await thumbnailPreloadPromise;
 
-    // t=1.3: 次の動画のサムネのフェードイン開始（0.8秒 → t=2.1で終了）
+    // t=1.3: 次の動画のサムネのフェードイン開始（0.8秒 → t=2.1で終了）。
+    // src を切り替えた直後は、実体のあるplayerThumbEl側でも念のためdecode()を待ってから
+    // opacityを変化させる。これにより「一瞬空白または前の絵が見えてから表示される」ちらつきを防ぐ。
     playerThumbEl.style.transition = "none";
     playerThumbEl.src = currentThumbnailUrl;
+    if (playerThumbEl.decode) {
+      await playerThumbEl.decode().catch(() => {});
+    }
     void playerThumbEl.offsetWidth;
     playerThumbEl.style.transition = "opacity 0.8s ease";
     playerThumbEl.classList.remove("thumb-hidden");
@@ -1008,22 +1029,35 @@ async function playRandomVideo({ animate = false } = {}) {
     playerThumbEl.classList.remove("thumb-hidden");
   }
 
-  // t=2.1: 次の動画のサムネがフル表示された状態で、裏側の埋め込みプレイヤーを新しい動画に差し替える。
-  //        動画側はまだ非表示（embed-hidden）のままなので、差し替えても画面には見えない。
+  // t=2.1: 次の動画のサムネがフル表示された状態。
+  //        動画本体は必ずembed-hidden（透明）にしてから、その裏で新しい動画のiframeを準備する。
+  //        画面には常に「フル表示されたサムネ」だけが見えているので、
+  //        iframeの読み込み中に何かが一瞬見えて消える、ということが起こらない。
   playerEmbedEl.style.transition = "none";
-  playerEmbedEl.classList.remove("embed-hidden");
+  playerEmbedEl.classList.add("embed-hidden");
   playerEmbedEl.innerHTML = "";
   const embedScript = document.createElement("script");
   embedScript.src = `https://embed.nicovideo.jp/watch/${video.contentId}/script?w=640&h=360`;
   playerEmbedEl.appendChild(embedScript);
-  observeEmbedIframeResize(playerEmbedEl);
-  void playerEmbedEl.offsetWidth;
-  playerEmbedEl.style.transition = "opacity 0.8s ease";
+  const iframe = await observeEmbedIframeResize(playerEmbedEl);
+  if (iframe) {
+    await new Promise((resolve) => {
+      // iframe自体の読み込み完了（load）まで待つ。ただし何らかの理由でloadが発火しない場合に
+      // 永久に止まらないよう、短いタイムアウトも保険として設ける。
+      const onLoad = () => {
+        iframe.removeEventListener("load", onLoad);
+        resolve();
+      };
+      iframe.addEventListener("load", onLoad);
+      setTimeout(resolve, 1500);
+    });
+  }
 
-  // サムネ（検索前のプレースホルダー画像、またはフェードインし終えたサムネ）を隠し、
-  // 裏で読み込み済みの実際の埋め込みプレイヤーを見せる
+  // 動画の準備ができたので、サムネを隠すのと同時に動画を不透明に戻す（＝サムネ→動画へ切り替え）
   playerThumbEl.style.transition = "none";
   playerThumbEl.classList.add("thumb-hidden");
+  playerEmbedEl.style.transition = "none";
+  playerEmbedEl.classList.remove("embed-hidden");
 
   const uploaderName = await fetchUploaderName(video.contentId);
   currentUploaderEl.textContent = uploaderName
