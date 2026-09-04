@@ -53,7 +53,7 @@ const translations = {
     vocaloidLabel: "ボカロ・音楽系",
     voiceCategoryNoteToggle: "説明をきく",
     voiceCategoryNote:
-      "・この選択で、表示される動画が限定されるよ。投稿祭などのタグだけで検索する場合、どちらも選択しない方がよい結果になるかもね。\n・それぞれのボタンで以下のタグが内部的にいずれか含む（OR）で付与されるよ。\n「ボイロ・解説・劇場系」：ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n「ボカロ・音楽系」：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID",
+      "投稿時のジャンルで動画を探す場所を選びます。\n・ボカロ・音楽系：「音楽・サウンド」\n・ボイロ・解説・劇場系：「音楽・サウンド」以外",
     includeTagsLabel: "Q1：気になるタグは何？",
     includeTagsNoteToggle: "説明をきく",
     fineTuneToggle: "細かく絞り込みたい？",
@@ -131,7 +131,7 @@ const translations = {
     vocaloidLabel: "VOCALOID・音乐系",
     voiceCategoryNoteToggle: "查看说明",
     voiceCategoryNote:
-      "・此选择可能会限制显示的视频范围。如果只想用投稿祭之类的标签搜索，两者都不选可能会得到更好的结果。\n・点击按钮后，会在内部以「包含任意一个（OR）」的方式附加以下标签。\n「VOICEROID・解说・剧场系」：ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n「VOCALOID・音乐系」：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID",
+      "根据投稿时的分类来选择搜索视频的范围。\n・VOCALOID・音乐系：「音乐・音效」\n・VOICEROID・解说・剧场系：「音乐・音效」以外",
     includeTagsLabel: "Q1：在意的标签是什么？",
     includeTagsNoteToggle: "查看说明",
     fineTuneToggle: "想要更精细地筛选？",
@@ -209,7 +209,7 @@ const translations = {
     vocaloidLabel: "보카로이드・음악 계열",
     voiceCategoryNoteToggle: "설명 보기",
     voiceCategoryNote:
-      "・이 선택으로 인해 표시되는 영상이 제한될 수 있습니다. 투고제 등의 태그만으로 검색할 경우, 둘 다 선택하지 않는 편이 더 좋은 결과가 될 수 있습니다.\n・각 버튼을 누르면 내부적으로 다음 태그가 「하나라도 포함(OR)」 조건으로 추가됩니다.\n「보이로이드・해설・극장 계열」：ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n「보카로이드・음악 계열」：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID",
+      "게시 당시의 장르로 영상을 찾을 범위를 선택합니다.\n・보카로이드・음악 계열：「음악・사운드」\n・보이로이드・해설・극장 계열：「음악・사운드」 이외",
     includeTagsLabel: "Q1：궁금한 태그가 있나요?",
     includeTagsNoteToggle: "설명 보기",
     fineTuneToggle: "세밀하게 좁혀볼까?",
@@ -287,7 +287,7 @@ const translations = {
     vocaloidLabel: "VOCALOID / Music",
     voiceCategoryNoteToggle: "Hear the explanation",
     voiceCategoryNote:
-      "\u2022 This choice may limit which videos show up. If you're searching by tag-festival-style tags alone, leaving both unselected may give better results.\n\u2022 Each button internally adds the following tags with an OR condition.\n\"VOICEROID / Narration / Theater\": \u30dc\u30a4\u30ed, \u30dc\u30a4\u30b9\u30ed\u30a4\u30c9, \u30bd\u30d5\u30c8\u30d5\u30a7\u30a2\u30c8\u30fc\u30af, \u30bd\u30d5\u30c8\u30a6\u30a7\u30a2\u30c8\u30fc\u30af\u5287\u5834, VOICELOID\n\"VOCALOID / Music\": \u30dc\u30ab\u30ed, \u30dc\u30fc\u30ab\u30ed\u30a4\u30c9, UTAU, \u30bd\u30d5\u30c8\u30a6\u30a7\u30a2\u30b7\u30f3\u30ac\u30fc, vocaloid\u30aa\u30ea\u30b8\u30ca\u30eb\u66f2, \u30aa\u30ea\u30b8\u30ca\u30eb, \u30aa\u30ea\u30b8\u30ca\u30eb\u66f2, VOCALOID",
+      "Choose which range of videos to search based on their genre at the time of posting.\n\u2022 VOCALOID / Music: \"Music & Sound\"\n\u2022 VOICEROID / Narration / Theater: anything other than \"Music & Sound\"",
     includeTagsLabel: "Q1: What tags interest you?",
     includeTagsNoteToggle: "Hear the explanation",
     fineTuneToggle: "Fine-tune your search?",
@@ -895,7 +895,7 @@ async function runSearch() {
       .replace("{label}", currentSearchLabel)
       .replace("{count}", totalHitCount.toLocaleString());
     resultSection.hidden = false;
-    resultSection.scrollIntoView({ behavior: "smooth", block: "center" });
+    document.querySelector(".video-meeting-spot").scrollIntoView({ behavior: "smooth", block: "center" });
     playRandomVideo();
   } catch (error) {
     console.error(error);
