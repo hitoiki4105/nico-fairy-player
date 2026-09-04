@@ -835,3 +835,14 @@ button {
     white-space: normal;
   }
 }
+
+.new-player-section {
+  margin-top: 28px;
+}
+
+.new-player-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
