@@ -1308,3 +1308,100 @@ async function fetchUploaderName(contentId) {
 function setStatus(message) {
   statusEl.textContent = message;
 }
+
+// ==== 新セクション（#new-player-section）専用ロジック ====
+// 既存の #result まわりのコード・変数・関数には一切触れず、完全に独立させる。
+
+const newPlayerCountEl = document.getElementById("new-player-count");
+const newPlayerTitleEl = document.getElementById("new-player-title");
+const newPlayerUploaderEl = document.getElementById("new-player-uploader");
+const newPlayerImageEl = document.getElementById("new-player-image");
+const newPlayerWatchLinkEl = document.getElementById("new-player-watch-link");
+const newPlayerNextButtonEl = document.getElementById("new-player-next-button");
+
+let newPlayerVideoList = [];
+let newPlayerShownIds = new Set();
+
+async function newPlayerFetchSearch(params) {
+  const response = await fetch(`${PROXY_BASE_URL}?${params.toString()}`);
+  return response.json();
+}
+
+async function newPlayerRunSearch() {
+  const baseParams = buildBaseParams();
+  if (!baseParams) return;
+
+  const includeTags = parseTags(includeTagsInput.value);
+  const keyword = keywordInput.value.trim();
+  const labelParts = [];
+  if (includeTags.length > 0) labelParts.push(`タグ：${includeTags.join(" ")}`);
+  if (keyword) labelParts.push(`キーワード：${keyword}`);
+  const label = labelParts.join("、");
+
+  try {
+    const countParams = new URLSearchParams(baseParams);
+    countParams.set("_limit", "1");
+    countParams.set("_offset", "0");
+    const countData = await newPlayerFetchSearch(countParams);
+
+    if (countData.meta.status !== 200 || countData.meta.totalCount === 0) {
+      newPlayerVideoList = [];
+      newPlayerCountEl.textContent = `【${label}】で検索して、0件の動画が見つかったよ`;
+      return;
+    }
+
+    const totalHitCount = countData.meta.totalCount;
+    const limit = 100;
+    const maxOffset = Math.max(0, Math.min(totalHitCount - limit, 100000 - limit));
+    const randomOffset = Math.floor(Math.random() * (maxOffset + 1));
+
+    const listParams = new URLSearchParams(baseParams);
+    listParams.set("_limit", String(limit));
+    listParams.set("_offset", String(randomOffset));
+    const listData = await newPlayerFetchSearch(listParams);
+
+    if (listData.meta.status !== 200 || !listData.data || listData.data.length === 0) {
+      newPlayerVideoList = [];
+      newPlayerCountEl.textContent = `【${label}】で検索して、0件の動画が見つかったよ`;
+      return;
+    }
+
+    newPlayerVideoList = listData.data;
+    newPlayerShownIds = new Set();
+    newPlayerCountEl.textContent = `【${label}】で検索して、${totalHitCount.toLocaleString()}件の動画が見つかったよ`;
+
+    newPlayerShowRandomVideo();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function newPlayerPickVideo() {
+  const unshown = newPlayerVideoList.filter((v) => !newPlayerShownIds.has(v.contentId));
+  const pool = unshown.length > 0 ? unshown : newPlayerVideoList;
+  if (unshown.length === 0) newPlayerShownIds = new Set();
+  const video = pool[Math.floor(Math.random() * pool.length)];
+  newPlayerShownIds.add(video.contentId);
+  return video;
+}
+
+async function newPlayerShowRandomVideo() {
+  if (newPlayerVideoList.length === 0) return;
+  const video = newPlayerPickVideo();
+
+  newPlayerTitleEl.textContent = video.title;
+  newPlayerUploaderEl.textContent = "";
+  newPlayerImageEl.src = video.thumbnailUrl || "";
+  newPlayerWatchLinkEl.href = `https://www.nicovideo.jp/watch/${video.contentId}`;
+
+  const uploaderName = await fetchUploaderName(video.contentId);
+  newPlayerUploaderEl.textContent = uploaderName || "";
+}
+
+form.addEventListener("submit", async () => {
+  await newPlayerRunSearch();
+});
+
+newPlayerNextButtonEl.addEventListener("click", () => {
+  newPlayerShowRandomVideo();
+});
