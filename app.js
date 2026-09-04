@@ -989,10 +989,6 @@ async function playRandomVideo({ animate = false } = {}) {
     : Promise.resolve();
 
   if (animate) {
-    // t=0: 前の動画のサムネのフェードアウト開始（0.8秒 → t=0.8で終了）
-    playerThumbEl.style.transition = "opacity 0.8s ease";
-    playerThumbEl.classList.add("thumb-hidden");
-
     // t=0: 動画本体（iframe）は既に非表示のまま保持
     playerEmbedEl.classList.add("embed-hidden");
 
@@ -1003,11 +999,16 @@ async function playRandomVideo({ animate = false } = {}) {
     playerFairyEl.classList.add(fairyVariant);
     playerFairyEl.classList.add("fairy-visible");
 
-    // t=1.0: 0.3秒かけてフェードアウトを開始する（t=1.3で完了）
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    // t=0.8: 現在の動画（サムネ）をカットアウト（フェードなし・瞬時に非表示）
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    playerThumbEl.style.transition = "none";
+    playerThumbEl.classList.add("thumb-hidden");
+
+    // t=1.0: 0.3秒かけて妖精のフェードアウトを開始する（t=1.3で完了）
+    await new Promise((resolve) => setTimeout(resolve, 200));
     playerFairyEl.classList.remove("fairy-visible");
 
-    // t=1.3: 妖精のアニメーションを終了。同時に次の動画のサムネのフェードインを開始する（0.8秒 → t=2.1で終了）
+    // t=1.3: 妖精のアニメーションを終了。同時に次の動画のサムネをカットイン表示する
     await new Promise((resolve) => setTimeout(resolve, 300));
     playerFairyEl.classList.remove(fairyVariant);
   }
@@ -1022,18 +1023,13 @@ async function playRandomVideo({ animate = false } = {}) {
     // t=1.3で開始した先読みがここまでに終わっていない場合のみ待つ（通常は既に完了している）
     await thumbnailPreloadPromise;
 
-    // t=1.3: 次の動画のサムネのフェードイン開始（0.8秒 → t=2.1で終了）。
-    // opacity:0のまま画像を確実に1フレーム分描画させてから（rAFを2回挟む）フェードインを始める。
-    // これにより「デコード途中のにじんだ状態でフェードインが始まる」ちらつきを防ぐ。
+    // t=1.3: 次の動画のサムネをカットイン（フェードなし・瞬時に表示）
     playerThumbEl.style.transition = "none";
     playerThumbEl.src = currentThumbnailUrl;
     if (playerThumbEl.decode) {
       await playerThumbEl.decode().catch(() => {});
     }
-    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-    playerThumbEl.style.transition = "opacity 0.8s ease";
     playerThumbEl.classList.remove("thumb-hidden");
-    await new Promise((resolve) => setTimeout(resolve, 800));
   } else {
     // アニメーションなし（初回検索時など）は、サムネをそのまま表示しておく
     playerThumbEl.style.transition = "none";
