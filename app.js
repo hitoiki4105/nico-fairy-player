@@ -89,7 +89,10 @@ const translations = {
     statusNoResults: "条件に一致する動画が見つかりませんでした。タグや条件を変えてお試しください。",
     statusNetworkError: "通信エラーが発生しました。時間をおいて再度お試しください。",
     statusLoopedRound: "すべて再生したので、最初からもう一周します。",
-    resultCountSuffix: "の動画が見つかったよ",
+    resultCountLabel: "【{label}】で検索して、{count}の動画が見つかったよ",
+    searchLabelTag: "タグ：",
+    searchLabelKeyword: "キーワード：",
+    searchLabelJoiner: "、",
     scrollToQ1Button: "🏷️ Q1へ",
     uploaderLoading: "投稿者を取得中...",
     uploaderPrefix: "投稿者: ",
@@ -100,6 +103,8 @@ const translations = {
     historyNote: "・クリックすると、ニコニコ動画に飛びます",
     historyMoreButton: "記録をもっとみる",
     historyMoreNote: "・新しいウィンドウが開きます",
+    historyGroupToggle: "検索語【{label}】で出会った動画",
+    historyWindowClosedNote: "元のページが閉じられたか、リンクが切れています。元のページからもう一度「記録をもっとみる」を開いてください。",
   },
   zh: {
     pageTitle: "视频森林，妖精播放器",
@@ -160,7 +165,10 @@ const translations = {
     statusNoResults: "没有找到符合条件的视频，请更改标签或筛选条件后重试。",
     statusNetworkError: "发生通信错误，请稍后重试。",
     statusLoopedRound: "已经全部播放过了，将重新从头开始循环。",
-    resultCountSuffix: "个结果",
+    resultCountLabel: "以【{label}】搜索，找到{count}个结果",
+    searchLabelTag: "标签：",
+    searchLabelKeyword: "关键词：",
+    searchLabelJoiner: "、",
     scrollToQ1Button: "🏷️ 前往Q1",
     uploaderLoading: "正在获取投稿者...",
     uploaderPrefix: "投稿者：",
@@ -171,6 +179,8 @@ const translations = {
     historyNote: "・点击即可跳转到niconico动画",
     historyMoreButton: "追寻足迹",
     historyMoreNote: "・会打开新窗口",
+    historyGroupToggle: "以搜索词【{label}】相遇的视频",
+    historyWindowClosedNote: "原页面已关闭或连接已断开，请从原页面重新打开「追寻足迹」。",
   },
   ko: {
     pageTitle: "영상의 숲, 요정 플레이어",
@@ -231,7 +241,10 @@ const translations = {
     statusNoResults: "조건에 맞는 동영상을 찾지 못했습니다. 태그나 조건을 변경해 보세요.",
     statusNetworkError: "통신 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
     statusLoopedRound: "모두 재생했으므로 처음부터 다시 순환합니다.",
-    resultCountSuffix: "건 검색됨",
+    resultCountLabel: "【{label}】(으)로 검색해서 {count}개의 동영상을 찾았어",
+    searchLabelTag: "태그：",
+    searchLabelKeyword: "키워드：",
+    searchLabelJoiner: "、",
     scrollToQ1Button: "🏷️ Q1로",
     uploaderLoading: "업로더 정보를 가져오는 중...",
     uploaderPrefix: "업로더: ",
@@ -241,6 +254,8 @@ const translations = {
     historyTitle: "만난 동영상 기록",
     historyMoreButton: "기록 더 보기",
     historyMoreNote: "・새 창이 열립니다",
+    historyGroupToggle: "검색어【{label}】(으)로 만난 동영상",
+    historyWindowClosedNote: "원본 페이지가 닫혔거나 연결이 끊어졌습니다. 원본 페이지에서 다시 「기록 더 보기」를 열어 주세요.",
   },
   en: {
     pageTitle: "Forest of Videos, Fairy Player",
@@ -301,7 +316,10 @@ const translations = {
     statusNoResults: "No videos matched your conditions. Try different tags or filters.",
     statusNetworkError: "A network error occurred. Please try again later.",
     statusLoopedRound: "You've seen them all - starting over from the top.",
-    resultCountSuffix: " results",
+    resultCountLabel: "Searched for 【{label}】 - found {count} videos",
+    searchLabelTag: "Tag: ",
+    searchLabelKeyword: "Keyword: ",
+    searchLabelJoiner: ", ",
     scrollToQ1Button: "🏷️ To Q1",
     uploaderLoading: "Loading uploader...",
     uploaderPrefix: "Uploader: ",
@@ -311,6 +329,8 @@ const translations = {
     historyTitle: "Videos you've met",
     historyMoreButton: "See more history",
     historyMoreNote: "* Opens a new window",
+    historyGroupToggle: "Videos found with 【{label}】",
+    historyWindowClosedNote: "The original page has been closed or the link is no longer active. Please open \"See more history\" again from the original page.",
   },
 };
 
@@ -368,6 +388,8 @@ let playedContentIds = new Set();
 let selectedVoiceCategories = new Set();
 // 出会った動画の記録（新しいものが先頭）
 let watchHistory = [];
+// 直近に実行した検索の検索語（タグ・キーワード）。履歴の「検索語Xで出会った動画」表示に使う
+let currentSearchLabel = "";
 // 現在プレイヤーに表示している動画のサムネイルURL（次の動画へのフェード演出で使う）
 let currentThumbnailUrl = "";
 const HISTORY_VISIBLE_COUNT = 5;
@@ -687,6 +709,20 @@ function buildJsonFilter({ includeTags, excludeTags, matchMode, minViews, maxVie
 
 // 検索条件（キーワード・タグ・フィルタ）をまとめたパラメータを組み立てる
 // （_limit, _offset はリクエストの用途ごとに後から付け足す）
+// タグ・キーワードの入力内容から「検索語X」の表示ラベルを組み立てる
+// 例：「タグ：初音ミク、キーワード：リミックス」（片方だけならその項目のみ）
+function buildSearchLabel(includeTags, keyword) {
+  const t = translations[currentLang];
+  const parts = [];
+  if (includeTags.length > 0) {
+    parts.push(`${t.searchLabelTag}${includeTags.join(" ")}`);
+  }
+  if (keyword) {
+    parts.push(`${t.searchLabelKeyword}${keyword}`);
+  }
+  return parts.join(t.searchLabelJoiner);
+}
+
 function buildBaseParams() {
   const includeTags = parseTags(includeTagsInput.value);
   const excludeTags = parseTags(excludeTagsInput.value);
@@ -742,6 +778,8 @@ async function runSearch() {
     return;
   }
 
+  currentSearchLabel = buildSearchLabel(parseTags(includeTagsInput.value), keywordInput.value.trim());
+
   setStatus(translations[currentLang].statusSearching);
   searchButton.disabled = true;
   resultSection.hidden = true;
@@ -790,9 +828,11 @@ async function runSearch() {
 
     playedContentIds = new Set();
     setStatus("");
-    resultCountEl.textContent = `${totalHitCount.toLocaleString()}${translations[currentLang].resultCountSuffix}`;
+    resultCountEl.textContent = translations[currentLang].resultCountLabel
+      .replace("{label}", currentSearchLabel)
+      .replace("{count}", totalHitCount.toLocaleString());
     resultSection.hidden = false;
-    resultCountEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    resultSection.scrollIntoView({ behavior: "smooth", block: "center" });
     playRandomVideo();
   } catch (error) {
     console.error(error);
@@ -821,6 +861,37 @@ function pickNextVideo() {
 }
 
 const FAIRY_VARIANTS = ["spin-active", "wave-rtl", "wave-ltr"];
+
+// ニコニコの埋め込みスクリプトは640x360固定サイズのiframeを生成するため、
+// 生成され次第それを検知して、プレイヤー枠（#player）いっぱいに広がるよう上書きする
+function observeEmbedIframeResize(containerEl) {
+  const applySize = (iframe) => {
+    iframe.removeAttribute("width");
+    iframe.removeAttribute("height");
+    iframe.style.width = "100%";
+    iframe.style.height = "100%";
+    iframe.style.border = "0";
+    iframe.style.display = "block";
+  };
+
+  const existingIframe = containerEl.querySelector("iframe");
+  if (existingIframe) {
+    applySize(existingIframe);
+    return;
+  }
+
+  const observer = new MutationObserver((mutations, obs) => {
+    const iframe = containerEl.querySelector("iframe");
+    if (iframe) {
+      applySize(iframe);
+      obs.disconnect();
+    }
+  });
+  observer.observe(containerEl, { childList: true, subtree: true });
+
+  // 万一iframeが現れなくても監視し続けないよう、一定時間で諦める
+  setTimeout(() => observer.disconnect(), 10000);
+}
 
 async function playRandomVideo({ animate = false } = {}) {
   if (videoList.length === 0) return;
@@ -874,6 +945,7 @@ async function playRandomVideo({ animate = false } = {}) {
   const embedScript = document.createElement("script");
   embedScript.src = `https://embed.nicovideo.jp/watch/${video.contentId}/script?w=640&h=360`;
   playerEmbedEl.appendChild(embedScript);
+  observeEmbedIframeResize(playerEmbedEl);
 
   if (animate) {
     // t=0で開始した先読みがここまでに終わっていない場合のみ待つ（通常は既に完了している）
@@ -903,6 +975,7 @@ async function playRandomVideo({ animate = false } = {}) {
     title: video.title,
     uploader: uploaderName,
     thumbnailUrl: video.thumbnailUrl,
+    searchLabel: currentSearchLabel,
   });
 }
 
@@ -967,49 +1040,90 @@ function renderHistory() {
   }
 }
 
-// 新規ウィンドウの内部に、元ページと同じ見た目で全履歴を描画する
+// 新規ウィンドウの内部に、検索語（searchLabel）ごとにグループ分けし、
+// 「検索語【X】で出会った動画」のトグルボタンで開閉できる形で全履歴を描画する
 function renderHistoryIntoWindow(win) {
-  const listEl = win.document.getElementById("history-list-full");
-  if (!listEl) return;
-  listEl.innerHTML = "";
+  const rootEl = win.document.getElementById("history-groups");
+  if (!rootEl) return;
+
+  const t = translations[currentLang];
+  const noHistoryLabel = "(-)"; // 検索語が空だった場合のグループ見出し用フォールバック
+
+  // 検索語（searchLabel）ごとにグループ化。出現順（＝新しい検索が先）を保つ
+  const groups = [];
+  const groupIndex = new Map();
   watchHistory.forEach((entry) => {
-    const li = win.document.createElement("li");
-    li.className = "history-item";
-    li.title = translations[currentLang].historyNote;
-    li.addEventListener("click", () => {
-      win.open(`https://www.nicovideo.jp/watch/${entry.contentId}`, "_blank", "noopener");
+    const label = entry.searchLabel || noHistoryLabel;
+    if (!groupIndex.has(label)) {
+      groupIndex.set(label, groups.length);
+      groups.push({ label, entries: [] });
+    }
+    groups[groupIndex.get(label)].entries.push(entry);
+  });
+
+  rootEl.innerHTML = "";
+
+  groups.forEach((group, index) => {
+    const groupEl = win.document.createElement("div");
+    groupEl.className = "history-group";
+
+    const toggleBtn = win.document.createElement("button");
+    toggleBtn.type = "button";
+    toggleBtn.className = "pill-button history-group-toggle";
+    toggleBtn.textContent = t.historyGroupToggle.replace("{label}", group.label);
+
+    const listEl = win.document.createElement("ul");
+    listEl.className = "history-group-list";
+    // 最初のグループ（最新の検索）だけ開いた状態にしておく
+    listEl.hidden = index !== 0;
+
+    toggleBtn.addEventListener("click", () => {
+      listEl.hidden = !listEl.hidden;
     });
 
-    const img = win.document.createElement("img");
-    img.className = "history-thumb";
-    img.src = entry.thumbnailUrl || "";
-    img.alt = "";
+    group.entries.forEach((entry) => {
+      const li = win.document.createElement("li");
+      li.className = "history-item";
+      li.title = t.historyNote;
+      li.addEventListener("click", () => {
+        win.open(`https://www.nicovideo.jp/watch/${entry.contentId}`, "_blank", "noopener");
+      });
 
-    const textWrap = win.document.createElement("div");
-    textWrap.className = "history-text";
+      const img = win.document.createElement("img");
+      img.className = "history-thumb";
+      img.src = entry.thumbnailUrl || "";
+      img.alt = "";
 
-    const titleEl = win.document.createElement("p");
-    titleEl.className = "history-title";
-    titleEl.textContent = entry.title;
+      const textWrap = win.document.createElement("div");
+      textWrap.className = "history-text";
 
-    const uploaderEl = win.document.createElement("p");
-    uploaderEl.className = "history-uploader";
-    uploaderEl.textContent = entry.uploader
-      ? `${translations[currentLang].uploaderPrefix}${entry.uploader}`
-      : translations[currentLang].uploaderUnknown;
+      const titleEl = win.document.createElement("p");
+      titleEl.className = "history-title";
+      titleEl.textContent = entry.title;
 
-    textWrap.appendChild(titleEl);
-    textWrap.appendChild(uploaderEl);
-    li.appendChild(img);
-    li.appendChild(textWrap);
-    listEl.appendChild(li);
+      const uploaderEl = win.document.createElement("p");
+      uploaderEl.className = "history-uploader";
+      uploaderEl.textContent = entry.uploader
+        ? `${t.uploaderPrefix}${entry.uploader}`
+        : t.uploaderUnknown;
+
+      textWrap.appendChild(titleEl);
+      textWrap.appendChild(uploaderEl);
+      li.appendChild(img);
+      li.appendChild(textWrap);
+      listEl.appendChild(li);
+    });
+
+    groupEl.appendChild(toggleBtn);
+    groupEl.appendChild(listEl);
+    rootEl.appendChild(groupEl);
   });
 }
 
 // 「記録をもっとみる」で開く全履歴ウィンドウへの参照（既に開いていれば使い回す）
 let historyWindowRef = null;
 
-historyMoreButton.addEventListener("click", () => {
+function openHistoryWindow() {
   if (historyWindowRef && !historyWindowRef.closed) {
     historyWindowRef.focus();
     renderHistoryIntoWindow(historyWindowRef);
@@ -1019,15 +1133,22 @@ historyMoreButton.addEventListener("click", () => {
   const win = window.open("", "_blank");
   if (!win) return;
   historyWindowRef = win;
+  writeHistoryWindowDocument(win);
+}
 
-  // 元ページと同じフォント・CSSを読み込んだ土台のHTMLを書き出す
+// 新規ウィンドウの土台HTMLを書き出す。
+// window.opener（＝このメインページ）を参照して描画するブートストラップ処理を埋め込むことで、
+// リロードされた場合も再度このopener経由で履歴を取得し直し、真っ白にならないようにしている。
+// opener自体が閉じられていた場合は、その旨を案内するメッセージを表示する。
+function writeHistoryWindowDocument(win) {
+  const t = translations[currentLang];
   win.document.open();
   win.document.write(`<!DOCTYPE html>
 <html lang="${currentLang}">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>${translations[currentLang].historyTitle}</title>
+<title>${t.historyTitle}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Hina+Mincho&family=BIZ+UDPGothic:wght@400;700&family=Kiwi+Maru:wght@400;500&family=Sawarabi+Gothic&display=swap" rel="stylesheet" />
@@ -1036,19 +1157,33 @@ historyMoreButton.addEventListener("click", () => {
 <body>
 <main>
   <div class="top-bar">
-    <h1 style="font-size: 24px;">${translations[currentLang].historyTitle}</h1>
+    <h1 style="font-size: 24px;">${t.historyTitle}</h1>
   </div>
   <section id="history">
-    <p class="disclaimer">${translations[currentLang].historyNote}</p>
-    <ul id="history-list-full"></ul>
+    <p class="disclaimer">${t.historyNote}</p>
+    <div id="history-groups"></div>
+    <p class="disclaimer" id="history-closed-note" hidden>${t.historyWindowClosedNote}</p>
   </section>
 </main>
+<script>
+  // リロード時を含め、このページを開くたびに実行される。
+  // window.opener（元のページ）が生きていれば、そちらのrenderHistoryIntoWindowを呼んでもらい
+  // 最新の履歴を描画してもらう。opener が閉じられていれば、その旨を表示する。
+  (function () {
+    if (window.opener && !window.opener.closed && typeof window.opener.renderHistoryIntoWindow === "function") {
+      window.opener.renderHistoryIntoWindow(window);
+    } else {
+      var note = document.getElementById("history-closed-note");
+      if (note) note.hidden = false;
+    }
+  })();
+</script>
 </body>
 </html>`);
   win.document.close();
+}
 
-  renderHistoryIntoWindow(win);
-});
+historyMoreButton.addEventListener("click", openHistoryWindow);
 
 // 動画の詳細情報API（getthumbinfo）から投稿者名（またはチャンネル名）を取り出す
 async function fetchUploaderName(contentId) {

@@ -114,7 +114,8 @@ main {
 
   .section-ss {
     grid-column: 2 / 3;
-    align-self: end;
+    align-self: stretch;
+    height: 100%;
   }
 
   .section-sr,
@@ -694,7 +695,8 @@ button {
   margin: 0 0 12px;
 }
 
-#history-list {
+#history-list,
+.history-group-list {
   list-style: none;
   margin: 0;
   padding: 0;
@@ -712,10 +714,6 @@ button {
   border-radius: 10px;
   cursor: pointer;
   padding: 8px 10px;
-}
-
-.history-item.hidden-extra {
-  display: none;
 }
 
 .history-thumb {
@@ -750,13 +748,19 @@ button {
   margin-top: 14px;
 }
 
-#history-list-extra {
-  list-style: none;
-  margin: 10px 0 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+/* 記録の全履歴ウィンドウ：検索語ごとのグループとトグルボタン */
+.history-group {
+  margin-bottom: 18px;
+}
+
+.history-group-toggle {
+  width: 100%;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.history-group-list {
+  margin-top: 10px;
 }
 
 #tag-map-section {
