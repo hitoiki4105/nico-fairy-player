@@ -867,6 +867,8 @@ button {
   width: 100%;
   height: auto;
   border-radius: 6px;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .new-player-actions {

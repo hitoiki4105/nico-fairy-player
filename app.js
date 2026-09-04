@@ -1385,6 +1385,21 @@ function newPlayerPickVideo() {
   return video;
 }
 
+async function newPlayerFetchLargeThumbnail(contentId) {
+  try {
+    const response = await fetch(`${PROXY_BASE_URL}thumbinfo/${contentId}`);
+    const xmlText = await response.text();
+    const xml = new DOMParser().parseFromString(xmlText, "text/xml");
+    const largeThumb = xml.querySelector("thumbnail_url_large, image_uri");
+    if (largeThumb) return largeThumb.textContent;
+    const thumb = xml.querySelector("thumbnail_url");
+    return thumb ? thumb.textContent : null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
 async function newPlayerShowRandomVideo() {
   if (newPlayerVideoList.length === 0) return;
   const video = newPlayerPickVideo();
@@ -1394,8 +1409,14 @@ async function newPlayerShowRandomVideo() {
   newPlayerImageEl.src = video.thumbnailUrl || "";
   newPlayerWatchLinkEl.href = `https://www.nicovideo.jp/watch/${video.contentId}`;
 
-  const uploaderName = await fetchUploaderName(video.contentId);
+  const [uploaderName, largeThumbnailUrl] = await Promise.all([
+    fetchUploaderName(video.contentId),
+    newPlayerFetchLargeThumbnail(video.contentId),
+  ]);
   newPlayerUploaderEl.textContent = uploaderName || "";
+  if (largeThumbnailUrl) {
+    newPlayerImageEl.src = largeThumbnailUrl;
+  }
 }
 
 form.addEventListener("submit", async () => {
