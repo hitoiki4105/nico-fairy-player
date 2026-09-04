@@ -435,7 +435,7 @@ function applyLanguage(lang) {
 
 // 検索ボタンの文字サイズを「文字列の幅がボタンの幅の80%になる」ように自動調整する。
 // ただし現在のデフォルトサイズ（16px）を下回らないようにする（最小値）。
-const SEARCH_BUTTON_MIN_FONT_SIZE = 16; // px（変更前のデフォルトサイズ＝最小値）
+const SEARCH_BUTTON_MIN_FONT_SIZE = 20; // px（最小値）
 const SEARCH_BUTTON_TARGET_RATIO = 0.8; // ボタン幅に対する文字列幅の目標比率
 
 function fitSearchButtonToWidth() {
@@ -1011,14 +1011,14 @@ async function playRandomVideo({ animate = false } = {}) {
     await thumbnailPreloadPromise;
 
     // t=1.3: 次の動画のサムネのフェードイン開始（0.8秒 → t=2.1で終了）。
-    // src を切り替えた直後は、実体のあるplayerThumbEl側でも念のためdecode()を待ってから
-    // opacityを変化させる。これにより「一瞬空白または前の絵が見えてから表示される」ちらつきを防ぐ。
+    // opacity:0のまま画像を確実に1フレーム分描画させてから（rAFを2回挟む）フェードインを始める。
+    // これにより「デコード途中のにじんだ状態でフェードインが始まる」ちらつきを防ぐ。
     playerThumbEl.style.transition = "none";
     playerThumbEl.src = currentThumbnailUrl;
     if (playerThumbEl.decode) {
       await playerThumbEl.decode().catch(() => {});
     }
-    void playerThumbEl.offsetWidth;
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     playerThumbEl.style.transition = "opacity 0.8s ease";
     playerThumbEl.classList.remove("thumb-hidden");
     await new Promise((resolve) => setTimeout(resolve, 800));
