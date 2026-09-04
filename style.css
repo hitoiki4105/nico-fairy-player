@@ -45,6 +45,85 @@ main {
   padding: 32px 20px 80px;
 }
 
+/* ==== ページ全体のセクション配置（Grid） ====
+   S11: あいさつ〜言語設定 / S12: タイトル画像 / SR: サムネ表示
+   S21: Q1 タグ / S22: Q2 再生数 / S31: Q3 キーワード / S32: Q4 ジャンル
+   S41: Q5 投稿日 / SS: 検索ボタン / SH: 記録
+
+   スマホ幅では全セクションが縦一列（1カラム）。
+   ブラウザ幅（769px〜）では、S11+S12, S21+S22, S31+S32, S41+SSをそれぞれ2カラムで並べ、
+   SR（サムネ表示）とSH（記録）は常に1カラム全幅で表示する。 */
+.page-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  row-gap: 20px;
+}
+
+.page-grid > form {
+  display: contents;
+}
+
+@media (min-width: 769px) {
+  main.page-grid {
+    max-width: 960px;
+  }
+
+  .page-grid {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 24px;
+  }
+
+  /* Q1〜SSをまとめて含むform内も、同じ2カラムGridの並びに乗せる */
+  .page-grid > form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column: 1 / -1;
+    column-gap: 24px;
+    row-gap: 20px;
+  }
+
+  .section-s11 {
+    grid-column: 1 / 2;
+    align-self: center;
+  }
+
+  .section-s12 {
+    grid-column: 2 / 3;
+    align-self: center;
+  }
+
+  .section-s21 {
+    grid-column: 1 / 2;
+  }
+
+  .section-s22 {
+    grid-column: 2 / 3;
+  }
+
+  .section-s31 {
+    grid-column: 1 / 2;
+  }
+
+  .section-s32 {
+    grid-column: 2 / 3;
+  }
+
+  .section-s41 {
+    grid-column: 1 / 2;
+  }
+
+  .section-ss {
+    grid-column: 2 / 3;
+    align-self: end;
+  }
+
+  .section-sr,
+  .section-sh,
+  #status {
+    grid-column: 1 / -1;
+  }
+}
+
 .top-bar {
   margin-bottom: 16px;
 }
@@ -120,7 +199,7 @@ h1 {
       border-box;
   padding: 18px 20px;
   box-shadow: 0 5px 10px rgba(47, 82, 51, 0.28), inset 0 0 0 1px rgba(90, 58, 30, 0.15);
-  margin-bottom: 24px;
+  margin-bottom: 0;
   transform: rotate(-0.4deg);
 }
 
@@ -564,7 +643,7 @@ button {
 }
 
 .title-image-wrap {
-  margin: 0 0 22px;
+  margin: 0;
 }
 
 .title-image {

@@ -13,29 +13,31 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main>
-    <div class="top-bar">
-      <h1 id="page-title" data-i18n="heading" style="font-size: 24px;">妖精さんプレイヤー</h1>
-      <p class="lead" data-i18n="subtitle">ニコニコ動画ランダム再生ツール（非公式）</p>
-      <p class="disclaimer"><span data-i18n="disclaimerPrefix">問い合わせなどはこちらから</span> <a href="https://x.com/hitoiki327882" target="_blank" rel="noopener">https://x.com/hitoiki327882</a></p>
+  <main class="page-grid">
+    <div class="section-s11">
+      <div class="top-bar">
+        <h1 id="page-title" data-i18n="heading" style="font-size: 24px;">妖精さんプレイヤー</h1>
+        <p class="lead" data-i18n="subtitle">ニコニコ動画ランダム再生ツール（非公式）</p>
+        <p class="disclaimer"><span data-i18n="disclaimerPrefix">問い合わせなどはこちらから</span> <a href="https://x.com/hitoiki327882" target="_blank" rel="noopener">https://x.com/hitoiki327882</a></p>
+      </div>
+
+      <div class="lang-field">
+        <label for="language-select" data-i18n="languageLabel">言語</label>
+        <select id="language-select">
+          <option value="ja">日本語</option>
+          <option value="zh">中文</option>
+          <option value="ko">한국어</option>
+          <option value="en">English</option>
+        </select>
+      </div>
     </div>
 
-    <div class="lang-field">
-      <label for="language-select" data-i18n="languageLabel">言語</label>
-      <select id="language-select">
-        <option value="ja">日本語</option>
-        <option value="zh">中文</option>
-        <option value="ko">한국어</option>
-        <option value="en">English</option>
-      </select>
-    </div>
-
-    <div class="title-image-wrap">
+    <div class="title-image-wrap section-s12">
       <img src="img_title.jpg" alt="" class="title-image" />
     </div>
 
     <form id="search-form">
-      <div class="field forest-box" id="q1-section">
+      <div class="field forest-box section-s21" id="q1-section">
         <label for="include-tags" class="section-question" style="font-family: 'Hina Mincho', serif; font-size: 1.15rem;font-weight: 700; color: var(--accent);" data-i18n="includeTagsLabel">Q1：気になるタグは何？</label>
         <input type="text" id="include-tags" data-i18n-placeholder="includeTagsPlaceholder" placeholder="例: 初音ミク オリジナル曲" />
         <p class="disclaimer" data-i18n="leadSub">タグ検索とキーワード検索、どちらか一方だけでも使えます。</p>
@@ -60,7 +62,7 @@
         </div>
       </div>
 
-      <div class="field forest-box">
+      <div class="field forest-box section-s22">
         <span class="section-question" style="font-family: 'Hina Mincho', serif;" data-i18n="viewsRangeLabel">Q2：森の奥まで行ってみる？</span>
         <div class="field-row views-row">
           <div>
@@ -76,7 +78,7 @@
         <p class="disclaimer" data-i18n="viewsBoxNote">森の奥には、まだたくさんの動画があるよ。</p>
       </div>
 
-      <div class="field forest-box">
+      <div class="field forest-box section-s31">
         <label for="keyword" class="section-question" style="font-family: 'Hina Mincho', serif; font-size: 1.15rem;font-weight: 700; color: var(--accent);" data-i18n="keywordLabel">Q3：キーワードでもいいよ？</label>
         <input type="text" id="keyword" data-i18n-placeholder="keywordPlaceholder" placeholder="例: リミックス" />
         <p class="disclaimer" data-i18n="keywordNote">キーワード検索はタイトル・動画詳細欄を参照します。</p>
@@ -94,7 +96,7 @@
         </div>
       </div>
 
-      <div class="field forest-box">
+      <div class="field forest-box section-s32">
         <span class="section-question" style="font-family: 'Hina Mincho', serif;" data-i18n="voiceCategoryLabel">Q4：ジャンル、指定する？（オプション）</span>
         <div class="toggle-row">
           <button type="button" class="toggle-btn" id="voiroid-toggle" data-category="voiroid" data-i18n="voiroidLabel">ボイロ・解説・劇場系</button>
@@ -107,7 +109,7 @@
 「ボカロ・音楽系」：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID</p>
       </div>
 
-      <div class="field forest-box">
+      <div class="field forest-box section-s41">
         <span class="section-question" style="font-family: 'Hina Mincho', serif;" data-i18n="dateRangeLabel">Q5：投稿日を指定する？（オプション）</span>
         <div class="radio-group">
           <label><input type="radio" name="date-mode" value="range" checked /> <span data-i18n="dateModeRange">期間で指定</span></label>
@@ -131,12 +133,12 @@
         </div>
       </div>
 
-      <button type="submit" id="search-button" data-i18n="searchButton">妖精さんと探しに行こう！</button>
+      <button type="submit" id="search-button" class="section-ss" data-i18n="searchButton">妖精さんと探しに行こう！</button>
     </form>
 
     <section id="status" aria-live="polite"></section>
 
-    <section id="result">
+    <section id="result" class="section-sr">
       <p id="result-count"></p>
       <div class="video-meeting-spot">
         <p id="current-title"></p>
@@ -153,7 +155,7 @@
       </div>
     </section>
 
-    <section id="history" hidden>
+    <section id="history" class="section-sh" hidden>
       <h2 data-i18n="historyTitle">出会った動画の記録</h2>
       <p class="disclaimer" data-i18n="historyNote">・クリックすると、ニコニコ動画に飛びます</p>
       <ul id="history-list"></ul>
