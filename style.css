@@ -556,6 +556,12 @@ button {
   opacity: 0;
 }
 
+.player-thumb-preload {
+  opacity: 0 !important;
+  transition: none !important;
+  pointer-events: none;
+}
+
 #player-embed {
   position: absolute;
   inset: 0;

@@ -379,6 +379,7 @@ const currentUploaderEl = document.getElementById("current-uploader");
 const playerEl = document.getElementById("player");
 const playerEmbedEl = document.getElementById("player-embed");
 const playerThumbEl = document.getElementById("player-thumb");
+const playerThumbPreloadEl = document.getElementById("player-thumb-preload");
 const playerFairyEl = document.getElementById("player-fairy");
 const nextButton = document.getElementById("next-button");
 const watchOnNicoLink = document.getElementById("watch-on-nico");
@@ -970,20 +971,20 @@ async function playRandomVideo({ animate = false } = {}) {
 
   const video = pickNextVideo();
 
-  // 次のサムネはできるだけ早く（アニメーション開始と同時に）先読みしておく。
-  // Image().decode() まで待つことで、後で playerThumbEl.src に反映した瞬間に
-  // 必ず完成した画像がそこにある状態にする（デコード待ちによる「一瞬空白→表示」のちらつき防止）
+  // 次のサムネはできるだけ早く（アニメーション開始と同時に）、実際に表示に使うのと
+  // 同じサイズ・スタイルの隠しimg要素（opacity:0）に読み込ませておく。
+  // これにより本番表示に切り替えた瞬間、既に本来のサイズでペイント済みの画像が出るため、
+  // 一瞬ぼやけてからくっきりする、という現象を防ぐ。
   const nextThumbnailUrl = video.thumbnailUrl || "";
   const thumbnailPreloadPromise = nextThumbnailUrl
     ? (() => {
-        const preloadImg = new Image();
-        preloadImg.src = nextThumbnailUrl;
-        if (preloadImg.decode) {
-          return preloadImg.decode().catch(() => {});
+        playerThumbPreloadEl.src = nextThumbnailUrl;
+        if (playerThumbPreloadEl.decode) {
+          return playerThumbPreloadEl.decode().catch(() => {});
         }
         return new Promise((resolve) => {
-          preloadImg.onload = resolve;
-          preloadImg.onerror = resolve;
+          playerThumbPreloadEl.onload = resolve;
+          playerThumbPreloadEl.onerror = resolve;
         });
       })()
     : Promise.resolve();
@@ -1023,12 +1024,11 @@ async function playRandomVideo({ animate = false } = {}) {
     // t=1.3で開始した先読みがここまでに終わっていない場合のみ待つ（通常は既に完了している）
     await thumbnailPreloadPromise;
 
-    // t=1.3: 次の動画のサムネをカットイン（フェードなし・瞬時に表示）
+    // t=1.3: 次の動画のサムネをカットイン（フェードなし・瞬時に表示）。
+    // 既に隠しimg要素で本番と同じサイズにペイント済みなので、srcをコピーするだけで
+    // ぼやけた状態を経由せずシャープな画像がそのまま出る。
     playerThumbEl.style.transition = "none";
-    playerThumbEl.src = currentThumbnailUrl;
-    if (playerThumbEl.decode) {
-      await playerThumbEl.decode().catch(() => {});
-    }
+    playerThumbEl.src = playerThumbPreloadEl.src;
     playerThumbEl.classList.remove("thumb-hidden");
   } else {
     // アニメーションなし（初回検索時など）は、サムネをそのまま表示しておく
