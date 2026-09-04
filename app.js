@@ -379,6 +379,7 @@ function applyLanguage(lang) {
       el.placeholder = translations[lang][key];
     }
   });
+}
 
 // タイトルは固定サイズ（style="font-size: 24px;"）で表示するため、
 // 幅いっぱいに自動拡大する機能は無効化しています（以前は fitTitleToWidth() で自動調整していました）
