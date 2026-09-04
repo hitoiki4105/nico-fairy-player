@@ -379,7 +379,6 @@ const currentUploaderEl = document.getElementById("current-uploader");
 const playerEl = document.getElementById("player");
 const playerEmbedEl = document.getElementById("player-embed");
 const playerThumbEl = document.getElementById("player-thumb");
-const playerThumbPreloadEl = document.getElementById("player-thumb-preload");
 const playerFairyEl = document.getElementById("player-fairy");
 const nextButton = document.getElementById("next-button");
 const watchOnNicoLink = document.getElementById("watch-on-nico");
@@ -971,20 +970,18 @@ async function playRandomVideo({ animate = false } = {}) {
 
   const video = pickNextVideo();
 
-  // 次のサムネはできるだけ早く（アニメーション開始と同時に）、実際に表示に使うのと
-  // 同じサイズ・スタイルの隠しimg要素（opacity:0）に読み込ませておく。
-  // これにより本番表示に切り替えた瞬間、既に本来のサイズでペイント済みの画像が出るため、
-  // 一瞬ぼやけてからくっきりする、という現象を防ぐ。
+  // 次のサムネはできるだけ早く（アニメーション開始と同時に）先読みしておく。
   const nextThumbnailUrl = video.thumbnailUrl || "";
   const thumbnailPreloadPromise = nextThumbnailUrl
     ? (() => {
-        playerThumbPreloadEl.src = nextThumbnailUrl;
-        if (playerThumbPreloadEl.decode) {
-          return playerThumbPreloadEl.decode().catch(() => {});
+        const preloadImg = new Image();
+        preloadImg.src = nextThumbnailUrl;
+        if (preloadImg.decode) {
+          return preloadImg.decode().catch(() => {});
         }
         return new Promise((resolve) => {
-          playerThumbPreloadEl.onload = resolve;
-          playerThumbPreloadEl.onerror = resolve;
+          preloadImg.onload = resolve;
+          preloadImg.onerror = resolve;
         });
       })()
     : Promise.resolve();
@@ -1028,7 +1025,7 @@ async function playRandomVideo({ animate = false } = {}) {
     // 既に隠しimg要素で本番と同じサイズにペイント済みなので、srcをコピーするだけで
     // ぼやけた状態を経由せずシャープな画像がそのまま出る。
     playerThumbEl.style.transition = "none";
-    playerThumbEl.src = playerThumbPreloadEl.src;
+    playerThumbEl.src = currentThumbnailUrl;
     playerThumbEl.classList.remove("thumb-hidden");
   } else {
     // アニメーションなし（初回検索時など）は、サムネをそのまま表示しておく
