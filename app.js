@@ -1016,7 +1016,7 @@ historyMoreButton.addEventListener("click", () => {
     return;
   }
 
-  const win = window.open("", "_blank", "noopener");
+  const win = window.open("", "_blank");
   if (!win) return;
   historyWindowRef = win;
 
