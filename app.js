@@ -80,7 +80,7 @@ const translations = {
     excludeTagsLabel: "除外するタグ（半角、全角スペースで複数入力可）",
     excludeTagsPlaceholder: "例: R-18",
     searchButton: "妖精さんと探しに行こう！",
-    statusNeedTag: "含めるタグかキーワードのどちらかを入力してください。",
+    statusNeedTag: "含めるタグかキーワードのどっちかは教えて、ね？",
     statusSearching: "検索中...",
     statusSuggesting: "単語を探しています...",
     statusExpanding: "類義語・関連語を探しています...",
@@ -341,6 +341,7 @@ const playerThumbEl = document.getElementById("player-thumb");
 const playerFairyEl = document.getElementById("player-fairy");
 const nextButton = document.getElementById("next-button");
 const watchOnNicoLink = document.getElementById("watch-on-nico");
+const resultActionsEl = document.getElementById("result-actions");
 const languageSelect = document.getElementById("language-select");
 const voiroidToggle = document.getElementById("voiroid-toggle");
 const vocaloidToggle = document.getElementById("vocaloid-toggle");
@@ -354,8 +355,8 @@ const keywordPlayToggle = document.getElementById("keyword-play-toggle");
 const keywordPlayEl = document.getElementById("keyword-play");
 const historySection = document.getElementById("history");
 const historyListEl = document.getElementById("history-list");
-const historyListExtraEl = document.getElementById("history-list-extra");
 const historyMoreButton = document.getElementById("history-more-button");
+const historyMoreNoteEl = document.getElementById("history-more-note");
 const scrollToQ1Button = document.getElementById("scroll-to-q1-button");
 const q1Section = document.getElementById("q1-section");
 
@@ -826,8 +827,19 @@ async function playRandomVideo({ animate = false } = {}) {
 
   const video = pickNextVideo();
 
+  // 次のサムネはできるだけ早く（アニメーション開始と同時に）先読みしておく
+  const nextThumbnailUrl = video.thumbnailUrl || "";
+  const thumbnailPreloadPromise = nextThumbnailUrl
+    ? new Promise((resolve) => {
+        const preloadImg = new Image();
+        preloadImg.onload = resolve;
+        preloadImg.onerror = resolve;
+        preloadImg.src = nextThumbnailUrl;
+      })
+    : Promise.resolve();
+
   if (animate) {
-    // t=0: 前の動画のサムネを表示した状態から、0.8秒でフェードアウト開始
+    // t=0: 前の動画のサムネを表示した状態から、0.8秒でフェードアウト開始（t=0.8で終了）
     playerThumbEl.style.transition = "none";
     playerThumbEl.src = currentThumbnailUrl || "";
     playerThumbEl.classList.remove("thumb-hidden");
@@ -836,7 +848,7 @@ async function playRandomVideo({ animate = false } = {}) {
     playerThumbEl.classList.add("thumb-hidden");
 
     // t=0.5: 妖精の動き（A:回転 / B:右→左 / C:左→右 からランダム）を開始し、
-    //        同時に0.3秒かけてフェードインさせる（t=0.8で完了）
+    //        同時に0.3秒かけてフェードインを開始する（t=0.8で完了）
     await new Promise((resolve) => setTimeout(resolve, 500));
     const fairyVariant = FAIRY_VARIANTS[Math.floor(Math.random() * FAIRY_VARIANTS.length)];
     playerFairyEl.classList.add(fairyVariant);
@@ -846,7 +858,7 @@ async function playRandomVideo({ animate = false } = {}) {
     await new Promise((resolve) => setTimeout(resolve, 500));
     playerFairyEl.classList.remove("fairy-visible");
 
-    // t=1.3: 妖精のアニメーションを終了させる
+    // t=1.3: 妖精のアニメーションを終了。同時に次の動画のサムネのフェードインを開始する（0.8秒 → t=2.1で終了）
     await new Promise((resolve) => setTimeout(resolve, 300));
     playerFairyEl.classList.remove(fairyVariant);
   }
@@ -855,6 +867,7 @@ async function playRandomVideo({ animate = false } = {}) {
   currentUploaderEl.textContent = translations[currentLang].uploaderLoading;
   watchOnNicoLink.href = `https://www.nicovideo.jp/watch/${video.contentId}`;
   currentThumbnailUrl = video.thumbnailUrl || "";
+  resultActionsEl.hidden = false;
 
   // 埋め込みプレイヤーを差し替える（サムネの裏側で読み込む）
   playerEmbedEl.innerHTML = "";
@@ -863,6 +876,9 @@ async function playRandomVideo({ animate = false } = {}) {
   playerEmbedEl.appendChild(embedScript);
 
   if (animate) {
+    // t=0で開始した先読みがここまでに終わっていない場合のみ待つ（通常は既に完了している）
+    await thumbnailPreloadPromise;
+
     // t=1.3: 次の動画のサムネのフェードイン開始（0.8秒 → t=2.1で終了）
     playerThumbEl.style.transition = "none";
     playerThumbEl.src = currentThumbnailUrl;
@@ -896,35 +912,87 @@ function addToHistory(entry) {
   renderHistory();
 }
 
-// 記録一覧を描画する（最近5件は上のリスト、それ以降は「記録をもっとみる」ボタンの下のリストに表示）
+// 記録一覧の1項目分のDOM（<li>）を組み立てる。元ページ・新規ウィンドウの両方で使う共通処理
+function createHistoryItem(entry) {
+  const li = document.createElement("li");
+  li.className = "history-item";
+  li.title = translations[currentLang].historyNote;
+  li.addEventListener("click", () => {
+    window.open(`https://www.nicovideo.jp/watch/${entry.contentId}`, "_blank", "noopener");
+  });
+
+  const img = document.createElement("img");
+  img.className = "history-thumb";
+  img.src = entry.thumbnailUrl || "";
+  img.alt = "";
+
+  const textWrap = document.createElement("div");
+  textWrap.className = "history-text";
+
+  const titleEl = document.createElement("p");
+  titleEl.className = "history-title";
+  titleEl.textContent = entry.title;
+
+  const uploaderEl = document.createElement("p");
+  uploaderEl.className = "history-uploader";
+  uploaderEl.textContent = entry.uploader
+    ? `${translations[currentLang].uploaderPrefix}${entry.uploader}`
+    : translations[currentLang].uploaderUnknown;
+
+  textWrap.appendChild(titleEl);
+  textWrap.appendChild(uploaderEl);
+  li.appendChild(img);
+  li.appendChild(textWrap);
+  return li;
+}
+
+// 記録一覧を描画する（このページには最新5件のみ表示。全件は「記録をもっとみる」から別ウィンドウで見る）
 function renderHistory() {
   if (watchHistory.length === 0) return;
 
   historySection.hidden = false;
   historyListEl.innerHTML = "";
-  historyListExtraEl.innerHTML = "";
 
-  function createHistoryItem(entry) {
-    const li = document.createElement("li");
+  watchHistory.slice(0, HISTORY_VISIBLE_COUNT).forEach((entry) => {
+    historyListEl.appendChild(createHistoryItem(entry));
+  });
+
+  const hasMore = watchHistory.length > HISTORY_VISIBLE_COUNT;
+  historyMoreButton.hidden = !hasMore;
+  historyMoreNoteEl.hidden = !hasMore;
+
+  // 開いている全履歴ウィンドウがあれば、そちらも最新の内容に更新する
+  if (historyWindowRef && !historyWindowRef.closed) {
+    renderHistoryIntoWindow(historyWindowRef);
+  }
+}
+
+// 新規ウィンドウの内部に、元ページと同じ見た目で全履歴を描画する
+function renderHistoryIntoWindow(win) {
+  const listEl = win.document.getElementById("history-list-full");
+  if (!listEl) return;
+  listEl.innerHTML = "";
+  watchHistory.forEach((entry) => {
+    const li = win.document.createElement("li");
     li.className = "history-item";
     li.title = translations[currentLang].historyNote;
     li.addEventListener("click", () => {
-      window.open(`https://www.nicovideo.jp/watch/${entry.contentId}`, "_blank", "noopener");
+      win.open(`https://www.nicovideo.jp/watch/${entry.contentId}`, "_blank", "noopener");
     });
 
-    const img = document.createElement("img");
+    const img = win.document.createElement("img");
     img.className = "history-thumb";
     img.src = entry.thumbnailUrl || "";
     img.alt = "";
 
-    const textWrap = document.createElement("div");
+    const textWrap = win.document.createElement("div");
     textWrap.className = "history-text";
 
-    const titleEl = document.createElement("p");
+    const titleEl = win.document.createElement("p");
     titleEl.className = "history-title";
     titleEl.textContent = entry.title;
 
-    const uploaderEl = document.createElement("p");
+    const uploaderEl = win.document.createElement("p");
     uploaderEl.className = "history-uploader";
     uploaderEl.textContent = entry.uploader
       ? `${translations[currentLang].uploaderPrefix}${entry.uploader}`
@@ -934,28 +1002,52 @@ function renderHistory() {
     textWrap.appendChild(uploaderEl);
     li.appendChild(img);
     li.appendChild(textWrap);
-    return li;
-  }
-
-  watchHistory.forEach((entry, index) => {
-    const li = createHistoryItem(entry);
-    if (index < HISTORY_VISIBLE_COUNT) {
-      historyListEl.appendChild(li);
-    } else {
-      historyListExtraEl.appendChild(li);
-    }
+    listEl.appendChild(li);
   });
-
-  historyMoreButton.hidden = watchHistory.length <= HISTORY_VISIBLE_COUNT;
-  isHistoryExpanded = false;
-  historyListExtraEl.hidden = true;
 }
 
-let isHistoryExpanded = false;
+// 「記録をもっとみる」で開く全履歴ウィンドウへの参照（既に開いていれば使い回す）
+let historyWindowRef = null;
 
 historyMoreButton.addEventListener("click", () => {
-  isHistoryExpanded = !isHistoryExpanded;
-  historyListExtraEl.hidden = !isHistoryExpanded;
+  if (historyWindowRef && !historyWindowRef.closed) {
+    historyWindowRef.focus();
+    renderHistoryIntoWindow(historyWindowRef);
+    return;
+  }
+
+  const win = window.open("", "_blank", "noopener");
+  if (!win) return;
+  historyWindowRef = win;
+
+  // 元ページと同じフォント・CSSを読み込んだ土台のHTMLを書き出す
+  win.document.open();
+  win.document.write(`<!DOCTYPE html>
+<html lang="${currentLang}">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>${translations[currentLang].historyTitle}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Hina+Mincho&family=BIZ+UDPGothic:wght@400;700&family=Kiwi+Maru:wght@400;500&family=Sawarabi+Gothic&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="${new URL("style.css", window.location.href).href}" />
+</head>
+<body>
+<main>
+  <div class="top-bar">
+    <h1 style="font-size: 24px;">${translations[currentLang].historyTitle}</h1>
+  </div>
+  <section id="history">
+    <p class="disclaimer">${translations[currentLang].historyNote}</p>
+    <ul id="history-list-full"></ul>
+  </section>
+</main>
+</body>
+</html>`);
+  win.document.close();
+
+  renderHistoryIntoWindow(win);
 });
 
 // 動画の詳細情報API（getthumbinfo）から投稿者名（またはチャンネル名）を取り出す
