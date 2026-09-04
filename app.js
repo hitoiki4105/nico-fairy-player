@@ -31,15 +31,15 @@ const CATEGORY_TAGS = {
 
 const translations = {
   ja: {
-    pageTitle: "動画の森、妖精さんプレイヤー",
-    heading: "動画の森、妖精さんプレイヤー",
+    pageTitle: "妖精さんプレイヤー",
+    heading: "妖精さんプレイヤー",
     subtitle: "ニコニコ動画ランダム再生ツール（非公式）",
     lead: "条件を指定して、ニコニコに投稿された動画とランダムで出会えます",
     leadSub: "タグ検索とキーワード検索、どちらか一方だけでも使えるよ。",
     tagMapPrefix: "あ、",
     tagMapSuffix: "ってツール、知ってる？",
     languageLabel: "言語",
-    voiceCategoryLabel: "Q4：どんな動画を探してるの？",
+    voiceCategoryLabel: "Q4：ジャンル、指定する？（オプション）",
     voiroidLabel: "ボイロ・解説・劇場系",
     vocaloidLabel: "ボカロ・音楽系",
     voiceCategoryNoteToggle: "説明をきく",
@@ -47,6 +47,7 @@ const translations = {
       "・この選択で、表示される動画が限定されるよ。投稿祭などのタグだけで検索する場合、どちらも選択しない方がよい結果になるかもね。\n・それぞれのボタンで以下のタグが内部的にいずれか含む（OR）で付与されるよ。\n「ボイロ・解説・劇場系」：ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n「ボカロ・音楽系」：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID",
     includeTagsLabel: "Q1：気になるタグは何？",
     includeTagsNoteToggle: "説明をきく",
+    fineTuneToggle: "細かく絞り込みたい？",
     includeTagsNote:
       "・半角、全角スペースを加えて複数入力した場合、すべて含む（AND）結果がでるよ。\n・ニコニコ動画でのタグ検索結果とヒット件数が違うことがあるよ。原因は不明だよ。",
     includeTagsPlaceholder: "例: 初音ミク オリジナル曲",
@@ -66,7 +67,7 @@ const translations = {
     minViewsLabel: "再生数（下限）",
     maxViewsLabel: "再生数（上限）",
     viewsPlaceholder: "指定なし",
-    dateRangeLabel: "投稿日の範囲",
+    dateRangeLabel: "Q5：投稿日を指定する？（オプション）",
     dateModeRange: "期間で指定",
     dateModeSingle: "特定の1日を指定",
     yearFromLabel: "投稿年（から）",
@@ -97,7 +98,8 @@ const translations = {
     watchOnNicoButton: "ニコニコで見る",
     historyTitle: "出会った動画の記録",
     historyNote: "・クリックすると、ニコニコ動画に飛びます",
-    historyMoreButton: "足跡を辿る",
+    historyMoreButton: "記録をもっとみる",
+    historyMoreNote: "・新しいウィンドウが開きます",
   },
   zh: {
     pageTitle: "视频森林，妖精播放器",
@@ -108,7 +110,7 @@ const translations = {
     tagMapPrefix: "对了，你知道",
     tagMapSuffix: "这个工具吗？",
     languageLabel: "语言",
-    voiceCategoryLabel: "Q4：想找什么样的视频？",
+    voiceCategoryLabel: "Q4：想找什么样的视频？（可选）",
     voiroidLabel: "VOICEROID・解说・剧场系",
     vocaloidLabel: "VOCALOID・音乐系",
     voiceCategoryNoteToggle: "查看说明",
@@ -116,6 +118,7 @@ const translations = {
       "・此选择可能会限制显示的视频范围。如果只想用投稿祭之类的标签搜索，两者都不选可能会得到更好的结果。\n・点击按钮后，会在内部以「包含任意一个（OR）」的方式附加以下标签。\n「VOICEROID・解说・剧场系」：ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n「VOCALOID・音乐系」：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID",
     includeTagsLabel: "Q1：在意的标签是什么？",
     includeTagsNoteToggle: "查看说明",
+    fineTuneToggle: "想要更精细地筛选？",
     includeTagsNote:
       "・用半角或全角空格输入多个标签时，会显示全部包含（AND）的结果。\n有时候和niconico动画站内标签搜索的结果数量会不同，原因不明。",
     includeTagsPlaceholder: "例：初音未来 原创曲",
@@ -135,7 +138,7 @@ const translations = {
     minViewsLabel: "播放数（下限）",
     maxViewsLabel: "播放数（上限）",
     viewsPlaceholder: "不限",
-    dateRangeLabel: "投稿日期范围",
+    dateRangeLabel: "Q5：要指定投稿日期吗？（可选）",
     dateModeRange: "按区间指定",
     dateModeSingle: "指定某一天",
     yearFromLabel: "投稿年份（从）",
@@ -167,6 +170,7 @@ const translations = {
     historyTitle: "相遇过的视频记录",
     historyNote: "・点击即可跳转到niconico动画",
     historyMoreButton: "追寻足迹",
+    historyMoreNote: "・会打开新窗口",
   },
   ko: {
     pageTitle: "영상의 숲, 요정 플레이어",
@@ -177,7 +181,7 @@ const translations = {
     tagMapPrefix: "아, ",
     tagMapSuffix: "이라는 도구 알아?",
     languageLabel: "언어",
-    voiceCategoryLabel: "Q4：어떤 영상을 찾고 있어?",
+    voiceCategoryLabel: "Q4：어떤 영상을 찾고 있어?（선택）",
     voiroidLabel: "보이로이드・해설・극장 계열",
     vocaloidLabel: "보카로이드・음악 계열",
     voiceCategoryNoteToggle: "설명 보기",
@@ -185,6 +189,7 @@ const translations = {
       "・이 선택으로 인해 표시되는 영상이 제한될 수 있습니다. 투고제 등의 태그만으로 검색할 경우, 둘 다 선택하지 않는 편이 더 좋은 결과가 될 수 있습니다.\n・각 버튼을 누르면 내부적으로 다음 태그가 「하나라도 포함(OR)」 조건으로 추가됩니다.\n「보이로이드・해설・극장 계열」：ボイロ、ボイスロイド、ソフトフェアトーク、ソフトウェアトーク劇場、VOICELOID\n「보카로이드・음악 계열」：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID",
     includeTagsLabel: "Q1：궁금한 태그가 있나요?",
     includeTagsNoteToggle: "설명 보기",
+    fineTuneToggle: "세밀하게 좁혀볼까?",
     includeTagsNote:
       "・반각・전각 공백으로 여러 개 입력하면 모두 포함（AND）된 결과가 나옵니다.\n니코니코 동영상 사이트 자체의 태그 검색 결과와 검색 건수가 다를 수 있습니다. 원인은 알 수 없습니다.",
     includeTagsPlaceholder: "예: 하츠네 미쿠 오리지널곡",
@@ -204,7 +209,7 @@ const translations = {
     minViewsLabel: "조회수（하한）",
     maxViewsLabel: "조회수（상한）",
     viewsPlaceholder: "지정 안 함",
-    dateRangeLabel: "게시일 범위",
+    dateRangeLabel: "Q5：게시일을 지정할까?（선택）",
     dateModeRange: "기간으로 지정",
     dateModeSingle: "특정 하루 지정",
     yearFromLabel: "게시 연도（부터）",
@@ -235,6 +240,7 @@ const translations = {
     watchOnNicoButton: "니코니코에서 보기",
     historyTitle: "만난 동영상 기록",
     historyMoreButton: "기록 더 보기",
+    historyMoreNote: "・새 창이 열립니다",
   },
   en: {
     pageTitle: "Forest of Videos, Fairy Player",
@@ -245,7 +251,7 @@ const translations = {
     tagMapPrefix: "Oh, do you know about ",
     tagMapSuffix: ", a tool for exploring tags?",
     languageLabel: "Language",
-    voiceCategoryLabel: "Q4: What kind of video are you looking for?",
+    voiceCategoryLabel: "Q4: What kind of video are you looking for? (Optional)",
     voiroidLabel: "VOICEROID / Narration / Theater",
     vocaloidLabel: "VOCALOID / Music",
     voiceCategoryNoteToggle: "Hear the explanation",
@@ -253,6 +259,7 @@ const translations = {
       "\u2022 This choice may limit which videos show up. If you're searching by tag-festival-style tags alone, leaving both unselected may give better results.\n\u2022 Each button internally adds the following tags with an OR condition.\n\"VOICEROID / Narration / Theater\": \u30dc\u30a4\u30ed, \u30dc\u30a4\u30b9\u30ed\u30a4\u30c9, \u30bd\u30d5\u30c8\u30d5\u30a7\u30a2\u30c8\u30fc\u30af, \u30bd\u30d5\u30c8\u30a6\u30a7\u30a2\u30c8\u30fc\u30af\u5287\u5834, VOICELOID\n\"VOCALOID / Music\": \u30dc\u30ab\u30ed, \u30dc\u30fc\u30ab\u30ed\u30a4\u30c9, UTAU, \u30bd\u30d5\u30c8\u30a6\u30a7\u30a2\u30b7\u30f3\u30ac\u30fc, vocaloid\u30aa\u30ea\u30b8\u30ca\u30eb\u66f2, \u30aa\u30ea\u30b8\u30ca\u30eb, \u30aa\u30ea\u30b8\u30ca\u30eb\u66f2, VOCALOID",
     includeTagsLabel: "Q1: What tags interest you?",
     includeTagsNoteToggle: "Hear the explanation",
+    fineTuneToggle: "Fine-tune your search?",
     includeTagsNote:
       "\u2022 Entering multiple tags separated by spaces returns videos matching all of them (AND).\nThe hit count may differ from Niconico's own tag search. The reason is unknown.",
     includeTagsPlaceholder: "e.g. Hatsune Miku original song",
@@ -272,7 +279,7 @@ const translations = {
     minViewsLabel: "Min. views",
     maxViewsLabel: "Max. views",
     viewsPlaceholder: "No limit",
-    dateRangeLabel: "Upload date range",
+    dateRangeLabel: "Q5: Specify an upload date? (Optional)",
     dateModeRange: "Specify a range",
     dateModeSingle: "Specify a single day",
     yearFromLabel: "From year",
@@ -303,6 +310,7 @@ const translations = {
     watchOnNicoButton: "Watch on Niconico",
     historyTitle: "Videos you've met",
     historyMoreButton: "See more history",
+    historyMoreNote: "* Opens a new window",
   },
 };
 
@@ -339,11 +347,14 @@ const vocaloidToggle = document.getElementById("vocaloid-toggle");
 const voiceCategoryNoteToggle = document.getElementById("voice-category-note-toggle");
 const voiceCategoryNoteEl = document.getElementById("voice-category-note");
 const includeTagsNoteToggle = document.getElementById("include-tags-note-toggle");
+const fineTuneToggle = document.getElementById("fine-tune-toggle");
+const fineTunePanel = document.getElementById("fine-tune-panel");
 const includeTagsNoteEl = document.getElementById("include-tags-note");
 const keywordPlayToggle = document.getElementById("keyword-play-toggle");
 const keywordPlayEl = document.getElementById("keyword-play");
 const historySection = document.getElementById("history");
 const historyListEl = document.getElementById("history-list");
+const historyListExtraEl = document.getElementById("history-list-extra");
 const historyMoreButton = document.getElementById("history-more-button");
 const scrollToQ1Button = document.getElementById("scroll-to-q1-button");
 const q1Section = document.getElementById("q1-section");
@@ -397,6 +408,10 @@ voiceCategoryNoteToggle.addEventListener("click", () => {
 
 includeTagsNoteToggle.addEventListener("click", () => {
   includeTagsNoteEl.hidden = !includeTagsNoteEl.hidden;
+});
+
+fineTuneToggle.addEventListener("click", () => {
+  fineTunePanel.hidden = !fineTunePanel.hidden;
 });
 
 keywordPlayToggle.addEventListener("click", () => {
@@ -820,13 +835,19 @@ async function playRandomVideo({ animate = false } = {}) {
     playerThumbEl.style.transition = "opacity 0.8s ease";
     playerThumbEl.classList.add("thumb-hidden");
 
-    // t=0.5: 妖精のアニメーション開始（A:回転 / B:右→左 / C:左→右 からランダム）
+    // t=0.5: 妖精の動き（A:回転 / B:右→左 / C:左→右 からランダム）を開始し、
+    //        同時に0.3秒かけてフェードインさせる（t=0.8で完了）
     await new Promise((resolve) => setTimeout(resolve, 500));
     const fairyVariant = FAIRY_VARIANTS[Math.floor(Math.random() * FAIRY_VARIANTS.length)];
     playerFairyEl.classList.add(fairyVariant);
+    playerFairyEl.classList.add("fairy-visible");
 
-    // t=1.3: 妖精のアニメーション終了（フェードアウトも t=0.8 に終わっている）
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    // t=1.0: 0.3秒かけてフェードアウトを開始する（t=1.3で完了）
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    playerFairyEl.classList.remove("fairy-visible");
+
+    // t=1.3: 妖精のアニメーションを終了させる
+    await new Promise((resolve) => setTimeout(resolve, 300));
     playerFairyEl.classList.remove(fairyVariant);
   }
 
@@ -851,6 +872,11 @@ async function playRandomVideo({ animate = false } = {}) {
     await new Promise((resolve) => setTimeout(resolve, 800));
   }
 
+  // サムネ（検索前のプレースホルダー画像、またはフェードインし終えたサムネ）を隠し、
+  // 裏で読み込み済みの実際の埋め込みプレイヤーを見せる
+  playerThumbEl.style.transition = "none";
+  playerThumbEl.classList.add("thumb-hidden");
+
   const uploaderName = await fetchUploaderName(video.contentId);
   currentUploaderEl.textContent = uploaderName
     ? `${translations[currentLang].uploaderPrefix}${uploaderName}`
@@ -870,19 +896,17 @@ function addToHistory(entry) {
   renderHistory();
 }
 
-// 記録一覧を描画する（最近5件はそのまま表示、それ以降は「足跡を辿る」で開閉表示）
+// 記録一覧を描画する（最近5件は上のリスト、それ以降は「記録をもっとみる」ボタンの下のリストに表示）
 function renderHistory() {
   if (watchHistory.length === 0) return;
 
   historySection.hidden = false;
   historyListEl.innerHTML = "";
+  historyListExtraEl.innerHTML = "";
 
-  watchHistory.forEach((entry, index) => {
+  function createHistoryItem(entry) {
     const li = document.createElement("li");
     li.className = "history-item";
-    if (index >= HISTORY_VISIBLE_COUNT) {
-      li.classList.add("hidden-extra");
-    }
     li.title = translations[currentLang].historyNote;
     li.addEventListener("click", () => {
       window.open(`https://www.nicovideo.jp/watch/${entry.contentId}`, "_blank", "noopener");
@@ -910,22 +934,28 @@ function renderHistory() {
     textWrap.appendChild(uploaderEl);
     li.appendChild(img);
     li.appendChild(textWrap);
-    historyListEl.appendChild(li);
+    return li;
+  }
+
+  watchHistory.forEach((entry, index) => {
+    const li = createHistoryItem(entry);
+    if (index < HISTORY_VISIBLE_COUNT) {
+      historyListEl.appendChild(li);
+    } else {
+      historyListExtraEl.appendChild(li);
+    }
   });
 
   historyMoreButton.hidden = watchHistory.length <= HISTORY_VISIBLE_COUNT;
   isHistoryExpanded = false;
+  historyListExtraEl.hidden = true;
 }
 
 let isHistoryExpanded = false;
 
 historyMoreButton.addEventListener("click", () => {
   isHistoryExpanded = !isHistoryExpanded;
-  document.querySelectorAll("#history-list .history-item").forEach((el, index) => {
-    if (index >= HISTORY_VISIBLE_COUNT) {
-      el.classList.toggle("hidden-extra", !isHistoryExpanded);
-    }
-  });
+  historyListExtraEl.hidden = !isHistoryExpanded;
 });
 
 // 動画の詳細情報API（getthumbinfo）から投稿者名（またはチャンネル名）を取り出す

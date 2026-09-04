@@ -369,6 +369,38 @@ button {
   border-top: 1px solid var(--border);
 }
 
+.video-meeting-spot {
+  position: relative;
+  padding: 24px 20px;
+  border-radius: 20px;
+  background: radial-gradient(circle at 50% 30%, #fdf8e8 0%, #f3ecd2 45%, #e3dcb8 100%);
+  box-shadow: 0 0 0 1px rgba(201, 138, 59, 0.35), 0 8px 24px rgba(47, 82, 51, 0.25);
+  overflow: hidden;
+}
+
+.video-meeting-spot::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px dashed rgba(201, 138, 59, 0.5);
+  border-radius: 14px;
+  pointer-events: none;
+}
+
+.video-meeting-spot::after {
+  content: "✨";
+  position: absolute;
+  top: 6px;
+  right: 14px;
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+.video-meeting-spot #current-title {
+  font-family: "Hina Mincho", serif;
+  font-size: 1.1rem;
+}
+
 #result-count {
   color: var(--muted);
   font-size: 0.85rem;
@@ -425,11 +457,14 @@ button {
   max-width: 100px;
   transform: translate(-50%, -50%) rotateY(0deg);
   opacity: 0;
-  transition: opacity 0.1s ease;
+  transition: opacity 0.3s ease;
+}
+
+.player-fairy.fairy-visible {
+  opacity: 1;
 }
 
 .player-fairy.spin-active {
-  opacity: 1;
   animation: playerFairySpin 0.8s linear;
 }
 
@@ -443,64 +478,71 @@ button {
 }
 
 .player-fairy.wave-rtl {
-  opacity: 1;
-  animation: playerFairyWaveRTL 0.8s ease-in-out;
+  animation: playerFairyWaveRTL 1.2s ease-in-out;
 }
 
 @keyframes playerFairyWaveRTL {
   0% {
     transform: translate(150%, -50%) translateY(0);
-    opacity: 0;
   }
-  10% {
-    opacity: 1;
+  12.5% {
+    transform: translate(112.5%, -50%) translateY(-14px);
   }
   25% {
-    transform: translate(75%, -50%) translateY(-16px);
+    transform: translate(75%, -50%) translateY(0);
+  }
+  37.5% {
+    transform: translate(37.5%, -50%) translateY(14px);
   }
   50% {
-    transform: translate(0%, -50%) translateY(12px);
+    transform: translate(0%, -50%) translateY(0);
+  }
+  62.5% {
+    transform: translate(-37.5%, -50%) translateY(-14px);
   }
   75% {
-    transform: translate(-75%, -50%) translateY(-16px);
+    transform: translate(-75%, -50%) translateY(0);
   }
-  90% {
-    opacity: 1;
+  87.5% {
+    transform: translate(-112.5%, -50%) translateY(14px);
   }
   100% {
     transform: translate(-150%, -50%) translateY(0);
-    opacity: 0;
   }
 }
 
 .player-fairy.wave-ltr {
-  opacity: 1;
-  animation: playerFairyWaveLTR 0.8s ease-in-out;
+  animation: playerFairyWaveLTR 1.2s ease-in-out;
 }
 
+/* Cの動きは img_fairy.png を左右反転（scaleX(-1)）させながら移動させる */
 @keyframes playerFairyWaveLTR {
   0% {
-    transform: translate(-150%, -50%) translateY(0);
-    opacity: 0;
+    transform: translate(-150%, -50%) translateY(0) scaleX(-1);
   }
-  10% {
-    opacity: 1;
+  12.5% {
+    transform: translate(-112.5%, -50%) translateY(-14px) scaleX(-1);
   }
   25% {
-    transform: translate(-75%, -50%) translateY(-16px);
+    transform: translate(-75%, -50%) translateY(0) scaleX(-1);
+  }
+  37.5% {
+    transform: translate(-37.5%, -50%) translateY(14px) scaleX(-1);
   }
   50% {
-    transform: translate(0%, -50%) translateY(12px);
+    transform: translate(0%, -50%) translateY(0) scaleX(-1);
+  }
+  62.5% {
+    transform: translate(37.5%, -50%) translateY(-14px) scaleX(-1);
   }
   75% {
-    transform: translate(75%, -50%) translateY(-16px);
+    transform: translate(75%, -50%) translateY(0) scaleX(-1);
   }
-  90% {
-    opacity: 1;
+  87.5% {
+    transform: translate(112.5%, -50%) translateY(14px) scaleX(-1);
   }
   100% {
-    transform: translate(150%, -50%) translateY(0);
-    opacity: 0;
+    transform: translate(150%, -50%) translateY(0) scaleX(-1);
   }
 }
 
@@ -622,6 +664,28 @@ button {
 
 #history-more-button {
   margin-top: 14px;
+}
+
+#history-list-extra {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#tag-map-section {
+  margin-top: 32px;
+}
+
+.tag-map-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  box-shadow: 0 4px 10px rgba(47, 82, 51, 0.25);
+  cursor: pointer;
 }
 
 #scroll-to-q1-button {

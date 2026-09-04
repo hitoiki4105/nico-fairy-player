@@ -43,6 +43,21 @@
         <button type="button" class="note-toggle" id="include-tags-note-toggle" data-i18n="includeTagsNoteToggle">説明をきく</button>
         <p class="disclaimer" id="include-tags-note" data-i18n="includeTagsNote" hidden>・半角、全角スペースを加えて複数入力した場合、すべて含む（AND）結果がでます。
 ニコニコ動画でのタグ検索結果とヒット件数が異なる場合があります。原因は不明です。</p>
+        <button type="button" class="note-toggle" id="fine-tune-toggle" data-i18n="fineTuneToggle">細かく絞り込みたい？</button>
+        <div id="fine-tune-panel" hidden>
+          <div class="field">
+            <span class="field-label" data-i18n="matchModeLabel">含めるタグの条件</span>
+            <div class="radio-group">
+              <label><input type="radio" name="match-mode" value="AND" checked /> <span data-i18n="matchModeAnd">すべて含む（AND）</span></label>
+              <label><input type="radio" name="match-mode" value="OR" /> <span data-i18n="matchModeOr">いずれか含む（OR）</span></label>
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="exclude-tags" data-i18n="excludeTagsLabel">除外するタグ（半角、全角スペースで複数入力可）</label>
+            <input type="text" id="exclude-tags" data-i18n-placeholder="excludeTagsPlaceholder" placeholder="例: R-18" />
+          </div>
+        </div>
       </div>
 
       <div class="field forest-box">
@@ -80,7 +95,7 @@
       </div>
 
       <div class="field forest-box">
-        <span class="section-question" style="font-family: 'Hina Mincho', serif;" data-i18n="voiceCategoryLabel">Q4：どんな動画を探してるの？</span>
+        <span class="section-question" style="font-family: 'Hina Mincho', serif;" data-i18n="voiceCategoryLabel">Q4：ジャンル、指定する？（オプション）</span>
         <div class="toggle-row">
           <button type="button" class="toggle-btn" id="voiroid-toggle" data-category="voiroid" data-i18n="voiroidLabel">ボイロ・解説・劇場系</button>
           <button type="button" class="toggle-btn" id="vocaloid-toggle" data-category="vocaloid" data-i18n="vocaloidLabel">ボカロ・音楽系</button>
@@ -92,48 +107,29 @@
 「ボカロ・音楽系」：ボカロ、ボーカロイド、UTAU、ソフトウェアシンガー、vocaloidオリジナル曲、オリジナル、オリジナル曲、VOCALOID</p>
       </div>
 
-      <details id="filter-panel">
-        <summary data-i18n="filterToggleLabel">フィルター設定（投稿日など）</summary>
+      <div class="field forest-box">
+        <span class="section-question" style="font-family: 'Hina Mincho', serif;" data-i18n="dateRangeLabel">Q5：投稿日を指定する？（オプション）</span>
+        <div class="radio-group">
+          <label><input type="radio" name="date-mode" value="range" checked /> <span data-i18n="dateModeRange">期間で指定</span></label>
+          <label><input type="radio" name="date-mode" value="single" /> <span data-i18n="dateModeSingle">特定の1日を指定</span></label>
+        </div>
 
-        <div class="filter-body">
-          <div class="field">
-            <span class="field-label" data-i18n="dateRangeLabel">投稿日の範囲</span>
-            <div class="radio-group">
-              <label><input type="radio" name="date-mode" value="range" checked /> <span data-i18n="dateModeRange">期間で指定</span></label>
-              <label><input type="radio" name="date-mode" value="single" /> <span data-i18n="dateModeSingle">特定の1日を指定</span></label>
-            </div>
-
-            <div id="date-range-block" class="field-row" style="margin-top:10px;">
-              <div>
-                <label for="year-from" data-i18n="yearFromLabel">投稿年（から）</label>
-                <input type="number" id="year-from" min="2006" max="2100" data-i18n-placeholder="yearPlaceholder" placeholder="指定なし" />
-              </div>
-              <div>
-                <label for="year-to" data-i18n="yearToLabel">投稿年（まで）</label>
-                <input type="number" id="year-to" min="2006" max="2100" data-i18n-placeholder="yearPlaceholder" placeholder="指定なし" />
-              </div>
-            </div>
-
-            <div id="date-single-block" style="margin-top:10px;" hidden>
-              <label for="specific-date" data-i18n="specificDateLabel">投稿日</label>
-              <input type="date" id="specific-date" />
-            </div>
+        <div id="date-range-block" class="field-row" style="margin-top:10px;">
+          <div>
+            <label for="year-from" data-i18n="yearFromLabel">投稿年（から）</label>
+            <input type="number" id="year-from" min="2006" max="2100" data-i18n-placeholder="yearPlaceholder" placeholder="指定なし" />
           </div>
-
-          <div class="field">
-            <span class="field-label" data-i18n="matchModeLabel">含めるタグの条件</span>
-            <div class="radio-group">
-              <label><input type="radio" name="match-mode" value="AND" checked /> <span data-i18n="matchModeAnd">すべて含む（AND）</span></label>
-              <label><input type="radio" name="match-mode" value="OR" /> <span data-i18n="matchModeOr">いずれか含む（OR）</span></label>
-            </div>
-          </div>
-
-          <div class="field">
-            <label for="exclude-tags" data-i18n="excludeTagsLabel">除外するタグ（半角、全角スペースで複数入力可）</label>
-            <input type="text" id="exclude-tags" data-i18n-placeholder="excludeTagsPlaceholder" placeholder="例: R-18" />
+          <div>
+            <label for="year-to" data-i18n="yearToLabel">投稿年（まで）</label>
+            <input type="number" id="year-to" min="2006" max="2100" data-i18n-placeholder="yearPlaceholder" placeholder="指定なし" />
           </div>
         </div>
-      </details>
+
+        <div id="date-single-block" style="margin-top:10px;" hidden>
+          <label for="specific-date" data-i18n="specificDateLabel">投稿日</label>
+          <input type="date" id="specific-date" />
+        </div>
+      </div>
 
       <button type="submit" id="search-button" data-i18n="searchButton">妖精さんと探しに行こう！</button>
     </form>
@@ -144,18 +140,20 @@
 
     <section id="status" aria-live="polite"></section>
 
-    <section id="result" hidden>
+    <section id="result">
       <p id="result-count"></p>
-      <p id="current-title"></p>
-      <p id="current-uploader"></p>
-      <div id="player">
-        <img id="player-thumb" class="player-thumb thumb-hidden" alt="" />
-        <img id="player-fairy" class="player-fairy" src="img_fairy.png" alt="" />
-        <div id="player-embed"></div>
-      </div>
-      <div class="result-actions">
-        <a id="watch-on-nico" class="watch-link" href="#" target="_blank" rel="noopener" data-i18n="watchOnNicoButton">ニコニコで見る</a>
-        <button type="button" id="next-button" data-i18n="nextButton">次の動画と出会う</button>
+      <div class="video-meeting-spot">
+        <p id="current-title"></p>
+        <p id="current-uploader"></p>
+        <div id="player">
+          <img id="player-thumb" class="player-thumb" src="https://hitoiki4105.github.io/nico-fairy-player/image_bg.jpg" alt="" />
+          <img id="player-fairy" class="player-fairy" src="img_fairy.png" alt="" />
+          <div id="player-embed"></div>
+        </div>
+        <div class="result-actions">
+          <a id="watch-on-nico" class="watch-link" href="#" target="_blank" rel="noopener" data-i18n="watchOnNicoButton">ニコニコで見る</a>
+          <button type="button" id="next-button" data-i18n="nextButton">次の動画と出会う</button>
+        </div>
       </div>
     </section>
 
@@ -163,7 +161,15 @@
       <h2 data-i18n="historyTitle">出会った動画の記録</h2>
       <p class="disclaimer" data-i18n="historyNote">・クリックすると、ニコニコ動画に飛びます</p>
       <ul id="history-list"></ul>
-      <button type="button" id="history-more-button" class="pill-button" data-i18n="historyMoreButton" hidden>足跡を辿る</button>
+      <button type="button" id="history-more-button" class="pill-button" data-i18n="historyMoreButton" hidden>記録をもっとみる</button>
+      <p class="disclaimer" data-i18n="historyMoreNote">・新しいウィンドウが開きます</p>
+      <ul id="history-list-extra" hidden></ul>
+    </section>
+
+    <section id="tag-map-section">
+      <a href="https://nico-tag-map.hitoiki4105.workers.dev/" target="_blank" rel="noopener">
+        <img src="https://github.com/hitoiki4105/nico-fairy-player/blob/main/img_map.jpg?raw=true" alt="タグ探索マップ" class="tag-map-image" />
+      </a>
     </section>
 
     <button type="button" id="scroll-to-q1-button" data-i18n="scrollToQ1Button">🏷️ Q1へ</button>
