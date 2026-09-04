@@ -989,8 +989,11 @@ async function playRandomVideo({ animate = false } = {}) {
     : Promise.resolve();
 
   if (animate) {
-    // t=0: 今見えている「前の動画」の本体（iframe）を0.8秒かけてフェードアウト開始（t=0.8で終了）。
-    //      サムネ画像はこの間ずっと非表示のまま（触らない）なので、余計なフラッシュは起きない。
+    // t=0: 前の動画のサムネのフェードアウト開始（0.8秒 → t=0.8で終了）
+    playerThumbEl.style.transition = "opacity 0.8s ease";
+    playerThumbEl.classList.add("thumb-hidden");
+
+    // t=0: 動画本体（iframe）は既に非表示のまま保持
     playerEmbedEl.classList.add("embed-hidden");
 
     // t=0.5: 妖精の動き（A:回転 / B:右→左 / C:左→右 からランダム）を開始し、
@@ -1016,7 +1019,7 @@ async function playRandomVideo({ animate = false } = {}) {
   resultActionsEl.hidden = false;
 
   if (animate) {
-    // t=0で開始した先読みがここまでに終わっていない場合のみ待つ（通常は既に完了している）
+    // t=1.3で開始した先読みがここまでに終わっていない場合のみ待つ（通常は既に完了している）
     await thumbnailPreloadPromise;
 
     // t=1.3: 次の動画のサムネのフェードイン開始（0.8秒 → t=2.1で終了）。
