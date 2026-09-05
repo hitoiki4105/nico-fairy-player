@@ -88,7 +88,7 @@ const translations = {
     matchModeOr: "いずれか含む（OR）",
     excludeTagsLabel: "除外するタグ（半角、全角スペースで複数入力可）",
     excludeTagsPlaceholder: "例: R-18",
-    searchButton: "準備はいい？探しに行こう！",
+    searchButton: "準備はいい？\n探しに行こう！",
     statusNeedTag: "含めるタグかキーワードのどっちかは教えて、ね？",
     statusSearching: "検索中...",
     statusSuggesting: "単語を探しています...",
@@ -837,7 +837,10 @@ async function runSearch() {
   const baseParams = buildBaseParams();
 
   if (!baseParams) {
-    setStatus(translations[currentLang].statusNeedTag);
+    setStatus("");
+    resultCountEl.textContent = translations[currentLang].statusNeedTag;
+    resultSection.hidden = false;
+    document.querySelector(".video-meeting-spot").scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
 
@@ -1253,108 +1256,3 @@ function setStatus(message) {
   statusEl.textContent = message;
 }
 
-// ==== 新セクション（#new-player-section）専用ロジック ====
-// 既存の #result まわりのコード・変数・関数には一切触れず、完全に独立させる。
-
-const newPlayerCountEl = document.getElementById("new-player-count");
-const newPlayerTitleEl = document.getElementById("new-player-title");
-const newPlayerUploaderEl = document.getElementById("new-player-uploader");
-const newPlayerImageEl = document.getElementById("new-player-image");
-const newPlayerEmbedEl = document.getElementById("new-player-embed");
-const newPlayerWatchLinkEl = document.getElementById("new-player-watch-link");
-const newPlayerNextButtonEl = document.getElementById("new-player-next-button");
-
-let newPlayerVideoList = [];
-let newPlayerShownIds = new Set();
-
-async function newPlayerFetchSearch(params) {
-  const response = await fetch(`${PROXY_BASE_URL}?${params.toString()}`);
-  return response.json();
-}
-
-async function newPlayerRunSearch() {
-  const baseParams = buildBaseParams();
-  if (!baseParams) return;
-
-  const includeTags = parseTags(includeTagsInput.value);
-  const keyword = keywordInput.value.trim();
-  const labelParts = [];
-  if (includeTags.length > 0) labelParts.push(`タグ：${includeTags.join(" ")}`);
-  if (keyword) labelParts.push(`キーワード：${keyword}`);
-  const label = labelParts.join("、");
-
-  try {
-    const countParams = new URLSearchParams(baseParams);
-    countParams.set("_limit", "1");
-    countParams.set("_offset", "0");
-    const countData = await newPlayerFetchSearch(countParams);
-
-    if (countData.meta.status !== 200 || countData.meta.totalCount === 0) {
-      newPlayerVideoList = [];
-      newPlayerCountEl.textContent = `【${label}】で検索して、0件の動画が見つかったよ`;
-      return;
-    }
-
-    const totalHitCount = countData.meta.totalCount;
-    const limit = 100;
-    const maxOffset = Math.max(0, Math.min(totalHitCount - limit, 100000 - limit));
-    const randomOffset = Math.floor(Math.random() * (maxOffset + 1));
-
-    const listParams = new URLSearchParams(baseParams);
-    listParams.set("_limit", String(limit));
-    listParams.set("_offset", String(randomOffset));
-    const listData = await newPlayerFetchSearch(listParams);
-
-    if (listData.meta.status !== 200 || !listData.data || listData.data.length === 0) {
-      newPlayerVideoList = [];
-      newPlayerCountEl.textContent = `【${label}】で検索して、0件の動画が見つかったよ`;
-      return;
-    }
-
-    newPlayerVideoList = listData.data;
-    newPlayerShownIds = new Set();
-    newPlayerCountEl.textContent = `【${label}】で検索して、${totalHitCount.toLocaleString()}件の動画が見つかったよ`;
-
-    newPlayerShowRandomVideo();
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-function newPlayerPickVideo() {
-  const unshown = newPlayerVideoList.filter((v) => !newPlayerShownIds.has(v.contentId));
-  const pool = unshown.length > 0 ? unshown : newPlayerVideoList;
-  if (unshown.length === 0) newPlayerShownIds = new Set();
-  const video = pool[Math.floor(Math.random() * pool.length)];
-  newPlayerShownIds.add(video.contentId);
-  return video;
-}
-
-async function newPlayerShowRandomVideo() {
-  if (newPlayerVideoList.length === 0) return;
-  const video = newPlayerPickVideo();
-
-  newPlayerTitleEl.textContent = video.title;
-  newPlayerUploaderEl.textContent = "";
-  newPlayerWatchLinkEl.href = `https://www.nicovideo.jp/watch/${video.contentId}`;
-
-  // サムネは表示せず、いきなりiframe（ニコニコ埋め込み・再生ボタンを押すと再生される）を埋め込む
-  newPlayerImageEl.style.display = "none";
-  newPlayerEmbedEl.innerHTML = "";
-  newPlayerEmbedEl.style.opacity = "0.5";
-  const embedScript = document.createElement("script");
-  embedScript.src = `https://embed.nicovideo.jp/watch/${video.contentId}/script?w=640&h=360`;
-  newPlayerEmbedEl.appendChild(embedScript);
-  observeEmbedIframeResize(newPlayerEmbedEl);
-
-  const uploaderName = await fetchUploaderName(video.contentId);
-  newPlayerUploaderEl.textContent = uploaderName || "";
-}
-
-form.addEventListener("submit", async () => {
-  await newPlayerRunSearch();
-});
-
-newPlayerNextButtonEl.addEventListener("click", () => {
-  newPlayerShowRandomVideo();
-});
