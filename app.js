@@ -96,7 +96,7 @@ const translations = {
     statusExpanding: "類義語・関連語を探しています...",
     statusExpandFailed: "うまく広げられませんでした。別の単語で試してみてください。",
     statusFailed: "検索に失敗しました。しばらくしてからもう一度お試しください。",
-    statusNoResults: "条件に一致する動画が見つかりませんでした。タグや条件を変えてお試しください。",
+    statusNoResults: "条件に一致する動画が見つからなかったよ。タグや条件を変えて試してみてね。",
     statusNetworkError: "通信エラーが発生しました。時間をおいて再度お試しください。",
     statusLoopedRound: "すべて再生したので、最初からもう一周します。",
     resultCountLabel: "【{label}】で検索して、{count}の動画が見つかったよ",
@@ -553,13 +553,8 @@ kiitePlaylistButton.addEventListener("click", () => {
 });
 
 // ==== 妖精さんプレイヤーのURLをコピーするボタン ====
-let copyAppUrlToastTimer = null;
 function showCopyAppUrlToast() {
   copyAppUrlToast.hidden = false;
-  clearTimeout(copyAppUrlToastTimer);
-  copyAppUrlToastTimer = setTimeout(() => {
-    copyAppUrlToast.hidden = true;
-  }, 1000);
 }
 
 copyAppUrlButton.addEventListener("click", async () => {
@@ -993,7 +988,7 @@ async function runSearch() {
 
     if (totalHitCount === 0) {
       videoList = [];
-      setStatus(translations[currentLang].statusNoResults);
+      setStatus(translations[currentLang].statusNoResults, true);
       return;
     }
 
@@ -1015,7 +1010,7 @@ async function runSearch() {
     videoList = listData.data || [];
 
     if (videoList.length === 0) {
-      setStatus(translations[currentLang].statusNoResults);
+      setStatus(translations[currentLang].statusNoResults, true);
       return;
     }
 
@@ -1385,7 +1380,8 @@ async function fetchUploaderName(contentId) {
   }
 }
 
-function setStatus(message) {
+function setStatus(message, isError = false) {
   statusEl.textContent = message;
+  statusEl.classList.toggle("status-error", isError);
 }
 

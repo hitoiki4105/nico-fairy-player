@@ -506,6 +506,10 @@ button {
   min-height: 1.4em;
 }
 
+#status.status-error {
+  color: #7a2021;
+}
+
 #result {
   margin-top: 28px;
   padding-top: 20px;
