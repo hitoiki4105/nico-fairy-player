@@ -105,7 +105,7 @@
           <button type="button" class="toggle-btn" id="vocaloid-toggle" data-category="vocaloid" data-i18n="vocaloidLabel">ボカロ・音楽系</button>
         </div>
         <button type="button" class="pill-button note-toggle" id="voice-category-note-toggle" data-i18n="voiceCategoryNoteToggle">説明をきく</button>
-        <p class="disclaimer" id="voice-category-note" data-i18n="voiceCategoryNote" hidden>投稿時のジャンルで動画を探す場所を選びます。
+        <p class="disclaimer" id="voice-category-note" data-i18n="voiceCategoryNote" hidden>投稿時のジャンルで動画を探す場所を選べるよ。
 ・ボカロ・音楽系：「音楽・サウンド」
 ・ボイロ・解説・劇場系：「音楽・サウンド」以外</p>
       </div>
@@ -159,14 +159,20 @@
 
     <section id="history" class="section-sh" hidden>
       <h2 data-i18n="historyTitle">出会った動画の記録</h2>
-      <p class="disclaimer" data-i18n="historyNote">・クリックすると、ニコニコ動画に飛びます。</p>
-      <p class="disclaimer" data-i18n="historyVisibleNote">・最新の５件を表示しています</p>
+      <p class="disclaimer" data-i18n="historyNote">・クリックすると、ニコニコ動画に飛べるよ。</p>
+      <p class="disclaimer" data-i18n="historyVisibleNote">・最新の５件を表示するね。</p>
       <ul id="history-list"></ul>
       <button type="button" id="history-more-button" class="pill-button" data-i18n="historyMoreButton" hidden>記録をもっとみる</button>
-      <p class="disclaimer" id="history-more-note" data-i18n="historyMoreNote" hidden>・新しいウィンドウが開きます</p>
+      <p class="disclaimer" id="history-more-note" data-i18n="historyMoreNote" hidden>・新しいタブが開きます</p>
     </section>
 
-    <button type="button" id="scroll-to-q1-button" data-i18n="scrollToQ1Button">🏷️ 道を変える</button>
+    <section id="share-section" class="section-share">
+      <h2 data-i18n="shareTitle">誰かに知らせる？</h2>
+      <p class="disclaimer" data-i18n="shareNote">・動画が「音楽・サウンド」ジャンルなら、ニコニコ動画で気になった曲をマイリストに入れて、Kiiteでプレイリストを作れるよ。</p>
+      <button type="button" id="kiite-playlist-button" class="pill-button" data-i18n="kiitePlaylistButton">Kiiteでプレイリストを公開する</button>
+    </section>
+
+    <button type="button" id="scroll-to-q1-button" data-i18n="scrollToQ1Button">道を変える</button>
   </main>
 
   <script src="app.js"></script>

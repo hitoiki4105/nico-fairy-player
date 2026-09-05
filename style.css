@@ -724,6 +724,23 @@ button {
   margin: 0 0 12px;
 }
 
+.section-share {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.section-share h2 {
+  font-family: "Hina Mincho", serif;
+  font-size: 1.2rem;
+  color: var(--accent);
+  margin: 0 0 12px;
+}
+
+.section-share .disclaimer {
+  margin-bottom: 12px;
+}
+
 #history-list,
 .history-group-list {
   list-style: none;

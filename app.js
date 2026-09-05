@@ -53,7 +53,7 @@ const translations = {
     vocaloidLabel: "ボカロ・音楽系",
     voiceCategoryNoteToggle: "説明をきく",
     voiceCategoryNote:
-      "投稿時のジャンルで動画を探す場所を選びます。\n・ボカロ・音楽系：「音楽・サウンド」\n・ボイロ・解説・劇場系：「音楽・サウンド」以外",
+      "投稿時のジャンルで動画を探す場所を選べるよ。\n・ボカロ・音楽系：「音楽・サウンド」\n・ボイロ・解説・劇場系：「音楽・サウンド」以外",
     includeTagsLabel: "気になるタグは何？",
     includeTagsNoteToggle: "説明をきく",
     fineTuneToggle: "細かく絞り込みたい？",
@@ -102,17 +102,21 @@ const translations = {
     searchLabelTag: "タグ：",
     searchLabelKeyword: "キーワード：",
     searchLabelJoiner: "、",
-    scrollToQ1Button: "🏷️ 道を変える",
+    scrollToQ1Button: "道を変える",
     uploaderLoading: "投稿者を取得中...",
     uploaderPrefix: "投稿者: ",
     uploaderUnknown: "投稿者: 取得できませんでした",
     nextButton: "次の動画と出会う",
     watchOnNicoButton: "ニコニコで見る",
     historyTitle: "出会った動画の記録",
-    historyNote: "・クリックすると、ニコニコ動画に飛びます。",
-    historyVisibleNote: "・最新の５件を表示しています",
+    historyNote: "・クリックすると、ニコニコ動画に飛べるよ。",
+    historyVisibleNote: "・最新の５件を表示するね。",
     historyMoreButton: "記録をもっとみる",
-    historyMoreNote: "・新しいウィンドウが開きます",
+    historyMoreNote: "・新しいタブが開きます",
+    shareTitle: "誰かに知らせる？",
+    shareNote:
+      "・動画が「音楽・サウンド」ジャンルなら、ニコニコ動画で気になった曲をマイリストに入れて、Kiiteでプレイリストを作れるよ。",
+    kiitePlaylistButton: "Kiiteでプレイリストを公開する",
     historyGroupToggle: "検索語【{label}】で出会った動画",
     historyWindowClosedNote: "元のページが閉じられたか、リンクが切れています。元のページからもう一度「記録をもっとみる」を開いてください。",
     historyWindowReloadNote: "・このウィンドウは更新すると真っ白になります。",
@@ -399,6 +403,7 @@ const historyListEl = document.getElementById("history-list");
 const historyMoreButton = document.getElementById("history-more-button");
 const historyMoreNoteEl = document.getElementById("history-more-note");
 const scrollToQ1Button = document.getElementById("scroll-to-q1-button");
+const kiitePlaylistButton = document.getElementById("kiite-playlist-button");
 const q1Section = document.getElementById("q1-section");
 
 // 検索でヒットした動画一覧（ランダムに取得した最大100件）
@@ -507,6 +512,11 @@ keywordPlayToggle.addEventListener("click", () => {
 // ==== 画面右下の固定ボタン：Q1セクションへスクロール ====
 scrollToQ1Button.addEventListener("click", () => {
   q1Section.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+// ==== Kiiteでプレイリストを公開するボタン ====
+kiitePlaylistButton.addEventListener("click", () => {
+  window.open("https://radar.kiite.jp/tools/playlist_import", "_blank", "noopener");
 });
 
 // ==== キーワード提案ボタン（Wikipediaのランダム記事APIから取得。失敗時は手元のリストにフォールバック） ====
@@ -642,6 +652,7 @@ form.addEventListener("submit", async (event) => {
 
 nextButton.addEventListener("click", () => {
   playRandomVideo({ animate: true });
+  document.querySelector(".video-meeting-spot").scrollIntoView({ behavior: "smooth", block: "center" });
 });
 
 // 再生数（上限）が（下限）より小さくならないようにする
