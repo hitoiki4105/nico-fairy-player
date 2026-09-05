@@ -1394,27 +1394,16 @@ async function newPlayerShowRandomVideo() {
   newPlayerUploaderEl.textContent = "";
   newPlayerWatchLinkEl.href = `https://www.nicovideo.jp/watch/${video.contentId}`;
 
-  // まずサムネ画像を表示し、動画本体（iframe）は隠しておく
+  // サムネは表示せず、いきなりiframe（ニコニコ埋め込み・再生ボタンを押すと再生される）を埋め込む
+  newPlayerImageEl.style.display = "none";
   newPlayerEmbedEl.innerHTML = "";
-  newPlayerEmbedEl.classList.remove("embed-visible");
-  const thumbnailUrl = video.thumbnailUrl || "";
-  newPlayerImageEl.style.display = "block";
-  newPlayerImageEl.src = thumbnailUrl;
+  const embedScript = document.createElement("script");
+  embedScript.src = `https://embed.nicovideo.jp/watch/${video.contentId}/script?w=640&h=360`;
+  newPlayerEmbedEl.appendChild(embedScript);
+  observeEmbedIframeResize(newPlayerEmbedEl);
 
   const uploaderName = await fetchUploaderName(video.contentId);
   newPlayerUploaderEl.textContent = uploaderName || "";
-
-  // 0.8秒後に、サムネ画像からiframe（ニコニコ埋め込み・再生ボタンを押すと再生される）に切り替える
-  setTimeout(() => {
-    const embedScript = document.createElement("script");
-    embedScript.src = `https://embed.nicovideo.jp/watch/${video.contentId}/script?w=640&h=360`;
-    newPlayerEmbedEl.appendChild(embedScript);
-    observeEmbedIframeResize(newPlayerEmbedEl).then((iframe) => {
-      if (iframe) {
-        newPlayerImageEl.style.display = "none";
-      }
-    });
-  }, 800);
 }
 
 form.addEventListener("submit", async () => {
