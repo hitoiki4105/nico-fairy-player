@@ -108,6 +108,7 @@ const translations = {
     uploaderUnknown: "投稿者: 取得できませんでした",
     nextButton: "次の動画と出会う",
     watchOnNicoButton: "ニコニコで見る",
+    shareOnXButton: "Xでポストする",
     historyTitle: "出会った動画の記録",
     historyNote: "・クリックすると、ニコニコ動画に飛べるよ。",
     historyVisibleNote: "・最新の５件を表示するね。",
@@ -386,6 +387,7 @@ const playerThumbEl = document.getElementById("player-thumb");
 const playerFairyEl = document.getElementById("player-fairy");
 const nextButton = document.getElementById("next-button");
 const watchOnNicoLink = document.getElementById("watch-on-nico");
+const shareOnXButton = document.getElementById("share-on-x-button");
 const resultActionsEl = document.getElementById("result-actions");
 const languageSelect = document.getElementById("language-select");
 const voiroidToggle = document.getElementById("voiroid-toggle");
@@ -418,6 +420,8 @@ let watchHistory = [];
 let currentSearchLabel = "";
 // 現在プレイヤーに表示している動画のサムネイルURL（次の動画へのフェード演出で使う）
 let currentThumbnailUrl = "";
+// 現在表示中の動画の情報（Xでポストする用）
+let currentSharePayload = null;
 const HISTORY_VISIBLE_COUNT = 5;
 
 // ==== 言語切り替え ====
@@ -517,6 +521,24 @@ scrollToQ1Button.addEventListener("click", () => {
 // ==== Kiiteでプレイリストを公開するボタン ====
 kiitePlaylistButton.addEventListener("click", () => {
   window.open("https://radar.kiite.jp/tools/playlist_import", "_blank", "noopener");
+});
+
+// ==== Xでポストするボタン ====
+shareOnXButton.addEventListener("click", () => {
+  if (!currentSharePayload) return;
+  const { contentId, title, uploader } = currentSharePayload;
+  const videoUrl = `https://www.nicovideo.jp/watch/${contentId}`;
+  const uploaderLine = uploader ? `${uploader}さん` : "";
+  const text = [
+    title,
+    uploaderLine,
+    "",
+    `#${contentId}`,
+    "#妖精さんプレイヤー で出会いました",
+    videoUrl,
+  ].join("\n");
+  const intentUrl = `https://twitter.com/intent/tweet?${new URLSearchParams({ text })}`;
+  window.open(intentUrl, "_blank", "noopener");
 });
 
 // ==== キーワード提案ボタン（Wikipediaのランダム記事APIから取得。失敗時は手元のリストにフォールバック） ====
@@ -1026,6 +1048,12 @@ async function playRandomVideo({ animate = false } = {}) {
   currentUploaderEl.textContent = uploaderName
     ? `${translations[currentLang].uploaderPrefix}${uploaderName}`
     : translations[currentLang].uploaderUnknown;
+
+  currentSharePayload = {
+    contentId: video.contentId,
+    title: video.title,
+    uploader: uploaderName,
+  };
 
   addToHistory({
     contentId: video.contentId,

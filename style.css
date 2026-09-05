@@ -689,6 +689,11 @@ button {
   gap: 10px;
 }
 
+#share-on-x-button {
+  width: 100%;
+  margin-top: 10px;
+}
+
 #next-button {
   flex: 2;
   padding: 12px;
