@@ -573,10 +573,12 @@ hashtagToggle.addEventListener("click", () => {
 
 hashtagCatVocaloidButton.addEventListener("click", () => {
   hashtagListVocaloidEl.hidden = !hashtagListVocaloidEl.hidden;
+  document.getElementById("share-section").scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
 hashtagCatVoiroidButton.addEventListener("click", () => {
   hashtagListVoiroidEl.hidden = !hashtagListVoiroidEl.hidden;
+  document.getElementById("share-section").scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
 // ==== Xでポストするボタン ====
