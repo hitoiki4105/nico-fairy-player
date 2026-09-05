@@ -45,6 +45,7 @@ const translations = {
     subtitle: "ニコニコ動画ランダム再生ツール（非公式）",
     lead: "条件を指定して、ニコニコに投稿された動画とランダムで出会えます",
     leadSub: "タグ検索とキーワード検索、どちらか一方だけでも使えるよ。",
+    tagNeedNote: "タグかキーワードのどっちかは教えて、ね？",
     tagMapPrefix: "あ、",
     tagMapSuffix: "ってツール、知ってる？",
     languageLabel: "言語",
@@ -434,6 +435,7 @@ const kiitePlaylistButton = document.getElementById("kiite-playlist-button");
 const copyAppUrlButton = document.getElementById("copy-app-url-button");
 const copyAppUrlToast = document.getElementById("copy-app-url-toast");
 const q1Section = document.getElementById("q1-section");
+const tagNeedNoteEl = document.getElementById("tag-need-note");
 
 // 検索でヒットした動画一覧（ランダムに取得した最大100件）
 let videoList = [];
@@ -962,11 +964,12 @@ async function runSearch() {
 
   if (!baseParams) {
     setStatus("");
-    resultCountEl.textContent = translations[currentLang].statusNeedTag;
-    resultSection.hidden = false;
-    document.querySelector(".video-meeting-spot").scrollIntoView({ behavior: "smooth", block: "center" });
+    tagNeedNoteEl.hidden = false;
+    q1Section.scrollIntoView({ behavior: "smooth", block: "start" });
     return;
   }
+
+  tagNeedNoteEl.hidden = true;
 
   currentSearchLabel = buildSearchLabel(parseTags(includeTagsInput.value), keywordInput.value.trim());
 

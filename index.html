@@ -43,6 +43,7 @@
         <label for="include-tags" class="section-question" style="font-family: 'Hina Mincho', serif; font-size: 1.15rem;font-weight: 700; color: var(--accent);" data-i18n="includeTagsLabel">どんなタグで探す？</label>
         <input type="text" id="include-tags" data-i18n-placeholder="includeTagsPlaceholder" placeholder="例: 初音ミク オリジナル曲" />
         <p class="disclaimer" data-i18n="leadSub">タグ検索とキーワード検索、どちらか一方だけでも使えます。</p>
+        <p class="tag-need-note" id="tag-need-note" data-i18n="tagNeedNote" hidden>タグかキーワードのどっちかは教えて、ね？</p>
         <p class="disclaimer"><span data-i18n="tagMapPrefix">あ、</span><a href="https://nico-tag-map.hitoiki4105.workers.dev/" target="_blank" rel="noopener">タグ探索マップ</a><span data-i18n="tagMapSuffix">ってツール、知ってる？</span></p>
         <button type="button" class="note-toggle" id="include-tags-note-toggle" data-i18n="includeTagsNoteToggle">説明をきく</button>
         <p class="disclaimer" id="include-tags-note" data-i18n="includeTagsNote" hidden>・半角、全角スペースを加えて複数入力した場合、すべて含む（AND）結果がでます。
@@ -141,7 +142,6 @@
     <section id="status" aria-live="polite"></section>
 
     <section id="result" class="section-sr">
-      <p id="result-count"></p>
       <div class="video-meeting-spot-wrapper">
         <div class="video-meeting-spot">
           <p id="current-title"></p>
@@ -161,6 +161,7 @@
 
     <section id="history" class="section-sh" hidden>
       <h2 data-i18n="historyTitle">出会った動画の記録</h2>
+      <p id="result-count"></p>
       <p class="disclaimer" data-i18n="historyNote">・クリックすると、ニコニコ動画に飛べるよ。</p>
       <p class="disclaimer" data-i18n="historyVisibleNote">・最新の５件を表示するね。</p>
       <ul id="history-list"></ul>
