@@ -138,6 +138,7 @@ const translations = {
     tagMapSectionTitle: "別のタグを探してみる？",
     tagMapSectionNote: "・ニコニコのタグを探索する魔法の地図があるよ！クリックしてみて！",
     historyGroupToggle: "検索語【{label}】で出会った動画",
+    historyGroupExpired: "200件を超えたため、この履歴は削除されました。",
     historyWindowClosedNote: "元のページが閉じられたか、リンクが切れています。元のページからもう一度「記録をもっとみる」を開いてください。",
     historyWindowReloadNote: "・このウィンドウは更新すると真っ白になります。",
   },
@@ -216,6 +217,7 @@ const translations = {
     historyMoreButton: "追寻足迹",
     historyMoreNote: "・会打开新窗口",
     historyGroupToggle: "以搜索词【{label}】相遇的视频",
+    historyGroupExpired: "由于超过200条记录上限，此记录已被删除。",
     historyWindowClosedNote: "原页面已关闭或连接已断开，请从原页面重新打开「追寻足迹」。",
     historyWindowReloadNote: "・此窗口刷新后会变成空白页面。",
   },
@@ -294,6 +296,7 @@ const translations = {
     historyMoreButton: "기록 더 보기",
     historyMoreNote: "・새 창이 열립니다",
     historyGroupToggle: "검색어【{label}】(으)로 만난 동영상",
+    historyGroupExpired: "200건을 초과하여 이 기록은 삭제되었습니다.",
     historyWindowClosedNote: "원본 페이지가 닫혔거나 연결이 끊어졌습니다. 원본 페이지에서 다시 「기록 더 보기」를 열어 주세요.",
     historyWindowReloadNote: "・이 창은 새로고침하면 빈 화면이 됩니다.",
   },
@@ -372,6 +375,7 @@ const translations = {
     historyMoreButton: "See more history",
     historyMoreNote: "* Opens a new window",
     historyGroupToggle: "Videos found with 【{label}】",
+    historyGroupExpired: "This history was removed because it exceeded the 200-entry limit.",
     historyWindowClosedNote: "The original page has been closed or the link is no longer active. Please open \"See more history\" again from the original page.",
     historyWindowReloadNote: "* This window will go blank if you reload it.",
   },
@@ -446,6 +450,13 @@ let selectedVoiceCategories = new Set();
 // 出会った動画の記録（新しいものが先頭）
 let watchHistory = [];
 const WATCH_HISTORY_STORAGE_KEY = "nicoFairyPlayerWatchHistory";
+const WATCH_HISTORY_MAX = 200; // 保存する記録の上限件数
+// 「検索語Xで出会った動画」のボタン一覧（新しいものが先頭）。
+// watchHistory本体が200件を超えて古い記録が消えても、ボタン自体は最大100件分残す
+let searchLabelHistory = [];
+const SEARCH_LABEL_HISTORY_STORAGE_KEY = "nicoFairyPlayerSearchLabelHistory";
+const SEARCH_LABEL_HISTORY_MAX = 100;
+const NO_SEARCH_LABEL = "(-)"; // 検索語が空だった場合のグループ見出し用フォールバック
 // 直近に実行した検索の検索語（タグ・キーワード）。履歴の「検索語Xで出会った動画」表示に使う
 let currentSearchLabel = "";
 // 現在プレイヤーに表示している動画のサムネイルURL（次の動画へのフェード演出で使う）
@@ -1162,6 +1173,7 @@ async function playRandomVideo({ animate = false } = {}) {
 function saveWatchHistory() {
   try {
     localStorage.setItem(WATCH_HISTORY_STORAGE_KEY, JSON.stringify(watchHistory));
+    localStorage.setItem(SEARCH_LABEL_HISTORY_STORAGE_KEY, JSON.stringify(searchLabelHistory));
   } catch (error) {
     console.error(error);
   }
@@ -1171,10 +1183,18 @@ function saveWatchHistory() {
 function loadWatchHistory() {
   try {
     const raw = localStorage.getItem(WATCH_HISTORY_STORAGE_KEY);
-    if (!raw) return;
-    const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) {
-      watchHistory = parsed;
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        watchHistory = parsed;
+      }
+    }
+    const rawLabels = localStorage.getItem(SEARCH_LABEL_HISTORY_STORAGE_KEY);
+    if (rawLabels) {
+      const parsedLabels = JSON.parse(rawLabels);
+      if (Array.isArray(parsedLabels)) {
+        searchLabelHistory = parsedLabels;
+      }
     }
   } catch (error) {
     console.error(error);
@@ -1184,6 +1204,21 @@ function loadWatchHistory() {
 // 出会った動画を記録に追加し、一覧を再描画する
 function addToHistory(entry) {
   watchHistory.unshift(entry);
+  if (watchHistory.length > WATCH_HISTORY_MAX) {
+    watchHistory.length = WATCH_HISTORY_MAX;
+  }
+
+  // 「検索語Xで出会った動画」ボタンの一覧も、新しい検索語を先頭にしつつ最大100件まで保持する
+  const label = entry.searchLabel || NO_SEARCH_LABEL;
+  const existingIndex = searchLabelHistory.indexOf(label);
+  if (existingIndex !== -1) {
+    searchLabelHistory.splice(existingIndex, 1);
+  }
+  searchLabelHistory.unshift(label);
+  if (searchLabelHistory.length > SEARCH_LABEL_HISTORY_MAX) {
+    searchLabelHistory.length = SEARCH_LABEL_HISTORY_MAX;
+  }
+
   saveWatchHistory();
   renderHistory();
 }
@@ -1250,75 +1285,88 @@ function renderHistoryIntoWindow(win) {
   if (!rootEl) return;
 
   const t = translations[currentLang];
-  const noHistoryLabel = "(-)"; // 検索語が空だった場合のグループ見出し用フォールバック
 
-  // 検索語（searchLabel）ごとにグループ化。出現順（＝新しい検索が先）を保つ
-  const groups = [];
-  const groupIndex = new Map();
+  // 現在watchHistoryに残っているエントリを、検索語ごとにまとめる
+  // （200件の上限を超えて削除された検索語は、ここには1件も残らない）
+  const entriesByLabel = new Map();
   watchHistory.forEach((entry) => {
-    const label = entry.searchLabel || noHistoryLabel;
-    if (!groupIndex.has(label)) {
-      groupIndex.set(label, groups.length);
-      groups.push({ label, entries: [] });
+    const label = entry.searchLabel || NO_SEARCH_LABEL;
+    if (!entriesByLabel.has(label)) {
+      entriesByLabel.set(label, []);
     }
-    groups[groupIndex.get(label)].entries.push(entry);
+    entriesByLabel.get(label).push(entry);
   });
 
   rootEl.innerHTML = "";
 
-  groups.forEach((group, index) => {
+  // ボタンの並び・表示自体は、削除されにくいsearchLabelHistory（最大100件）を基準にする
+  searchLabelHistory.forEach((label) => {
+    const entries = entriesByLabel.get(label) || [];
+
     const groupEl = win.document.createElement("div");
     groupEl.className = "history-group";
 
     const toggleBtn = win.document.createElement("button");
     toggleBtn.type = "button";
     toggleBtn.className = "pill-button history-group-toggle";
-    toggleBtn.textContent = t.historyGroupToggle.replace("{label}", group.label);
+    toggleBtn.textContent = t.historyGroupToggle.replace("{label}", label);
 
-    const listEl = win.document.createElement("ul");
-    listEl.className = "history-group-list";
-    // 最初のグループ（最新の検索）だけ開いた状態にしておく
-    listEl.hidden = index !== 0;
+    const bodyEl = win.document.createElement("div");
+    bodyEl.className = "history-group-body";
+    bodyEl.hidden = true; // すべて閉じた状態から始める（ボタンを押した時だけ展開）
 
-    toggleBtn.addEventListener("click", () => {
-      listEl.hidden = !listEl.hidden;
-    });
+    if (entries.length === 0) {
+      // watchHistory本体の200件上限を超えて中身が消えてしまった検索語
+      const expiredEl = win.document.createElement("p");
+      expiredEl.className = "history-group-expired";
+      expiredEl.textContent = t.historyGroupExpired;
+      bodyEl.appendChild(expiredEl);
+    } else {
+      const listEl = win.document.createElement("ul");
+      listEl.className = "history-group-list";
 
-    group.entries.forEach((entry) => {
-      const li = win.document.createElement("li");
-      li.className = "history-item";
-      li.title = t.historyNote;
-      li.addEventListener("click", () => {
-        win.open(`https://www.nicovideo.jp/watch/${entry.contentId}`, "_blank", "noopener");
+      entries.forEach((entry) => {
+        const li = win.document.createElement("li");
+        li.className = "history-item";
+        li.title = t.historyNote;
+        li.addEventListener("click", () => {
+          win.open(`https://www.nicovideo.jp/watch/${entry.contentId}`, "_blank", "noopener");
+        });
+
+        const img = win.document.createElement("img");
+        img.className = "history-thumb";
+        img.src = entry.thumbnailUrl || "";
+        img.alt = "";
+
+        const textWrap = win.document.createElement("div");
+        textWrap.className = "history-text";
+
+        const titleEl = win.document.createElement("p");
+        titleEl.className = "history-title";
+        titleEl.textContent = entry.title;
+
+        const uploaderEl = win.document.createElement("p");
+        uploaderEl.className = "history-uploader";
+        uploaderEl.textContent = entry.uploader
+          ? `${t.uploaderPrefix}${entry.uploader}`
+          : t.uploaderUnknown;
+
+        textWrap.appendChild(titleEl);
+        textWrap.appendChild(uploaderEl);
+        li.appendChild(img);
+        li.appendChild(textWrap);
+        listEl.appendChild(li);
       });
 
-      const img = win.document.createElement("img");
-      img.className = "history-thumb";
-      img.src = entry.thumbnailUrl || "";
-      img.alt = "";
+      bodyEl.appendChild(listEl);
+    }
 
-      const textWrap = win.document.createElement("div");
-      textWrap.className = "history-text";
-
-      const titleEl = win.document.createElement("p");
-      titleEl.className = "history-title";
-      titleEl.textContent = entry.title;
-
-      const uploaderEl = win.document.createElement("p");
-      uploaderEl.className = "history-uploader";
-      uploaderEl.textContent = entry.uploader
-        ? `${t.uploaderPrefix}${entry.uploader}`
-        : t.uploaderUnknown;
-
-      textWrap.appendChild(titleEl);
-      textWrap.appendChild(uploaderEl);
-      li.appendChild(img);
-      li.appendChild(textWrap);
-      listEl.appendChild(li);
+    toggleBtn.addEventListener("click", () => {
+      bodyEl.hidden = !bodyEl.hidden;
     });
 
     groupEl.appendChild(toggleBtn);
-    groupEl.appendChild(listEl);
+    groupEl.appendChild(bodyEl);
     rootEl.appendChild(groupEl);
   });
 }

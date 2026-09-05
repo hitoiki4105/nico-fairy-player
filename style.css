@@ -938,6 +938,16 @@ button {
   margin-top: 10px;
 }
 
+.history-group-body {
+  margin-top: 10px;
+}
+
+.history-group-expired {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0;
+}
+
 #tag-map-section {
   margin-top: 32px;
 }
