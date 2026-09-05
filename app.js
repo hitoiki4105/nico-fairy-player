@@ -115,9 +115,12 @@ const translations = {
     historyMoreButton: "記録をもっとみる",
     historyMoreNote: "・新しいタブが開きます",
     shareTitle: "誰かに知らせる？",
+    shareOnXNote: "・気になった曲、Xでポストする？連携しなくてもできるってよ！",
     shareNote:
       "・動画が「音楽・サウンド」ジャンルなら、ニコニコ動画で気になった曲をマイリストに入れて、Kiiteでプレイリストを作れるよ。",
     kiitePlaylistButton: "Kiiteでプレイリストを公開する",
+    tagMapSectionTitle: "別のタグを探してみる？",
+    tagMapSectionNote: "・ニコニコのタグを探索する魔法の地図があるよ！クリックしてみて！",
     historyGroupToggle: "検索語【{label}】で出会った動画",
     historyWindowClosedNote: "元のページが閉じられたか、リンクが切れています。元のページからもう一度「記録をもっとみる」を開いてください。",
     historyWindowReloadNote: "・このウィンドウは更新すると真っ白になります。",
