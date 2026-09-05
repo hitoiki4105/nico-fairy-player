@@ -1316,6 +1316,7 @@ const newPlayerCountEl = document.getElementById("new-player-count");
 const newPlayerTitleEl = document.getElementById("new-player-title");
 const newPlayerUploaderEl = document.getElementById("new-player-uploader");
 const newPlayerImageEl = document.getElementById("new-player-image");
+const newPlayerEmbedEl = document.getElementById("new-player-embed");
 const newPlayerWatchLinkEl = document.getElementById("new-player-watch-link");
 const newPlayerNextButtonEl = document.getElementById("new-player-next-button");
 
@@ -1385,38 +1386,35 @@ function newPlayerPickVideo() {
   return video;
 }
 
-async function newPlayerFetchLargeThumbnail(contentId) {
-  try {
-    const response = await fetch(`${PROXY_BASE_URL}thumbinfo/${contentId}`);
-    const xmlText = await response.text();
-    const xml = new DOMParser().parseFromString(xmlText, "text/xml");
-    const largeThumb = xml.querySelector("thumbnail_url_large, image_uri");
-    if (largeThumb) return largeThumb.textContent;
-    const thumb = xml.querySelector("thumbnail_url");
-    return thumb ? thumb.textContent : null;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
-
 async function newPlayerShowRandomVideo() {
   if (newPlayerVideoList.length === 0) return;
   const video = newPlayerPickVideo();
 
   newPlayerTitleEl.textContent = video.title;
   newPlayerUploaderEl.textContent = "";
-  newPlayerImageEl.src = video.thumbnailUrl || "";
   newPlayerWatchLinkEl.href = `https://www.nicovideo.jp/watch/${video.contentId}`;
 
-  const [uploaderName, largeThumbnailUrl] = await Promise.all([
-    fetchUploaderName(video.contentId),
-    newPlayerFetchLargeThumbnail(video.contentId),
-  ]);
+  // まずサムネ画像を表示し、動画本体（iframe）は隠しておく
+  newPlayerEmbedEl.innerHTML = "";
+  newPlayerEmbedEl.classList.remove("embed-visible");
+  const thumbnailUrl = video.thumbnailUrl || "";
+  newPlayerImageEl.style.display = "block";
+  newPlayerImageEl.src = thumbnailUrl;
+
+  const uploaderName = await fetchUploaderName(video.contentId);
   newPlayerUploaderEl.textContent = uploaderName || "";
-  if (largeThumbnailUrl) {
-    newPlayerImageEl.src = largeThumbnailUrl;
-  }
+
+  // 0.8秒後に、サムネ画像からiframe（ニコニコ埋め込み・再生ボタンを押すと再生される）に切り替える
+  setTimeout(() => {
+    const embedScript = document.createElement("script");
+    embedScript.src = `https://embed.nicovideo.jp/watch/${video.contentId}/script?w=640&h=360`;
+    newPlayerEmbedEl.appendChild(embedScript);
+    observeEmbedIframeResize(newPlayerEmbedEl).then((iframe) => {
+      if (iframe) {
+        newPlayerImageEl.style.display = "none";
+      }
+    });
+  }, 800);
 }
 
 form.addEventListener("submit", async () => {
