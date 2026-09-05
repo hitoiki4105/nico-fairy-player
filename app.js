@@ -109,6 +109,7 @@ const translations = {
     nextButton: "次の動画と出会う",
     watchOnNicoButton: "ニコニコで見る",
     shareOnXButton: "Xでポストする",
+    shareOnBlueskyButton: "Blueskyでポストする",
     historyTitle: "出会った動画の記録",
     historyNote: "・クリックすると、ニコニコ動画に飛べるよ。",
     historyVisibleNote: "・最新の５件を表示するね。",
@@ -391,6 +392,7 @@ const playerFairyEl = document.getElementById("player-fairy");
 const nextButton = document.getElementById("next-button");
 const watchOnNicoLink = document.getElementById("watch-on-nico");
 const shareOnXButton = document.getElementById("share-on-x-button");
+const shareOnBlueskyButton = document.getElementById("share-on-bluesky-button");
 const resultActionsEl = document.getElementById("result-actions");
 const languageSelect = document.getElementById("language-select");
 const voiroidToggle = document.getElementById("voiroid-toggle");
@@ -526,13 +528,13 @@ kiitePlaylistButton.addEventListener("click", () => {
   window.open("https://radar.kiite.jp/tools/playlist_import", "_blank", "noopener");
 });
 
-// ==== Xでポストするボタン ====
-shareOnXButton.addEventListener("click", () => {
-  if (!currentSharePayload) return;
+// ==== SNSポスト用の文言を組み立てる（Xでも Bluesky でも同じ文言を使う） ====
+function buildShareText() {
+  if (!currentSharePayload) return null;
   const { contentId, title, uploader } = currentSharePayload;
   const videoUrl = `https://www.nicovideo.jp/watch/${contentId}`;
   const uploaderLine = uploader ? `${uploader}さん` : "";
-  const text = [
+  return [
     title,
     uploaderLine,
     "",
@@ -540,7 +542,21 @@ shareOnXButton.addEventListener("click", () => {
     "#妖精さんプレイヤー で出会いました",
     videoUrl,
   ].join("\n");
+}
+
+// ==== Xでポストするボタン ====
+shareOnXButton.addEventListener("click", () => {
+  const text = buildShareText();
+  if (!text) return;
   const intentUrl = `https://twitter.com/intent/tweet?${new URLSearchParams({ text })}`;
+  window.open(intentUrl, "_blank", "noopener");
+});
+
+// ==== Blueskyでポストするボタン ====
+shareOnBlueskyButton.addEventListener("click", () => {
+  const text = buildShareText();
+  if (!text) return;
+  const intentUrl = `https://bsky.app/intent/compose?${new URLSearchParams({ text })}`;
   window.open(intentUrl, "_blank", "noopener");
 });
 
