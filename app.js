@@ -445,6 +445,7 @@ let playedContentIds = new Set();
 let selectedVoiceCategories = new Set();
 // 出会った動画の記録（新しいものが先頭）
 let watchHistory = [];
+const WATCH_HISTORY_STORAGE_KEY = "nicoFairyPlayerWatchHistory";
 // 直近に実行した検索の検索語（タグ・キーワード）。履歴の「検索語Xで出会った動画」表示に使う
 let currentSearchLabel = "";
 // 現在プレイヤーに表示している動画のサムネイルURL（次の動画へのフェード演出で使う）
@@ -524,6 +525,10 @@ languageSelect.addEventListener("change", () => {
 });
 
 applyLanguage("ja");
+
+// ページを開いた時、保存されている記録を読み込んで表示する
+loadWatchHistory();
+renderHistory();
 
 // ==== 説明文・補助機能の開閉トグル ====
 voiceCategoryNoteToggle.addEventListener("click", () => {
@@ -1153,9 +1158,33 @@ async function playRandomVideo({ animate = false } = {}) {
   });
 }
 
+// 記録をlocalStorageに保存する（次にページを開いた時も履歴を残すため）
+function saveWatchHistory() {
+  try {
+    localStorage.setItem(WATCH_HISTORY_STORAGE_KEY, JSON.stringify(watchHistory));
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// ページを開いた時、localStorageから記録を読み込む
+function loadWatchHistory() {
+  try {
+    const raw = localStorage.getItem(WATCH_HISTORY_STORAGE_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) {
+      watchHistory = parsed;
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 // 出会った動画を記録に追加し、一覧を再描画する
 function addToHistory(entry) {
   watchHistory.unshift(entry);
+  saveWatchHistory();
   renderHistory();
 }
 
