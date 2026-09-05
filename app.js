@@ -116,7 +116,8 @@ const translations = {
     historyMoreButton: "記録をもっとみる",
     historyMoreNote: "・新しいタブが開きます",
     shareTitle: "誰かに知らせる？",
-    shareOnXNote: "・気になった曲、Xでポストする？連携しなくてもできるってよ！",
+    shareOnXNote: "・気になった動画、SNSでポストする？連携しなくてもできるってよ！",
+    shareAutoFetchNote: "・現在表示されている動画の情報を自動的に取得するよ。",
     shareNote:
       "・動画が「音楽・サウンド」ジャンルなら、ニコニコ動画で気になった曲をマイリストに入れて、Kiiteでプレイリストを作れるよ。",
     kiitePlaylistButton: "Kiiteでプレイリストを公開する",
