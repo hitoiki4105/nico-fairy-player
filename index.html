@@ -170,6 +170,56 @@
       <h2 data-i18n="shareTitle">誰かに知らせる？</h2>
       <p class="disclaimer" data-i18n="shareOnXNote">・気になった動画、SNSでポストする？連携しなくてもできるってよ！</p>
       <p class="disclaimer" data-i18n="shareAutoFetchNote">・現在表示されている動画の情報を自動的に取得するよ。</p>
+      <button type="button" class="note-toggle" id="hashtag-toggle" data-i18n="hashtagToggle">ハッシュタグ、選んでいく？</button>
+      <div id="hashtag-panel" hidden>
+        <div class="toggle-row">
+          <button type="button" class="toggle-btn" id="hashtag-cat-vocaloid-button" data-i18n="hashtagCatVocaloid">ボカロ・サウンド系</button>
+          <button type="button" class="toggle-btn" id="hashtag-cat-voiroid-button" data-i18n="hashtagCatVoiroid">ボイロ・解説・劇場・実況系</button>
+        </div>
+
+        <div id="hashtag-list-vocaloid" class="hashtag-list" hidden>
+          <div class="hashtag-group">
+            <p class="hashtag-group-title" data-i18n="hashtagGroupAnnounce">とにかく知らせるなら？</p>
+            <label class="hashtag-item"><span>#ボカロおすすめ</span><input type="checkbox" class="hashtag-checkbox" value="#ボカロおすすめ" /></label>
+            <label class="hashtag-item"><span>#ボカロ曲紹介</span><input type="checkbox" class="hashtag-checkbox" value="#ボカロ曲紹介" /></label>
+          </div>
+          <div class="hashtag-group">
+            <p class="hashtag-group-title" data-i18n="hashtagGroupWords">言葉を選ぶなら？</p>
+            <label class="hashtag-item"><span>#ぼかれびゅ</span><input type="checkbox" class="hashtag-checkbox" value="#ぼかれびゅ" /></label>
+          </div>
+          <div class="hashtag-group">
+            <p class="hashtag-group-title" data-i18n="hashtagGroupWide">広いタグなら？</p>
+            <label class="hashtag-item"><span>#ボカロ</span><input type="checkbox" class="hashtag-checkbox" value="#ボカロ" /></label>
+            <label class="hashtag-item"><span>#ボカロ曲</span><input type="checkbox" class="hashtag-checkbox" value="#ボカロ曲" /></label>
+            <label class="hashtag-item"><span>#VOCALOID</span><input type="checkbox" class="hashtag-checkbox" value="#VOCALOID" /></label>
+          </div>
+        </div>
+
+        <div id="hashtag-list-voiroid" class="hashtag-list" hidden>
+          <div class="hashtag-group">
+            <p class="hashtag-group-title" data-i18n="hashtagGroupTheater">劇場系なら？</p>
+            <label class="hashtag-item"><span>#ボイスロイド劇場</span><input type="checkbox" class="hashtag-checkbox" value="#ボイスロイド劇場" /></label>
+            <label class="hashtag-item"><span>#ソフトウェアトーク劇場</span><input type="checkbox" class="hashtag-checkbox" value="#ソフトウェアトーク劇場" /></label>
+            <label class="hashtag-item"><span>#ボイロ一人称劇場</span><input type="checkbox" class="hashtag-checkbox" value="#ボイロ一人称劇場" /></label>
+          </div>
+          <div class="hashtag-group">
+            <p class="hashtag-group-title" data-i18n="hashtagGroupCommentary">解説系なら？</p>
+            <label class="hashtag-item"><span>#ボイロ解説</span><input type="checkbox" class="hashtag-checkbox" value="#ボイロ解説" /></label>
+          </div>
+          <div class="hashtag-group">
+            <p class="hashtag-group-title" data-i18n="hashtagGroupLetsPlay">実況系なら？</p>
+            <label class="hashtag-item"><span>#ボイロ実況</span><input type="checkbox" class="hashtag-checkbox" value="#ボイロ実況" /></label>
+            <label class="hashtag-item"><span>#ソフトウェアトーク実況</span><input type="checkbox" class="hashtag-checkbox" value="#ソフトウェアトーク実況" /></label>
+          </div>
+          <div class="hashtag-group">
+            <p class="hashtag-group-title" data-i18n="hashtagGroupWide2">広いタグなら？</p>
+            <label class="hashtag-item"><span>#ボイロ</span><input type="checkbox" class="hashtag-checkbox" value="#ボイロ" /></label>
+            <label class="hashtag-item"><span>#ボイロ動画</span><input type="checkbox" class="hashtag-checkbox" value="#ボイロ動画" /></label>
+            <label class="hashtag-item"><span>#VOICEROID</span><input type="checkbox" class="hashtag-checkbox" value="#VOICEROID" /></label>
+            <label class="hashtag-item"><span>#VOICEVOX</span><input type="checkbox" class="hashtag-checkbox" value="#VOICEVOX" /></label>
+          </div>
+        </div>
+      </div>
       <div class="share-buttons">
         <button type="button" id="share-on-bluesky-button" class="pill-button" data-i18n="shareOnBlueskyButton">Blueskyでポストする</button>
         <button type="button" id="share-on-x-button" class="pill-button" data-i18n="shareOnXButton">Xでポストする</button>

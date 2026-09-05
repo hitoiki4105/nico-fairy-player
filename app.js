@@ -118,6 +118,16 @@ const translations = {
     shareTitle: "誰かに知らせる？",
     shareOnXNote: "・気になった動画、SNSでポストする？連携しなくてもできるってよ！",
     shareAutoFetchNote: "・現在表示されている動画の情報を自動的に取得するよ。",
+    hashtagToggle: "ハッシュタグ、選んでいく？",
+    hashtagCatVocaloid: "ボカロ・サウンド系",
+    hashtagCatVoiroid: "ボイロ・解説・劇場・実況系",
+    hashtagGroupAnnounce: "とにかく知らせるなら？",
+    hashtagGroupWords: "言葉を選ぶなら？",
+    hashtagGroupWide: "広いタグなら？",
+    hashtagGroupTheater: "劇場系なら？",
+    hashtagGroupCommentary: "解説系なら？",
+    hashtagGroupLetsPlay: "実況系なら？",
+    hashtagGroupWide2: "広いタグなら？",
     shareNote:
       "・動画が「音楽・サウンド」ジャンルなら、ニコニコ動画で気になった曲をマイリストに入れて、Kiiteでプレイリストを作れるよ。",
     kiitePlaylistButton: "Kiiteでプレイリストを公開する",
@@ -394,6 +404,12 @@ const nextButton = document.getElementById("next-button");
 const watchOnNicoLink = document.getElementById("watch-on-nico");
 const shareOnXButton = document.getElementById("share-on-x-button");
 const shareOnBlueskyButton = document.getElementById("share-on-bluesky-button");
+const hashtagToggle = document.getElementById("hashtag-toggle");
+const hashtagPanel = document.getElementById("hashtag-panel");
+const hashtagCatVocaloidButton = document.getElementById("hashtag-cat-vocaloid-button");
+const hashtagCatVoiroidButton = document.getElementById("hashtag-cat-voiroid-button");
+const hashtagListVocaloidEl = document.getElementById("hashtag-list-vocaloid");
+const hashtagListVoiroidEl = document.getElementById("hashtag-list-voiroid");
 const resultActionsEl = document.getElementById("result-actions");
 const languageSelect = document.getElementById("language-select");
 const voiroidToggle = document.getElementById("voiroid-toggle");
@@ -535,15 +551,35 @@ function buildShareText() {
   const { contentId, title, uploader } = currentSharePayload;
   const videoUrl = `https://www.nicovideo.jp/watch/${contentId}`;
   const uploaderLine = uploader ? `${uploader}さん` : "";
-  return [
+  const lines = [
     title,
     uploaderLine,
     "",
     `#${contentId}`,
     "#妖精さんプレイヤー で出会いました",
     videoUrl,
-  ].join("\n");
+  ];
+  const selectedHashtags = Array.from(
+    document.querySelectorAll(".hashtag-checkbox:checked")
+  ).map((checkbox) => checkbox.value);
+  if (selectedHashtags.length > 0) {
+    lines.push(selectedHashtags.join(" "));
+  }
+  return lines.join("\n");
 }
+
+// ==== ハッシュタグ選択パネルの開閉 ====
+hashtagToggle.addEventListener("click", () => {
+  hashtagPanel.hidden = !hashtagPanel.hidden;
+});
+
+hashtagCatVocaloidButton.addEventListener("click", () => {
+  hashtagListVocaloidEl.hidden = !hashtagListVocaloidEl.hidden;
+});
+
+hashtagCatVoiroidButton.addEventListener("click", () => {
+  hashtagListVoiroidEl.hidden = !hashtagListVoiroidEl.hidden;
+});
 
 // ==== Xでポストするボタン ====
 shareOnXButton.addEventListener("click", () => {
