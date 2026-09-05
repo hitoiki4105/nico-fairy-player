@@ -131,6 +131,9 @@ const translations = {
     shareNote:
       "・動画が「音楽・サウンド」ジャンルなら、ニコニコ動画で気になった曲をマイリストに入れて、Kiiteでプレイリストを作れるよ。",
     kiitePlaylistButton: "Kiiteでプレイリストを公開する",
+    shareAppUrlNote: "・え？このツールを誰かに知らせたい？ありがとう！",
+    copyAppUrlButton: "妖精さんプレイヤーのURLをコピーする",
+    copyAppUrlDone: "コピーしました！",
     tagMapSectionTitle: "別のタグを探してみる？",
     tagMapSectionNote: "・ニコニコのタグを探索する魔法の地図があるよ！クリックしてみて！",
     historyGroupToggle: "検索語【{label}】で出会った動画",
@@ -428,6 +431,8 @@ const historyMoreButton = document.getElementById("history-more-button");
 const historyMoreNoteEl = document.getElementById("history-more-note");
 const scrollToQ1Button = document.getElementById("scroll-to-q1-button");
 const kiitePlaylistButton = document.getElementById("kiite-playlist-button");
+const copyAppUrlButton = document.getElementById("copy-app-url-button");
+const copyAppUrlToast = document.getElementById("copy-app-url-toast");
 const q1Section = document.getElementById("q1-section");
 
 // 検索でヒットした動画一覧（ランダムに取得した最大100件）
@@ -543,6 +548,36 @@ scrollToQ1Button.addEventListener("click", () => {
 // ==== Kiiteでプレイリストを公開するボタン ====
 kiitePlaylistButton.addEventListener("click", () => {
   window.open("https://radar.kiite.jp/tools/playlist_import", "_blank", "noopener");
+});
+
+// ==== 妖精さんプレイヤーのURLをコピーするボタン ====
+let copyAppUrlToastTimer = null;
+function showCopyAppUrlToast() {
+  copyAppUrlToast.hidden = false;
+  clearTimeout(copyAppUrlToastTimer);
+  copyAppUrlToastTimer = setTimeout(() => {
+    copyAppUrlToast.hidden = true;
+  }, 1000);
+}
+
+copyAppUrlButton.addEventListener("click", async () => {
+  const appUrl = "https://hitoiki4105.github.io/nico-fairy-player/";
+  try {
+    await navigator.clipboard.writeText(appUrl);
+    showCopyAppUrlToast();
+  } catch (error) {
+    console.error(error);
+    // クリップボードAPIが使えない場合のフォールバック
+    const tempInput = document.createElement("textarea");
+    tempInput.value = appUrl;
+    tempInput.style.position = "fixed";
+    tempInput.style.opacity = "0";
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand("copy");
+    document.body.removeChild(tempInput);
+    showCopyAppUrlToast();
+  }
 });
 
 // ==== SNSポスト用の文言を組み立てる（Xでも Bluesky でも同じ文言を使う） ====

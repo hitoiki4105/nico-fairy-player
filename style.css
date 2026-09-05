@@ -366,6 +366,19 @@ h1 {
   color: var(--accent-text);
 }
 
+.copy-url-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.copy-toast {
+  font-size: 0.78rem;
+  color: var(--accent);
+  font-weight: 700;
+}
+
 .note-toggle {
   display: inline-block;
   margin-top: 8px;
@@ -509,7 +522,7 @@ button {
   padding: 24px 20px;
   border-radius: 20px;
   background: #1c2826;
-  box-shadow: 0 0 0 1px rgba(201, 138, 59, 0.35), 0 8px 24px rgba(47, 82, 51, 0.25);
+  box-shadow: 0 8px 24px rgba(47, 82, 51, 0.25);
   overflow: hidden;
 }
 
@@ -517,15 +530,6 @@ button {
   .video-meeting-spot {
     max-width: 920px;
   }
-}
-
-.video-meeting-spot::after {
-  content: "✨";
-  position: absolute;
-  top: 6px;
-  right: 14px;
-  font-size: 1.1rem;
-  opacity: 0.8;
 }
 
 .video-meeting-spot #current-title {
@@ -543,6 +547,7 @@ button {
   font-weight: 600;
   margin-top: 0;
   margin-bottom: 2px;
+  color: #ffffff;
 }
 
 #current-uploader {
