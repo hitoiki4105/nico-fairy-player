@@ -464,6 +464,8 @@ let currentThumbnailUrl = "";
 // 現在表示中の動画の情報（Xでポストする用）
 let currentSharePayload = null;
 const HISTORY_VISIBLE_COUNT = 5;
+// 直近に再生した動画の投稿者（userIdまたはchannelId）。同じ投稿者の連続を避けるために使う
+let lastPlayedUploaderKey = null;
 
 // ==== 言語切り替え ====
 function applyLanguage(lang) {
@@ -941,7 +943,7 @@ function buildBaseParams() {
     q: keyword,
     _sort: "-viewCounter",
     _context: "nico-tag-player",
-    fields: "contentId,title,viewCounter,thumbnailUrl",
+    fields: "contentId,title,viewCounter,thumbnailUrl,userId,channelId",
   });
 
   if (keyword) {
@@ -1031,6 +1033,7 @@ async function runSearch() {
     }
 
     playedContentIds = new Set();
+    lastPlayedUploaderKey = null;
     setStatus("");
     resultCountEl.textContent = translations[currentLang].resultCountLabel
       .replace("{label}", currentSearchLabel)
@@ -1046,21 +1049,37 @@ async function runSearch() {
   }
 }
 
-// 未再生の動画から1本選ぶ。全部再生済みならリセットして最初から
-function pickNextVideo() {
-  const unplayed = videoList.filter((v) => !playedContentIds.has(v.contentId));
+function getUploaderKey(video) {
+  // 一般ユーザーの投稿ならuserId、チャンネル投稿ならchannelIdが入る
+  return video.userId || video.channelId || null;
+}
 
-  if (unplayed.length === 0) {
+// 未再生の動画から1本選ぶ。全部再生済みならリセットして最初から。
+// また、直前の動画と同じ投稿者の動画は、他に候補がある限り避ける
+function pickNextVideo() {
+  let candidates = videoList.filter((v) => !playedContentIds.has(v.contentId));
+  let loopedRound = false;
+
+  if (candidates.length === 0) {
     playedContentIds = new Set();
-    setStatus(translations[currentLang].statusLoopedRound);
-    const video = videoList[Math.floor(Math.random() * videoList.length)];
-    playedContentIds.add(video.contentId);
-    return video;
+    candidates = videoList;
+    loopedRound = true;
   }
 
-  setStatus("");
-  const video = unplayed[Math.floor(Math.random() * unplayed.length)];
+  // 直前と同じ投稿者を避けた候補を優先する。他に候補がなければ同じ投稿者でもOK
+  let pool = candidates;
+  if (lastPlayedUploaderKey !== null) {
+    const filtered = candidates.filter((v) => getUploaderKey(v) !== lastPlayedUploaderKey);
+    if (filtered.length > 0) {
+      pool = filtered;
+    }
+  }
+
+  setStatus(loopedRound ? translations[currentLang].statusLoopedRound : "");
+
+  const video = pool[Math.floor(Math.random() * pool.length)];
   playedContentIds.add(video.contentId);
+  lastPlayedUploaderKey = getUploaderKey(video);
   return video;
 }
 
