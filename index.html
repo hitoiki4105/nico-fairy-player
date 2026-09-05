@@ -142,17 +142,19 @@
 
     <section id="result" class="section-sr">
       <p id="result-count"></p>
-      <div class="video-meeting-spot">
-        <p id="current-title"></p>
-        <p id="current-uploader"></p>
-        <div id="player">
-          <img id="player-thumb" class="player-thumb" src="https://hitoiki4105.github.io/nico-fairy-player/image_bg.jpg" alt="" />
-          <img id="player-fairy" class="player-fairy" src="img_fairy.png" alt="" />
-          <div id="player-embed"></div>
-        </div>
-        <div class="result-actions" id="result-actions" hidden>
-          <a id="watch-on-nico" class="watch-link" href="#" target="_blank" rel="noopener" data-i18n="watchOnNicoButton">ニコニコで見る</a>
-          <button type="button" id="next-button" data-i18n="nextButton">次の動画と出会う</button>
+      <div class="video-meeting-spot-wrapper">
+        <div class="video-meeting-spot">
+          <p id="current-title"></p>
+          <p id="current-uploader"></p>
+          <div id="player">
+            <img id="player-thumb" class="player-thumb" src="https://hitoiki4105.github.io/nico-fairy-player/image_bg.jpg" alt="" />
+            <img id="player-fairy" class="player-fairy" src="img_fairy.png" alt="" />
+            <div id="player-embed"></div>
+          </div>
+          <div class="result-actions" id="result-actions" hidden>
+            <a id="watch-on-nico" class="watch-link" href="#" target="_blank" rel="noopener" data-i18n="watchOnNicoButton">ニコニコで見る</a>
+            <button type="button" id="next-button" data-i18n="nextButton">次の動画と出会う</button>
+          </div>
         </div>
       </div>
     </section>
@@ -226,6 +228,8 @@
       </div>
       <p class="disclaimer" data-i18n="shareNote">・動画が「音楽・サウンド」ジャンルなら、ニコニコ動画で気になった曲をマイリストに入れて、Kiiteでプレイリストを作れるよ。</p>
       <button type="button" id="kiite-playlist-button" class="pill-button" data-i18n="kiitePlaylistButton">Kiiteでプレイリストを公開する</button>
+      <p class="disclaimer" data-i18n="shareAppUrlNote">・え？このツールを誰かに知らせたい？ありがとう！</p>
+      <button type="button" id="copy-app-url-button" class="pill-button" data-i18n="copyAppUrlButton">妖精さんプレイヤーのURLをコピーする</button>
     </section>
 
     <section id="tag-map-section" class="section-tagmap">
