@@ -706,6 +706,15 @@ button {
 .share-buttons .pill-button {
   flex: 1;
   text-align: center;
+  background: #d4a017;
+  color: #ffffff;
+  border-color: #d4a017;
+}
+
+.share-buttons .pill-button:hover {
+  background: #b8890f;
+  border-color: #b8890f;
+  color: #ffffff;
 }
 
 #next-button {
@@ -800,12 +809,7 @@ button {
   padding: 6px 2px;
   font-size: 0.9rem;
   color: var(--text);
-  border-bottom: 1px solid var(--border);
   cursor: pointer;
-}
-
-.hashtag-item:last-child {
-  border-bottom: none;
 }
 
 .hashtag-checkbox {

@@ -49,7 +49,7 @@ const translations = {
     tagMapSuffix: "ってツール、知ってる？",
     languageLabel: "言語",
     voiceCategoryLabel: "ジャンル、指定する？（オプション）",
-    voiroidLabel: "ボイロ・解説・劇場系",
+    voiroidLabel: "ボイロ・劇場・実況・解説系",
     vocaloidLabel: "ボカロ・音楽系",
     voiceCategoryNoteToggle: "説明をきく",
     voiceCategoryNote:
@@ -551,20 +551,18 @@ function buildShareText() {
   const { contentId, title, uploader } = currentSharePayload;
   const videoUrl = `https://www.nicovideo.jp/watch/${contentId}`;
   const uploaderLine = uploader ? `${uploader}さん` : "";
+  const selectedHashtags = Array.from(
+    document.querySelectorAll(".hashtag-checkbox:checked")
+  ).map((checkbox) => checkbox.value);
+  const contentIdTag = [`#${contentId}`, ...selectedHashtags].join(" ");
   const lines = [
     title,
     uploaderLine,
     "",
-    `#${contentId}`,
     "#妖精さんプレイヤー で出会いました",
     videoUrl,
+    contentIdTag,
   ];
-  const selectedHashtags = Array.from(
-    document.querySelectorAll(".hashtag-checkbox:checked")
-  ).map((checkbox) => checkbox.value);
-  if (selectedHashtags.length > 0) {
-    lines.push(selectedHashtags.join(" "));
-  }
   return lines.join("\n");
 }
 
