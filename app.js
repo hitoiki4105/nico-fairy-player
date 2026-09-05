@@ -971,22 +971,20 @@ async function playRandomVideo({ animate = false } = {}) {
   const video = pickNextVideo();
 
   if (animate) {
-    // t=0: 動画本体（iframe）は非表示のまま保持
-    playerEmbedEl.classList.add("embed-hidden");
+    // t=0〜0.8: 既存の動画（iframe）をそのまま0.8秒間保持する
+    await new Promise((resolve) => setTimeout(resolve, 800));
 
-    // t=0.5: 妖精の動き（A:回転 / B:右→左 / C:左→右 からランダム）を開始し、
-    //        同時に0.3秒かけてフェードインを開始する（t=0.8で完了）
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    // t=0.8: 既存の動画を隠し、妖精のアニメーションを0.8秒間だけ行う
+    playerEmbedEl.classList.add("embed-hidden");
     const fairyVariant = FAIRY_VARIANTS[Math.floor(Math.random() * FAIRY_VARIANTS.length)];
     playerFairyEl.classList.add(fairyVariant);
     playerFairyEl.classList.add("fairy-visible");
 
-    // t=1.0: 0.3秒かけて妖精のフェードアウトを開始する（t=1.3で完了）
     await new Promise((resolve) => setTimeout(resolve, 500));
     playerFairyEl.classList.remove("fairy-visible");
 
-    // t=1.3: 妖精のアニメーションを終了
     await new Promise((resolve) => setTimeout(resolve, 300));
+    // t=1.6: 妖精のアニメーションを終了
     playerFairyEl.classList.remove(fairyVariant);
   }
 
