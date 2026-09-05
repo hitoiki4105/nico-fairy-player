@@ -970,24 +970,8 @@ async function playRandomVideo({ animate = false } = {}) {
 
   const video = pickNextVideo();
 
-  // 次のサムネはできるだけ早く（アニメーション開始と同時に）先読みしておく。
-  const nextThumbnailUrl = video.thumbnailUrl || "";
-  const thumbnailPreloadPromise = nextThumbnailUrl
-    ? (() => {
-        const preloadImg = new Image();
-        preloadImg.src = nextThumbnailUrl;
-        if (preloadImg.decode) {
-          return preloadImg.decode().catch(() => {});
-        }
-        return new Promise((resolve) => {
-          preloadImg.onload = resolve;
-          preloadImg.onerror = resolve;
-        });
-      })()
-    : Promise.resolve();
-
   if (animate) {
-    // t=0: 動画本体（iframe）は既に非表示のまま保持
+    // t=0: 動画本体（iframe）は非表示のまま保持
     playerEmbedEl.classList.add("embed-hidden");
 
     // t=0.5: 妖精の動き（A:回転 / B:右→左 / C:左→右 からランダム）を開始し、
@@ -997,16 +981,11 @@ async function playRandomVideo({ animate = false } = {}) {
     playerFairyEl.classList.add(fairyVariant);
     playerFairyEl.classList.add("fairy-visible");
 
-    // t=0.8: 現在の動画（サムネ）をカットアウト（フェードなし・瞬時に非表示）
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    playerThumbEl.style.transition = "none";
-    playerThumbEl.classList.add("thumb-hidden");
-
     // t=1.0: 0.3秒かけて妖精のフェードアウトを開始する（t=1.3で完了）
-    await new Promise((resolve) => setTimeout(resolve, 200));
+    await new Promise((resolve) => setTimeout(resolve, 500));
     playerFairyEl.classList.remove("fairy-visible");
 
-    // t=1.3: 妖精のアニメーションを終了。同時に次の動画のサムネをカットイン表示する
+    // t=1.3: 妖精のアニメーションを終了
     await new Promise((resolve) => setTimeout(resolve, 300));
     playerFairyEl.classList.remove(fairyVariant);
   }
@@ -1017,52 +996,16 @@ async function playRandomVideo({ animate = false } = {}) {
   currentThumbnailUrl = video.thumbnailUrl || "";
   resultActionsEl.hidden = false;
 
-  if (animate) {
-    // t=1.3で開始した先読みがここまでに終わっていない場合のみ待つ（通常は既に完了している）
-    await thumbnailPreloadPromise;
-
-    // t=1.3: 次の動画のサムネをカットイン（フェードなし・瞬時に表示）。
-    // 既に隠しimg要素で本番と同じサイズにペイント済みなので、srcをコピーするだけで
-    // ぼやけた状態を経由せずシャープな画像がそのまま出る。
-    playerThumbEl.style.transition = "none";
-    playerThumbEl.src = currentThumbnailUrl;
-    playerThumbEl.classList.remove("thumb-hidden");
-  } else {
-    // アニメーションなし（初回検索時など）は、サムネをそのまま表示しておく
-    playerThumbEl.style.transition = "none";
-    playerThumbEl.src = currentThumbnailUrl;
-    playerThumbEl.classList.remove("thumb-hidden");
-  }
-
-  // t=2.1: 次の動画のサムネがフル表示された状態。
-  //        動画本体は必ずembed-hidden（透明）にしてから、その裏で新しい動画のiframeを準備する。
-  //        画面には常に「フル表示されたサムネ」だけが見えているので、
-  //        iframeの読み込み中に何かが一瞬見えて消える、ということが起こらない。
-  playerEmbedEl.style.transition = "none";
-  playerEmbedEl.classList.add("embed-hidden");
-  playerEmbedEl.innerHTML = "";
-  const embedScript = document.createElement("script");
-  embedScript.src = `https://embed.nicovideo.jp/watch/${video.contentId}/script?w=640&h=360`;
-  playerEmbedEl.appendChild(embedScript);
-  const iframe = await observeEmbedIframeResize(playerEmbedEl);
-  if (iframe) {
-    await new Promise((resolve) => {
-      // iframe自体の読み込み完了（load）まで待つ。ただし何らかの理由でloadが発火しない場合に
-      // 永久に止まらないよう、短いタイムアウトも保険として設ける。
-      const onLoad = () => {
-        iframe.removeEventListener("load", onLoad);
-        resolve();
-      };
-      iframe.addEventListener("load", onLoad);
-      setTimeout(resolve, 1500);
-    });
-  }
-
-  // 動画の準備ができたので、サムネを隠すのと同時に動画を不透明に戻す（＝サムネ→動画へ切り替え）
+  // サムネは表示せず、いきなりiframe（ニコニコ埋め込み・再生ボタンを押すと再生される）を埋め込む
   playerThumbEl.style.transition = "none";
   playerThumbEl.classList.add("thumb-hidden");
   playerEmbedEl.style.transition = "none";
   playerEmbedEl.classList.remove("embed-hidden");
+  playerEmbedEl.innerHTML = "";
+  const embedScript = document.createElement("script");
+  embedScript.src = `https://embed.nicovideo.jp/watch/${video.contentId}/script?w=640&h=360`;
+  playerEmbedEl.appendChild(embedScript);
+  observeEmbedIframeResize(playerEmbedEl);
 
   const uploaderName = await fetchUploaderName(video.contentId);
   currentUploaderEl.textContent = uploaderName
