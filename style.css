@@ -126,6 +126,7 @@ main {
 
   .section-sr,
   .section-sh,
+  .search-hint,
   #status {
     grid-column: 1 / -1;
   }
@@ -431,10 +432,11 @@ button {
 
 #search-button {
   width: 100%;
-  padding: 14px;
+  padding: 18px;
   background: var(--highlight);
   color: var(--highlight-text);
   margin-top: 8px;
+  font-size: 1.6rem;
   font-weight: 700;
   letter-spacing: 0.02em;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
@@ -447,12 +449,12 @@ button {
   0%,
   100% {
     box-shadow: 0 4px 14px rgba(201, 138, 59, 0.55);
-    font-size: 1rem;
+    font-size: 1.6rem;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
   }
   50% {
     box-shadow: 0 8px 36px rgba(201, 138, 59, 0.9);
-    font-size: 1.08rem;
+    font-size: 1.75rem;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
   }
 }
@@ -466,6 +468,13 @@ button {
 #search-button:disabled {
   opacity: 0.6;
   cursor: default;
+}
+
+.search-hint {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  text-align: center;
 }
 
 #status {
@@ -488,15 +497,6 @@ button {
   background: radial-gradient(circle at 50% 30%, #fdf8e8 0%, #f3ecd2 45%, #e3dcb8 100%);
   box-shadow: 0 0 0 1px rgba(201, 138, 59, 0.35), 0 8px 24px rgba(47, 82, 51, 0.25);
   overflow: hidden;
-}
-
-.video-meeting-spot::before {
-  content: "";
-  position: absolute;
-  inset: 8px;
-  border: 1px dashed rgba(201, 138, 59, 0.5);
-  border-radius: 14px;
-  pointer-events: none;
 }
 
 .video-meeting-spot::after {

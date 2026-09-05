@@ -40,7 +40,7 @@
 
     <form id="search-form">
       <div class="field forest-box section-s21" id="q1-section">
-        <label for="include-tags" class="section-question" style="font-family: 'Hina Mincho', serif; font-size: 1.15rem;font-weight: 700; color: var(--accent);" data-i18n="includeTagsLabel">Q1：気になるタグは何？</label>
+        <label for="include-tags" class="section-question" style="font-family: 'Hina Mincho', serif; font-size: 1.15rem;font-weight: 700; color: var(--accent);" data-i18n="includeTagsLabel">気になるタグは何？</label>
         <input type="text" id="include-tags" data-i18n-placeholder="includeTagsPlaceholder" placeholder="例: 初音ミク オリジナル曲" />
         <p class="disclaimer" data-i18n="leadSub">タグ検索とキーワード検索、どちらか一方だけでも使えます。</p>
         <p class="disclaimer"><span data-i18n="tagMapPrefix">あ、</span><a href="https://nico-tag-map.hitoiki4105.workers.dev/" target="_blank" rel="noopener">タグ探索マップ</a><span data-i18n="tagMapSuffix">ってツール、知ってる？</span></p>
@@ -65,7 +65,7 @@
       </div>
 
       <div class="field forest-box section-s22">
-        <span class="section-question" style="font-family: 'Hina Mincho', serif;" data-i18n="viewsRangeLabel">Q2：森の奥まで行ってみる？</span>
+        <span class="section-question" style="font-family: 'Hina Mincho', serif;" data-i18n="viewsRangeLabel">森の奥まで行ってみる？</span>
         <div class="field-row views-row">
           <div>
             <label for="min-views" data-i18n="minViewsLabel">再生数（下限）</label>
@@ -81,7 +81,7 @@
       </div>
 
       <div class="field forest-box section-s31">
-        <label for="keyword" class="section-question" style="font-family: 'Hina Mincho', serif; font-size: 1.15rem;font-weight: 700; color: var(--accent);" data-i18n="keywordLabel">Q3：キーワードでもいいよ？</label>
+        <label for="keyword" class="section-question" style="font-family: 'Hina Mincho', serif; font-size: 1.15rem;font-weight: 700; color: var(--accent);" data-i18n="keywordLabel">キーワードでもいいよ？</label>
         <input type="text" id="keyword" data-i18n-placeholder="keywordPlaceholder" placeholder="例: リミックス" />
         <p class="disclaimer" data-i18n="keywordNote">キーワード検索はタイトル・動画詳細欄を参照します。</p>
         <button type="button" class="note-toggle" id="keyword-play-toggle" data-i18n="keywordPlayToggle">キーワードであそんじゃう？</button>
@@ -99,7 +99,7 @@
       </div>
 
       <div class="field forest-box section-s32">
-        <span class="section-question" style="font-family: 'Hina Mincho', serif;" data-i18n="voiceCategoryLabel">Q4：ジャンル、指定する？（オプション）</span>
+        <span class="section-question" style="font-family: 'Hina Mincho', serif;" data-i18n="voiceCategoryLabel">ジャンル、指定する？（オプション）</span>
         <div class="toggle-row">
           <button type="button" class="toggle-btn" id="voiroid-toggle" data-category="voiroid" data-i18n="voiroidLabel">ボイロ・解説・劇場系</button>
           <button type="button" class="toggle-btn" id="vocaloid-toggle" data-category="vocaloid" data-i18n="vocaloidLabel">ボカロ・音楽系</button>
@@ -111,7 +111,7 @@
       </div>
 
       <div class="field forest-box section-s41">
-        <span class="section-question" style="font-family: 'Hina Mincho', serif;" data-i18n="dateRangeLabel">Q5：投稿日を指定する？（オプション）</span>
+        <span class="section-question" style="font-family: 'Hina Mincho', serif;" data-i18n="dateRangeLabel">投稿日を指定する？（オプション）</span>
         <div class="radio-group">
           <label><input type="radio" name="date-mode" value="range" checked /> <span data-i18n="dateModeRange">期間で指定</span></label>
           <label><input type="radio" name="date-mode" value="single" /> <span data-i18n="dateModeSingle">特定の1日を指定</span></label>
@@ -134,7 +134,8 @@
         </div>
       </div>
 
-      <button type="submit" id="search-button" class="section-ss" data-i18n="searchButton">妖精さんと探しに行こう！</button>
+      <button type="submit" id="search-button" class="section-ss" data-i18n="searchButton">準備はいい？探しに行こう！</button>
+      <p class="search-hint" data-i18n="statusNeedTag">含めるタグかキーワードのどっちかは教えて、ね？</p>
     </form>
 
     <section id="status" aria-live="polite"></section>
@@ -181,7 +182,7 @@
       <p class="disclaimer" id="history-more-note" data-i18n="historyMoreNote" hidden>・新しいウィンドウが開きます</p>
     </section>
 
-    <button type="button" id="scroll-to-q1-button" data-i18n="scrollToQ1Button">🏷️ Q1へ</button>
+    <button type="button" id="scroll-to-q1-button" data-i18n="scrollToQ1Button">🏷️ 道を変える</button>
   </main>
 
   <script src="app.js"></script>

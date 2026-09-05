@@ -48,19 +48,19 @@ const translations = {
     tagMapPrefix: "あ、",
     tagMapSuffix: "ってツール、知ってる？",
     languageLabel: "言語",
-    voiceCategoryLabel: "Q4：ジャンル、指定する？（オプション）",
+    voiceCategoryLabel: "ジャンル、指定する？（オプション）",
     voiroidLabel: "ボイロ・解説・劇場系",
     vocaloidLabel: "ボカロ・音楽系",
     voiceCategoryNoteToggle: "説明をきく",
     voiceCategoryNote:
       "投稿時のジャンルで動画を探す場所を選びます。\n・ボカロ・音楽系：「音楽・サウンド」\n・ボイロ・解説・劇場系：「音楽・サウンド」以外",
-    includeTagsLabel: "Q1：気になるタグは何？",
+    includeTagsLabel: "気になるタグは何？",
     includeTagsNoteToggle: "説明をきく",
     fineTuneToggle: "細かく絞り込みたい？",
     includeTagsNote:
       "・半角、全角スペースを加えて複数入力した場合、すべて含む（AND）結果がでるよ。\n・ニコニコ動画でのタグ検索結果とヒット件数が違うことがあるよ。原因は不明だよ。",
     includeTagsPlaceholder: "例: 初音ミク オリジナル曲",
-    keywordLabel: "Q3：キーワードでもいいよ？",
+    keywordLabel: "キーワードでもいいよ？",
     keywordNote: "キーワード検索は動画のタイトル・動画詳細欄を参照するよ。",
     keywordPlayToggle: "キーワードであそんじゃう？",
     keywordPlaceholder: "例: リミックス",
@@ -71,12 +71,12 @@ const translations = {
     keywordExpandButton: "キーワードを広げる",
     disclaimerPrefix: "問い合わせなどはこちらから",
     filterToggleLabel: "フィルター設定（投稿日など）",
-    viewsRangeLabel: "Q2：森の奥まで行ってみる？",
+    viewsRangeLabel: "森の奥まで行ってみる？",
     viewsBoxNote: "森の奥にはたくさんの動画があるよ。",
     minViewsLabel: "再生数（下限）",
     maxViewsLabel: "再生数（上限）",
     viewsPlaceholder: "指定なし",
-    dateRangeLabel: "Q5：投稿日を指定する？（オプション）",
+    dateRangeLabel: "投稿日を指定する？（オプション）",
     dateModeRange: "期間で指定",
     dateModeSingle: "特定の1日を指定",
     yearFromLabel: "投稿年（から）",
@@ -88,7 +88,7 @@ const translations = {
     matchModeOr: "いずれか含む（OR）",
     excludeTagsLabel: "除外するタグ（半角、全角スペースで複数入力可）",
     excludeTagsPlaceholder: "例: R-18",
-    searchButton: "妖精さんと探しに行こう！",
+    searchButton: "準備はいい？探しに行こう！",
     statusNeedTag: "含めるタグかキーワードのどっちかは教えて、ね？",
     statusSearching: "検索中...",
     statusSuggesting: "単語を探しています...",
@@ -102,7 +102,7 @@ const translations = {
     searchLabelTag: "タグ：",
     searchLabelKeyword: "キーワード：",
     searchLabelJoiner: "、",
-    scrollToQ1Button: "🏷️ Q1へ",
+    scrollToQ1Button: "🏷️ 道を変える",
     uploaderLoading: "投稿者を取得中...",
     uploaderPrefix: "投稿者: ",
     uploaderUnknown: "投稿者: 取得できませんでした",
@@ -444,7 +444,7 @@ function applyLanguage(lang) {
 
 // 検索ボタンの文字サイズを「文字列の幅がボタンの幅の80%になる」ように自動調整する。
 // ただし現在のデフォルトサイズ（16px）を下回らないようにする（最小値）。
-const SEARCH_BUTTON_MIN_FONT_SIZE = 20; // px（最小値）
+const SEARCH_BUTTON_MIN_FONT_SIZE = 25; // px（最小値）
 const SEARCH_BUTTON_TARGET_RATIO = 0.8; // ボタン幅に対する文字列幅の目標比率
 
 function fitSearchButtonToWidth() {
@@ -1004,8 +1004,8 @@ async function playRandomVideo({ animate = false } = {}) {
   playerEmbedEl.appendChild(embedScript);
   observeEmbedIframeResize(playerEmbedEl);
 
-  // t=1.6〜2.4: 次の動画のiframeのopacityを0→1へ0.8秒かけてフェードイン（初回検索時はフェードなしで即表示）
-  playerEmbedEl.style.transition = animate ? "opacity 0.8s ease" : "none";
+  // t=1.6〜4.6: 次の動画のiframeのopacityを0→1へ3秒かけてフェードイン（初回検索時はフェードなしで即表示）
+  playerEmbedEl.style.transition = animate ? "opacity 3s ease" : "none";
   playerEmbedEl.classList.remove("embed-hidden");
 
   const uploaderName = await fetchUploaderName(video.contentId);
