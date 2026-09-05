@@ -971,11 +971,12 @@ async function playRandomVideo({ animate = false } = {}) {
   const video = pickNextVideo();
 
   if (animate) {
-    // t=0〜0.8: 既存の動画（iframe）をそのまま0.8秒間保持する
+    // t=0〜0.8: 既存の動画（iframe）のopacityを1→0へ0.8秒かけてフェードアウト
+    playerEmbedEl.style.transition = "opacity 0.8s ease";
+    playerEmbedEl.classList.add("embed-hidden");
     await new Promise((resolve) => setTimeout(resolve, 800));
 
-    // t=0.8: 既存の動画を隠し、妖精のアニメーションを0.8秒間だけ行う
-    playerEmbedEl.classList.add("embed-hidden");
+    // t=0.8: 妖精のアニメーションを0.8秒間だけ行う
     const fairyVariant = FAIRY_VARIANTS[Math.floor(Math.random() * FAIRY_VARIANTS.length)];
     playerFairyEl.classList.add(fairyVariant);
     playerFairyEl.classList.add("fairy-visible");
@@ -997,13 +998,15 @@ async function playRandomVideo({ animate = false } = {}) {
   // サムネは表示せず、いきなりiframe（ニコニコ埋め込み・再生ボタンを押すと再生される）を埋め込む
   playerThumbEl.style.transition = "none";
   playerThumbEl.classList.add("thumb-hidden");
-  playerEmbedEl.style.transition = "none";
-  playerEmbedEl.classList.remove("embed-hidden");
   playerEmbedEl.innerHTML = "";
   const embedScript = document.createElement("script");
   embedScript.src = `https://embed.nicovideo.jp/watch/${video.contentId}/script?w=640&h=360`;
   playerEmbedEl.appendChild(embedScript);
   observeEmbedIframeResize(playerEmbedEl);
+
+  // t=1.6〜2.4: 次の動画のiframeのopacityを0→1へ0.8秒かけてフェードイン（初回検索時はフェードなしで即表示）
+  playerEmbedEl.style.transition = animate ? "opacity 0.8s ease" : "none";
+  playerEmbedEl.classList.remove("embed-hidden");
 
   const uploaderName = await fetchUploaderName(video.contentId);
   currentUploaderEl.textContent = uploaderName
