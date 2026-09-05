@@ -1341,6 +1341,7 @@ async function newPlayerShowRandomVideo() {
   // サムネは表示せず、いきなりiframe（ニコニコ埋め込み・再生ボタンを押すと再生される）を埋め込む
   newPlayerImageEl.style.display = "none";
   newPlayerEmbedEl.innerHTML = "";
+  newPlayerEmbedEl.style.opacity = "0.5";
   const embedScript = document.createElement("script");
   embedScript.src = `https://embed.nicovideo.jp/watch/${video.contentId}/script?w=640&h=360`;
   newPlayerEmbedEl.appendChild(embedScript);
